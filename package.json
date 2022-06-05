@@ -10,8 +10,12 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@rneui/base": "^4.0.0-rc.4",
+    "@rneui/themed": "^4.0.0-rc.4",
     "expo": "~44.0.0",
     "expo-status-bar": "~1.2.0",
+    "metro-config": "^0.71.0",
+    "node-sass": "^7.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
@@ -21,6 +25,12 @@
     "@babel/core": "^7.12.9",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
+    "postcss": "^8.4.14",
+    "postcss-css-variables": "^0.18.0",
+    "postcss-load-config": "^4.0.1",
+    "react-native-postcss-transformer": "^1.2.4",
+    "react-native-sass-transformer": "^2.0.0",
+    "sass": "^1.52.2",
     "typescript": "~4.3.5"
   },
   "private": true

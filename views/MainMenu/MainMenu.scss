@@ -1,0 +1,9 @@
+@use '../../styles/theme.scss';
+
+.container {
+  background-color: theme.$COLOR_DARK_BLUE;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

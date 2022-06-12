@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import {ButtonGroup} from "@rneui/themed";
 import styles from "./MainMenu.scss";
-import {GameSelectionForm} from "../Game/GameSelectionForm/GameSelectionForm";
+import { GameSelection } from '../Game/GameSelection/GameSelection';
 import React from "react";
 
 export const MainMenu = (): JSX.Element => {
@@ -13,6 +13,6 @@ export const MainMenu = (): JSX.Element => {
                 containerStyle={{backgroundColor: "#FFFFFF", width: "50%"}}
                 buttons={['PLAY', 'DASHBOARD', 'LOGIN', 'LOGOUT', 'SIGN-UP', 'SETTINGS']}
             />
-            <GameSelectionForm />
+            <GameSelection />
         </View>);
 };

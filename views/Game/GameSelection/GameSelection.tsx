@@ -1,7 +1,8 @@
-import {View, Text} from 'react-native';
 import {useState} from "react";
 import {AvailableCharacters, CharacterObject} from "../../../characters";
 import shuffle from "lodash/shuffle";
+import {Game} from "../Game/Game";
+import {GameSelectionForm} from "../GameSelectionForm/GameSelectionForm";
 
 export interface GameSelectionState {
     characters: AvailableCharacters,
@@ -10,7 +11,7 @@ export interface GameSelectionState {
     selectedGameMode: string,
 }
 
-export const Signup = (): JSX.Element => {
+export const GameSelection = (): JSX.Element => {
     const [startGame, setStartGame] = useState<boolean>(false);
     const [values, setValues] = useState<GameSelectionState>({
         characters: AvailableCharacters.HIRAGANA,
@@ -22,13 +23,12 @@ export const Signup = (): JSX.Element => {
     return (
         <>
             {startGame ? <Game
-                    characters={values.characters}
                     selectedGameMode={values.selectedGameMode}
                     setStartGame={setStartGame}
                     duration={values.duration}
                     selectedCharacters={shuffle(values.selectedCharacters)}
                     characters={values.characters}/> :
-                <GameSelectionForm setStartGame values={values} setValues={setValues}/>
+                <GameSelectionForm setStartGame={setStartGame} values={values} setValues={setValues}/>
             }
         </>
     );

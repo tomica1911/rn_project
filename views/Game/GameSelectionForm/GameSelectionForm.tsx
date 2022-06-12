@@ -68,7 +68,6 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             renderItem={({item}) => <CharacterTile
                                 selected={values.selectedCharacters.includes(item)} character={item.letter}
                                 onPress={() => {
-                                    console.log(values.selectedCharacters);
                                     if (values.selectedCharacters.includes(item.letter)) {
                                         return setValues((prevValues: GameSelectionState) => {
                                             const withoutToBeRemoved = prevValues.selectedCharacters.filter(charObj => charObj.letter !== item.letter);
@@ -149,7 +148,7 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             marginLeft: 5,
                             marginRight: 5,
                             marginBottom: 1,
-                            height: 50,
+                            height: 150,
                             backgroundColor: "#3E5494",
                             // ':hover': {
                             //     backgroundColor: "#5370C7",

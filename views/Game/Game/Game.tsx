@@ -1,14 +1,14 @@
-import {View, Text} from 'react-native';
-import {useEffect, useState} from "react";
+import {View, Text, TextInput} from 'react-native';
+import {useEffect, useRef, useState} from "react";
 import {GameSelectionState} from '../GameSelection/GameSelection';
 import * as Progress from 'react-native-progress';
 import {characters as charDB} from '../../../characters';
 import {getRandomNumberInRange} from "../../../utils/utils";
+import {ButtonGroup} from '@rneui/themed'
 import {CustomizableButton} from "../../../components/CustomizableButton/CustomizableButton";
 
-// add appropriate type here
 type GameModeOneTwoProps = {
-    setStartGame: Function
+    setStartGame: () => void
 } & GameSelectionState;
 
 export const Game = ({
@@ -19,107 +19,114 @@ export const Game = ({
                          setStartGame
                      }: GameModeOneTwoProps): JSX.Element => {
     const [tileDuration, setTileDuration] = useState<number>(duration);
-    const [radioButtonValues, setRadioButtonValues] = useState<string[]>([]);
+    const [buttonGroupValues, setButtonGroupValues] = useState<string[]>([]);
     const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
     const [progress, setProgress] = useState(0);
     const [timeoutGame, setTimeoutGame] = useState<boolean>(false);
     const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
     const [gameCompleted, setGameCompleted] = useState<boolean>(false);
-    // replace this input ref
-    // const inputRef = useRef<HTMLInputElement>(null);
+    const textInputRef = useRef(null);
     let timer: NodeJS.Timeout;
-    //
-    // useEffect(() => {
-    //     console.log(selectedCharacters[currentCharIndex].equivalents);
-    // })
-    //
-    //
-    // if (selectedGameMode === "GameModeTwo") {
-    //     useEffect(() => {
-    //         setValuesForRadioButton();
-    //     }, [currentCharIndex])
-    // }
-    //
-    // useEffect(() => {
-    //     if (tileDuration !== 0) {
-    //         timer = setTimeout(() => setTileDuration(tileDuration - 1)
-    //             , 1000);
-    //     } else {
-    //         // ToDo: remove If condition here
-    //         if ((currentCharIndex + 1) < selectedCharacters.length) {
-    //             setTimeoutGame(true);
-    //         }
-    //     }
-    // });
-    //
-    // // ToDo: component seems to rerender too many times after user finishes playing, try to reduce the number of rerenders
+
+    useEffect(() => {
+        if (selectedGameMode === "GameModeTwo") {
+            setValuesForButtonGroup();
+        }
+    }, [currentCharIndex])
+
+    useEffect(() => {
+        if (tileDuration !== 0) {
+            timer = setTimeout(() => setTileDuration(tileDuration - 1)
+                , 1000);
+        } else {
+            // ToDo: remove If condition here
+            if ((currentCharIndex + 1) < selectedCharacters.length) {
+                setTimeoutGame(true);
+            }
+        }
+    });
+
+    // ToDo: component seems to rerender too many times after user finishes playing, try to reduce the number of rerenders
     // ToDo: gotten points should be dependent on how long a user was in a chosen game(replace instead of 100)...
     const getPoints = (durationOfGame: number, numberOfSelectedChars: number) => {
         return (numberOfSelectedChars * 100 / duration * 1) * 100;
     }
+
+    function handleTextInputChange(enteredValue: string) {
+        if (selectedCharacters[currentCharIndex].equivalents.includes(enteredValue)) {
+            if ((currentCharIndex + 1) <= selectedCharacters.length) {
+                // ToDo: think about what should happen at the end
+                if ((currentCharIndex + 1) == selectedCharacters.length) {
+                    setGameCompleted(true);
+                } else {
+                    setCurrentCharIndex(prevCurrentIndex => prevCurrentIndex + 1);
+                    // ToDo: remove @ts-ignore
+                    // @ts-ignore
+                    textInputRef.current.clear();
+                    setTileDuration(duration);
+                    setProgress(((currentCharIndex + 1) / selectedCharacters.length) * 100);
+                    clearTimeout(timer);
+                }
+            }
+        }
+    }
+
     //
-    // const setValuesForRadioButton = (): void => {
-    //     const values = [];
-    //     let randomCharIndex = getRandomNumberInRange(0, charDB[characters].length - 1);
-    //     let randomEquivalentIndex = getRandomNumberInRange(0, charDB[characters][randomCharIndex].equivalents.length - 1);
-    //     values.push(charDB[characters][randomCharIndex].equivalents[randomEquivalentIndex])
-    //     randomCharIndex = getRandomNumberInRange(0, charDB[characters].length - 1);
-    //     randomEquivalentIndex = getRandomNumberInRange(0, charDB[characters][randomCharIndex].equivalents.length - 1);
-    //     values.push(charDB[characters][randomCharIndex].equivalents[randomEquivalentIndex]);
-    //     randomCharIndex = getRandomNumberInRange(0, charDB[characters].length - 1);
-    //     randomEquivalentIndex = getRandomNumberInRange(0, charDB[characters][randomCharIndex].equivalents.length - 1);
-    //     values.push(charDB[characters][randomCharIndex].equivalents[randomEquivalentIndex]);
-    //     let notFound: boolean = true;
-    //     for (let i = 0; i < selectedCharacters[currentCharIndex].equivalents.length; i++) {
-    //         if (values.includes(selectedCharacters[currentCharIndex].equivalents[i])) {
-    //             notFound = false;
-    //         }
-    //     }
-    //     if (notFound) {
-    //         values[getRandomNumberInRange(0, values.length - 1)] = selectedCharacters[currentCharIndex].equivalents[randomEquivalentIndex];
-    //     }
-    //     setRadioButtonValues(values);
-    // }
-    //
-    // function handleChange(enteredValue: string) {
-    //     if (selectedCharacters[currentCharIndex].equivalents.includes(enteredValue)) {
-    //         if ((currentCharIndex + 1) <= selectedCharacters.length) {
-    //             // ToDo: think about what should happen at the end
-    //             if ((currentCharIndex + 1) == selectedCharacters.length) {
-    //                 setGameCompleted(true);
-    //             } else {
-    //                 setCurrentCharIndex(prevCurrentIndex => prevCurrentIndex + 1);
-    //                 // inputRef.current.value = '';
-    //                 setTileDuration(duration);
-    //                 setProgress(((currentCharIndex + 1) / selectedCharacters.length) * 100);
-    //                 clearTimeout(timer);
-    //             }
-    //         }
-    //     }
-    // }
-    //
-    // // ToDo: add some proper typings and refactor this function and the function above
-    // const updateRadioSelection = (event: any) => {
-    //     if (selectedCharacters[currentCharIndex].equivalents.includes(event.target.value)) {
-    //         if ((currentCharIndex + 1) <= selectedCharacters.length) {
-    //             // ToDo: think about what should happen at the end
-    //             if ((currentCharIndex + 1) == selectedCharacters.length) {
-    //                 setGameCompleted(true)
-    //             } else {
-    //                 setCurrentCharIndex(prevCurrentIndex => prevCurrentIndex + 1);
-    //                 clearTimeout(timer);
-    //                 setTileDuration(duration);
-    //                 setProgress(((currentCharIndex + 1) / selectedCharacters.length) * 100);
-    //             }
-    //         }
-    //     } else {
-    //         setThrowOutIncorrect(true);
-    //         setProgress(0);
-    //         setCurrentCharIndex(0);
-    //         setTileDuration(duration);
-    //     }
-    // };
-    //
+    // ToDo: add some proper typings and refactor this function and the function above
+    const updateButtons = (buttonIndex: number) => {
+        if (selectedCharacters[currentCharIndex].equivalents.includes(buttonGroupValues[buttonIndex])) {
+            if ((currentCharIndex + 1) <= selectedCharacters.length) {
+                // ToDo: think about what should happen at the end
+                if ((currentCharIndex + 1) == selectedCharacters.length) {
+                    setGameCompleted(true)
+                } else {
+                    setCurrentCharIndex(prevCurrentIndex => prevCurrentIndex + 1);
+                    clearTimeout(timer);
+                    setTileDuration(duration);
+                    setProgress(((currentCharIndex + 1) / selectedCharacters.length) * 100);
+                }
+            }
+        } else {
+            setThrowOutIncorrect(true);
+            setProgress(0);
+            setCurrentCharIndex(0);
+            setTileDuration(duration);
+        }
+    };
+
+    selectedGameMode = "1";
+
+    useEffect(() => {
+        if (selectedGameMode === "2") {
+            setValuesForButtonGroup();
+        }
+    }, [currentCharIndex])
+
+    const setValuesForButtonGroup = (): void => {
+        const values = [];
+        let randomCharIndex = getRandomNumberInRange(0, charDB[characters].length - 1);
+        let randomEquivalentIndex = getRandomNumberInRange(0, charDB[characters][randomCharIndex].equivalents.length - 1);
+        values.push(charDB[characters][randomCharIndex].equivalents[randomEquivalentIndex])
+        randomCharIndex = getRandomNumberInRange(0, charDB[characters].length - 1);
+        randomEquivalentIndex = getRandomNumberInRange(0, charDB[characters][randomCharIndex].equivalents.length - 1);
+        values.push(charDB[characters][randomCharIndex].equivalents[randomEquivalentIndex]);
+        randomCharIndex = getRandomNumberInRange(0, charDB[characters].length - 1);
+        randomEquivalentIndex = getRandomNumberInRange(0, charDB[characters][randomCharIndex].equivalents.length - 1);
+        values.push(charDB[characters][randomCharIndex].equivalents[randomEquivalentIndex]);
+        let notFound: boolean = true;
+        for (let i = 0; i < selectedCharacters[currentCharIndex].equivalents.length; i++) {
+            if (values.includes(selectedCharacters[currentCharIndex].equivalents[i])) {
+                notFound = false;
+            }
+        }
+        if (notFound) {
+            values[getRandomNumberInRange(0, values.length - 1)] = selectedCharacters[currentCharIndex].equivalents[randomEquivalentIndex];
+        }
+        console.log("** values");
+        console.log(values);
+        setButtonGroupValues(values);
+    }
+
     const startAgainWithCurrentSettings = () => {
         setTileDuration(duration);
         setCurrentCharIndex(0);
@@ -129,9 +136,11 @@ export const Game = ({
         setGameCompleted(false);
     }
 
+    console.log("*** buttonGroupValues");
+    console.log(buttonGroupValues);
+
     return (
         <View>
-            <Text>Hehe</Text>
             {throwOutIncorrect && (<Text>
                 Oh no, you have provided an incorrect answer!
             </Text>)}
@@ -163,35 +172,23 @@ export const Game = ({
                     <View style={{margin: 5}}>
                         <Text>{tileDuration}</Text>
                     </View>
-                    {/*{selectedGameMode === "GameModeOne" &&*/}
-                    {/*    (*/}
-                    {/*        <View style={{margin: 5}}>*/}
-                    {/*            <TextField inputRef={inputRef} id="outlined-search" label="Answer"*/}
-                    {/*                       onChange={(e) => handleChange(e.target.value)}/>*/}
-                    {/*        </View>*/}
-                    {/*    )}*/}
+                    {selectedGameMode === "1" &&
+                        (
+                            <View style={{margin: 5}}>
+                                <Text>Answer</Text>
+                                <TextInput
+                                    ref={textInputRef}
+                                    onChangeText={(text: string) => handleTextInputChange(text)}/>
+                            </View>
+                        )}
                     <Progress.Pie progress={progress * 0.01} size={50}/>
-                    {/* ToDo: find simpler way - index number should not be used in radioButtonValues */}
-                    {/*{selectedGameMode === "GameModeTwo" && (<FormControl sx={{margin: "0 auto"}}>*/}
-                    {/*    <FormLabel>Choose a correct answer</FormLabel>*/}
-                    {/*    <RadioGroup*/}
-                    {/*        row*/}
-                    {/*        onChange={updateRadioSelection}*/}
-                    {/*    >*/}
-                    {/*        <FormControlLabel*/}
-                    {/*            value={radioButtonValues[0]}*/}
-                    {/*            control={<Radio/>}*/}
-                    {/*            label={radioButtonValues[0] ?? "A"}*/}
-                    {/*        />*/}
-                    {/*        <FormControlLabel*/}
-                    {/*            value={radioButtonValues[1]}*/}
-                    {/*            control={<Radio/>}*/}
-                    {/*            label={radioButtonValues[1] ?? "E"}*/}
-                    {/*        />*/}
-                    {/*        <FormControlLabel label={radioButtonValues[2] ?? "I"} value={radioButtonValues[2]}*/}
-                    {/*                          control={<Radio/>}/>*/}
-                    {/*    </RadioGroup>*/}
-                    {/*</FormControl>)}*/}
+                    {selectedGameMode === "2" && (<View>
+                        <Text>Choose a correct answer</Text>
+                        <ButtonGroup
+                            buttons={buttonGroupValues}
+                            onPress={(buttonIndex: number) => updateButtons(buttonIndex)}
+                        />
+                    </View>)}
                 </>
             )}
             {(timeoutGame || throwOutIncorrect) && (<CustomizableButton

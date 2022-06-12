@@ -4,7 +4,7 @@ export interface CharacterObject {
 }
 
 export interface CharDB {
-    hiragana: CharacterObject[]
+    Hiragana: CharacterObject[]
 }
 
 export enum AvailableCharacters {
@@ -12,7 +12,8 @@ export enum AvailableCharacters {
 }
 
 export const characters: CharDB = {
-    hiragana: [
+    //ToDo: all names shoul be lower-case
+    Hiragana: [
         {
             letter: "あ",
             equivalents: ["A"],

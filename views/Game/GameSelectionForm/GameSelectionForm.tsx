@@ -42,20 +42,23 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
         return menuInputItems.map(item => item);
     }
 
+    const buttonColor = "#F7B42F"
+
     return (
         <>
             {!characters || !userData ? (<p>loading...</p>) : (
                 <>
-                    <Text>Characters</Text>
+                    <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Characters</Text>
                     <Picker
                         selectedValue={Object.values((AvailableCharacters))[0]}
                         style={{width: 200, backgroundColor: "white"}}
                         onValueChange={(itemValue) => handleChange("characters", itemValue)}>
                         {availableCharacters.map(key => <Picker.Item key={key} label={key} value={key}/>)}
                     </Picker>
-                    <Text>Select characters which you would like to practice</Text>
+                    <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select characters which you would like
+                        to practice</Text>
                     <View style={{
-                        height: 200,
+                        height: 100,
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center"
@@ -98,9 +101,9 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             style={{width: "100%"}}
                         />
                     </View>
-                    <Text>Selected characters</Text>
+                    <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Selected characters</Text>
                     <View style={{
-                        height: 200,
+                        height: 100,
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center"
@@ -122,6 +125,7 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             style={{width: "100%"}}
                         />
                     </View>
+                    <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select game mode</Text>
                     <Picker
                         selectedValue={Object.values((AvailableCharacters))[0]}
                         style={{width: 200, backgroundColor: "white"}}
@@ -129,6 +133,7 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                         <Picker.Item key="key1" label="Game Mode 1" value={1}/>
                         <Picker.Item key="key2" label="Game Mode 2" value={2}/>
                     </Picker>
+                    <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select duration</Text>
                     <Picker
                         selectedValue={Object.values((AvailableCharacters))[0]}
                         style={{width: 200, backgroundColor: "white"}}
@@ -143,13 +148,16 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             setStartGame(true);
                         }}
                         stylesButton={{
-                            // color: "white",
-                            marginTop: 1,
+                            marginTop: 10,
+                            width: 250,
+                            height: 50,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginBottom: 10,
                             marginLeft: 5,
                             marginRight: 5,
-                            marginBottom: 1,
-                            height: 150,
-                            backgroundColor: "#3E5494",
+                            backgroundColor: "#F7B42F",
                             // ':hover': {
                             //     backgroundColor: "#5370C7",
                             // }

@@ -12,15 +12,15 @@ export const CharacterTile = ({character, onPress, selected}: CharacterTileProps
         <Pressable
             onPress={onPress}
             style={{
-            backgroundColor: selected ? '#96A5D0' : "white",
-            height: 50,
-            width: 50,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: 0.5,
-        }}>
-            <Text>{character}</Text>
+                backgroundColor: selected ? '#F7B42F' : "white",
+                height: 50,
+                width: 50,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: 0.5,
+            }}>
+            <Text style={{fontSize: 40}}>{character}</Text>
         </Pressable>
     );
 };

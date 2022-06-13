@@ -7,12 +7,12 @@ import React from "react";
 export const MainMenu = (): JSX.Element => {
     return (
         <View style={styles.container}>
-            <ButtonGroup
-                vertical
-                textStyle={{color: "black"}}
-                containerStyle={{backgroundColor: "#FFFFFF", width: "50%"}}
-                buttons={['PLAY', 'DASHBOARD', 'LOGIN', 'LOGOUT', 'SIGN-UP', 'SETTINGS']}
-            />
+            {/*<ButtonGroup*/}
+            {/*    vertical*/}
+            {/*    textStyle={{color: "black"}}*/}
+            {/*    containerStyle={{backgroundColor: "#FFFFFF", width: "50%"}}*/}
+            {/*    buttons={['PLAY', 'DASHBOARD', 'LOGIN', 'LOGOUT', 'SIGN-UP', 'SETTINGS']}*/}
+            {/*/>*/}
             <GameSelection />
         </View>);
 };

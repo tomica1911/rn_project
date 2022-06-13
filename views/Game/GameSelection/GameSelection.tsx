@@ -17,15 +17,17 @@ export const GameSelection = (): JSX.Element => {
         characters: AvailableCharacters.HIRAGANA,
         duration: 2,
         selectedCharacters: [],
-        selectedGameMode: "GameModeOne"
+        selectedGameMode: "1"
     });
+
+    console.log(values.characters)
 
     return (
         <>
             {startGame ? <Game
                     selectedGameMode={values.selectedGameMode}
                     setStartGame={setStartGame}
-                    duration={values.duration}
+                    duration={20000}
                     selectedCharacters={shuffle(values.selectedCharacters)}
                     characters={values.characters}/> :
                 <GameSelectionForm setStartGame={setStartGame} values={values} setValues={setValues}/>

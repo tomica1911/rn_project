@@ -4,6 +4,7 @@ import {GameSelectionForm} from "../GameSelectionForm/GameSelectionForm";
 import {GameMode1 } from "../GameModes/GameMode1";
 import {GameMode2 } from "../GameModes/GameMode2";
 import {shuffle} from "lodash";
+import {FormLayout} from "../../../components/FormLayout/FormLayout";
 
 export interface GameSelectionState {
     characters: AvailableCharacters,
@@ -14,7 +15,7 @@ export interface GameSelectionState {
 
 export const GameSelection = (): JSX.Element => {
     const [startGame, setStartGame] = useState<boolean>(false);
-    const [formValues, setValues] = useState<GameSelectionState>({
+    const [formValues, setFormValues] = useState<GameSelectionState>({
         characters: AvailableCharacters.HIRAGANA,
         duration: 2,
         selectedCharacters: [],
@@ -29,12 +30,15 @@ export const GameSelection = (): JSX.Element => {
     }
 
     const Component = components[formValues.selectedGameMode];
+    console.log(formValues)
 
     return (
         <>
+            <FormLayout>
             {startGame ? <Component formValues={{...formValues, setStartGame, selectedCharacters: shuffle(formValues.selectedCharacters)}}  /> :
-                <GameSelectionForm setStartGame={setStartGame} values={formValues} setValues={setValues}/>
+                <GameSelectionForm formValues={{...formValues, setStartGame, setFormValues}} />
             }
+            </FormLayout>
         </>
     );
 };

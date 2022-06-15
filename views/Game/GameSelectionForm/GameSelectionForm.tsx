@@ -7,14 +7,16 @@ import {CustomizableButton} from "../../../components/CustomizableButton/Customi
 import {CharacterTile} from "../../../components/CharacterTile/CharacterTile";
 
 interface GameSelectionFormProps {
-    // ToDo: remove function types and add more appropriate ones
-    setStartGame: Function,
-    setValues: Function,
-    values: GameSelectionState
+    //ToDo: check if all values from GameSelectionState are needed here and rename it to GameSelectionStateProps
+    formValues: GameSelectionState & {
+        setStartGame: (arg: boolean) => void,
+        //ToDo: define proper type for any
+        setFormValues: (arg: any) => void
+    }
 }
 
 //ToDo: add return type to the component (GameSelectionFormProps)
-export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
+export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
     //ToDo: make commented lines of code work
     // @ts-ignore
     // const {userData} = useFirestore();
@@ -27,9 +29,10 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
     // ToDo: add appropriate value to any
     const handleChange =
         (key: keyof GameSelectionState, value: any) => {
-            setValues({...values, [key]: value});
+            formValues.setFormValues({...formValues, [key]: value});
         };
 
+    // ToDo: see if this can be refactored
     const renderDurationPickerItems = () => {
         const menuInputItems = [];
 
@@ -69,10 +72,10 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             numColumns={5}
                             data={characters.Hiragana}
                             renderItem={({item}) => <CharacterTile
-                                selected={values.selectedCharacters.includes(item)} character={item.letter}
+                                selected={formValues.selectedCharacters.includes(item)} character={item.letter}
                                 onPress={() => {
-                                    if (values.selectedCharacters.includes(item.letter)) {
-                                        return setValues((prevValues: GameSelectionState) => {
+                                    if (formValues.selectedCharacters.includes(item)) {
+                                        return formValues.setFormValues((prevValues: GameSelectionState) => {
                                             const withoutToBeRemoved = prevValues.selectedCharacters.filter(charObj => charObj.letter !== item.letter);
                                             return {
                                                 ...prevValues,
@@ -82,7 +85,7 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                                             }
                                         })
                                     }
-                                    return setValues((prevValues: GameSelectionState) => {
+                                    return formValues.setFormValues((prevValues: GameSelectionState) => {
                                         const duplicate = prevValues.selectedCharacters.find((el: CharacterObject) => el.letter === item.letter);
                                         if (!duplicate) {
                                             return {
@@ -112,11 +115,11 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             persistentScrollbar
                             keyExtractor={(item, index) => item.letter + index}
                             numColumns={5}
-                            data={values.selectedCharacters}
+                            data={formValues.selectedCharacters}
                             renderItem={({item}) => <CharacterTile character={item.letter} onPress={() => {
-                                const filteredSelectedCharacters = values.selectedCharacters.filter((charObj: CharacterObject) => item.letter !== charObj.letter)
-                                setValues({
-                                    ...values,
+                                const filteredSelectedCharacters = formValues.selectedCharacters.filter((charObj: CharacterObject) => item.letter !== charObj.letter)
+                                formValues.setFormValues({
+                                    ...formValues,
                                     selectedCharacters: [
                                         ...filteredSelectedCharacters
                                     ]
@@ -127,25 +130,25 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                     </View>
                     <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select game mode</Text>
                     <Picker
-                        selectedValue={Object.values((AvailableCharacters))[0]}
+                        selectedValue={formValues.selectedGameMode}
                         style={{width: 200, backgroundColor: "white"}}
-                        onValueChange={(itemValue) => handleChange("characters", itemValue)}>
+                        onValueChange={(gameMode) => handleChange("selectedGameMode", gameMode)}>
                         <Picker.Item key="key1" label="Game Mode 1" value={1}/>
                         <Picker.Item key="key2" label="Game Mode 2" value={2}/>
                     </Picker>
                     <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select duration</Text>
                     <Picker
-                        selectedValue={Object.values((AvailableCharacters))[0]}
+                        selectedValue={formValues.duration}
                         style={{width: 200, backgroundColor: "white"}}
-                        onValueChange={(itemValue) => handleChange("characters", itemValue)}>
+                        onValueChange={(duration) => handleChange("duration", duration)}>
                         {renderDurationPickerItems()}
                     </Picker>
                     <CustomizableButton
                         onPress={() => {
-                            if (values.selectedCharacters.length === 0) {
+                            if (formValues.selectedCharacters.length === 0) {
                                 return setError('Please select a few characters');
                             }
-                            setStartGame(true);
+                            formValues.setStartGame(true);
                         }}
                         stylesButton={{
                             marginTop: 10,
@@ -158,9 +161,6 @@ export const GameSelectionForm = ({setStartGame, setValues, values}: any) => {
                             marginLeft: 5,
                             marginRight: 5,
                             backgroundColor: "#F7B42F",
-                            // ':hover': {
-                            //     backgroundColor: "#5370C7",
-                            // }
                         }}
                         title="Play"/>
                 </>

@@ -22,10 +22,6 @@ export const GameMode2 = ({formValues}: GameModeTwoProps): JSX.Element => {
     let timer: NodeJS.Timeout;
 
     useEffect(() => {
-        setValuesForButtonGroup();
-    }, [currentCharIndex])
-
-    useEffect(() => {
         if (tileDuration !== 0) {
             timer = setTimeout(() => setTileDuration(tileDuration - 1)
                 , 1000);
@@ -163,7 +159,7 @@ export const GameMode2 = ({formValues}: GameModeTwoProps): JSX.Element => {
                     marginLeft: 10,
                     marginRight: 10,
                     marginBottom: 1,
-                    marginTop: 1,
+                    marginTop: 150,
                     height: 50,
                     backgroundColor: "#F7B42F",
                     display: "flex",

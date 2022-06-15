@@ -1,12 +1,11 @@
 import {View, Text, TextInput} from 'react-native';
-import {useEffect, useRef, useState} from "react";
+import {createRef, useEffect, useRef, useState} from "react";
 import {GameSelectionState} from '../GameSelection/GameSelection';
 import * as Progress from 'react-native-progress';
 import {characters as charDB} from '../../../characters';
 import {getRandomNumberInRange} from "../../../utils/utils";
 import {ButtonGroup} from '@rneui/themed'
 import {CustomizableButton} from "../../../components/CustomizableButton/CustomizableButton";
-import {values} from "lodash";
 
 type GameModeOneTwoProps = {
     setStartGame: (arg: boolean) => void
@@ -26,7 +25,7 @@ export const Game = ({
     const [timeoutGame, setTimeoutGame] = useState<boolean>(false);
     const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
     const [gameCompleted, setGameCompleted] = useState<boolean>(false);
-    const textInputRef = useRef(null);
+    const [textInputValue, setTextInputValue] = useState<string>('');
     let timer: NodeJS.Timeout;
 
     useEffect(() => {
@@ -54,7 +53,9 @@ export const Game = ({
         return (numberOfSelectedChars * 100 / duration) * 100;
     }
 
+    //ToDo: try to trigger this function less often in TextInput component to optimize performance
     function handleTextInputChange(enteredValue: string) {
+        setTextInputValue(enteredValue);
         if (selectedCharacters[currentCharIndex].equivalents.includes(enteredValue)) {
             if ((currentCharIndex + 1) <= selectedCharacters.length) {
                 // ToDo: think about what should happen at the end
@@ -62,9 +63,7 @@ export const Game = ({
                     setGameCompleted(true);
                 } else {
                     setCurrentCharIndex(prevCurrentIndex => prevCurrentIndex + 1);
-                    // ToDo: remove @ts-ignore
-                    // @ts-ignore
-                    textInputRef.current.clear();
+                    setTextInputValue('');
                     setTileDuration(duration);
                     setProgress(((currentCharIndex + 1) / selectedCharacters.length) * 100);
                     clearTimeout(timer);
@@ -124,8 +123,6 @@ export const Game = ({
         if (notFound) {
             values[getRandomNumberInRange(0, values.length - 1)] = selectedCharacters[currentCharIndex].equivalents[randomEquivalentIndex];
         }
-        console.log("** values");
-        console.log(values);
         setButtonGroupValues(values);
     }
 
@@ -186,9 +183,9 @@ export const Game = ({
                                 <Text style={{color: buttonColor}}>Answer</Text>
                                 {/*ToDo: Define layout component and set width to maximum*/}
                                 <TextInput
+                                    value={textInputValue}
                                     style={{ backgroundColor: "white", width: 150 }}
-                                    ref={textInputRef}
-                                    onChangeText={(text: string) => handleTextInputChange(text)}/>
+                                    onChangeText={(answer: string) => handleTextInputChange((answer))}/>
                             </View>
                         )}
                     <View style={{

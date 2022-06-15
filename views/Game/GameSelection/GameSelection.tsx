@@ -1,8 +1,9 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {AvailableCharacters, CharacterObject} from "../../../characters";
-import shuffle from "lodash/shuffle";
-import {Game} from "../Game/Game";
 import {GameSelectionForm} from "../GameSelectionForm/GameSelectionForm";
+import {GameMode1 } from "../GameModes/GameMode1";
+import {GameMode2 } from "../GameModes/GameMode2";
+import {shuffle} from "lodash";
 
 export interface GameSelectionState {
     characters: AvailableCharacters,
@@ -13,24 +14,26 @@ export interface GameSelectionState {
 
 export const GameSelection = (): JSX.Element => {
     const [startGame, setStartGame] = useState<boolean>(false);
-    const [values, setValues] = useState<GameSelectionState>({
+    const [formValues, setValues] = useState<GameSelectionState>({
         characters: AvailableCharacters.HIRAGANA,
         duration: 2,
         selectedCharacters: [],
         selectedGameMode: "1"
     });
 
-    console.log(values.characters)
+    // ToDo: define proper type for any
+    const components: any = {
+        //ToDo: add GameMode3, GameMode4, GameMode5, GameMode6
+        1: GameMode1,
+        2: GameMode2
+    }
+
+    const Component = components[formValues.selectedGameMode];
 
     return (
         <>
-            {startGame ? <Game
-                    selectedGameMode={values.selectedGameMode}
-                    setStartGame={setStartGame}
-                    duration={20000}
-                    selectedCharacters={shuffle(values.selectedCharacters)}
-                    characters={values.characters}/> :
-                <GameSelectionForm setStartGame={setStartGame} values={values} setValues={setValues}/>
+            {startGame ? <Component formValues={{...formValues, setStartGame, selectedCharacters: shuffle(formValues.selectedCharacters)}}  /> :
+                <GameSelectionForm setStartGame={setStartGame} values={formValues} setValues={setValues}/>
             }
         </>
     );

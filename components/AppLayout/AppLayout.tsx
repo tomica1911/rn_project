@@ -10,6 +10,7 @@ export const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
   return (
     <View
       style={{
+        flex: 1,
         paddingLeft: 100,
         paddingRight: 100,
         display: "flex",

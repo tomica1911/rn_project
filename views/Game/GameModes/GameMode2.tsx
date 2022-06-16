@@ -24,7 +24,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
   const [counter, { start: startCountdown, stop: stopCountdown, reset: resetCountdown }] =
     useCountdown({
       seconds: formValues.duration,
-      interval: 100,
+      interval: 1000,
       isIncrement: false,
     });
 

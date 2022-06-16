@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {GameSelectionState} from "../GameSelection/GameSelection";
-import {Picker} from '@react-native-community/picker';
+import {Picker} from '@react-native-picker/picker'
 import {AvailableCharacters, CharacterObject, characters} from "../../../characters";
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Text, View, Platform} from 'react-native';
 import {CustomizableButton} from "../../../components/CustomizableButton/CustomizableButton";
 import {CharacterTile} from "../../../components/CharacterTile/CharacterTile";
 
@@ -53,8 +53,9 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                 <>
                     <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Characters</Text>
                     <Picker
+                        itemStyle={{marginTop: -70}}
                         selectedValue={Object.values((AvailableCharacters))[0]}
-                        style={{width: 200, backgroundColor: "white"}}
+                        style={ Platform.OS === "ios" ? {width: 200, height:70, backgroundColor: "white"} : {width: 200, backgroundColor: "white"} }
                         onValueChange={(itemValue) => handleChange("characters", itemValue)}>
                         {availableCharacters.map(key => <Picker.Item key={key} label={key} value={key}/>)}
                     </Picker>
@@ -130,16 +131,18 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                     </View>
                     <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select game mode</Text>
                     <Picker
+                        itemStyle={{marginTop: -70}}
                         selectedValue={formValues.selectedGameMode}
-                        style={{width: 200, backgroundColor: "white"}}
+                        style={ Platform.OS === "ios" ? {width: 200, height:70, backgroundColor: "white"} : {width: 200, backgroundColor: "white"} }
                         onValueChange={(gameMode) => handleChange("selectedGameMode", gameMode)}>
                         <Picker.Item key="key1" label="Game Mode 1" value={1}/>
                         <Picker.Item key="key2" label="Game Mode 2" value={2}/>
                     </Picker>
                     <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select duration</Text>
                     <Picker
+                        itemStyle={{marginTop: -70}}
                         selectedValue={formValues.duration}
-                        style={{width: 200, backgroundColor: "white"}}
+                        style={ Platform.OS === "ios" ? {width: 200, height:70, backgroundColor: "white"} : {width: 200, backgroundColor: "white"} }
                         onValueChange={(duration) => handleChange("duration", duration)}>
                         {renderDurationPickerItems()}
                     </Picker>

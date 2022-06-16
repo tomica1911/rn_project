@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import * as Progress from "react-native-progress";
@@ -80,7 +80,7 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
   const buttonColor = "#F7B42F";
 
   return (
-    <View>
+    <ScrollView>
       {/*{throwOutIncorrect && (<Text>*/}
       {/*    Oh no, you have provided an incorrect answer!*/}
       {/*</Text>)}*/}
@@ -181,6 +181,6 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
           alignItems: "center",
         }}
       />
-    </View>
+    </ScrollView>
   );
 };

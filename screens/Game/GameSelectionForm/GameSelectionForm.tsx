@@ -56,7 +56,7 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                         itemStyle={{marginTop: -70}}
                         selectedValue={Object.values((AvailableCharacters))[0]}
                         style={ Platform.OS === "ios" ? {width: 200, height:70, backgroundColor: "white"} : {width: 200, backgroundColor: "white"} }
-                        onValueChange={(itemValue) => handleChange("characters", itemValue)}>
+                        onValueChange={(itemValue: string) => handleChange("characters", itemValue)}>
                         {availableCharacters.map(key => <Picker.Item key={key} label={key} value={key}/>)}
                     </Picker>
                     <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Select characters which you would like

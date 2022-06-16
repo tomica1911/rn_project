@@ -38,7 +38,7 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
 
         for (let i = 0; i < 30; i++) {
             if (i % 2 == 0) {
-                menuInputItems.push(<Picker.Item key={`key${i}`} label={(i + 2).toString()} value={i}/>)
+                menuInputItems.push(<Picker.Item key={`key${i}`} label={(i + 2).toString()} value={i+2}/>)
             }
         }
 

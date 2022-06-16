@@ -30,7 +30,6 @@ export const GameSelection = (): JSX.Element => {
     }
 
     const Component = components[formValues.selectedGameMode];
-    console.log(formValues)
 
     return (
         <>

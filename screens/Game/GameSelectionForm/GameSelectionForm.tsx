@@ -5,6 +5,7 @@ import {AvailableCharacters, CharacterObject, characters} from "../../../charact
 import {FlatList, Text, View, Platform} from 'react-native';
 import {CustomizableButton} from "../../../components/CustomizableButton/CustomizableButton";
 import {CharacterTile} from "../../../components/CharacterTile/CharacterTile";
+import { Modal } from "../../../components/Modals/modal";
 
 interface GameSelectionFormProps {
     //ToDo: check if all values from GameSelectionState are needed here and rename it to GameSelectionStateProps
@@ -47,10 +48,48 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
 
     const buttonColor = "#F7B42F"
 
+    const handleDecline = () => setIsModalVisible(() => !isModalVisible);
+    const [isModalVisible, setIsModalVisible] = React.useState(false);
+    const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
     return (
         <>
             {!characters || !userData ? (<p>loading...</p>) : (
                 <>
+                    <Modal isVisible={isModalVisible}>
+                        <Modal.Container>
+                        <View>
+                            <Modal.Header title="You're just one step away!" />
+                            <Modal.Body>
+                            <Text>
+                                Want access? We just need your email address
+                            </Text>
+                            </Modal.Body>
+                            <Modal.Footer>
+                            <View>
+                            <CustomizableButton
+                        onPress={() => {
+                            handleModal()
+                        }}
+                        stylesButton={{
+                            marginTop: 10,
+                            width: 250,
+                            height: 50,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginBottom: 10,
+                            marginLeft: 5,
+                            marginRight: 5,
+                            backgroundColor: "#F7B42F",
+                        }}
+                        title="Play"/>
+                            </View>
+                            </Modal.Footer>
+                        </View>
+                        </Modal.Container>
+                    </Modal>
+
                     <Text style={{fontSize: 20, marginTop: 10, marginBottom: 10, color: buttonColor}}>Characters</Text>
                     <Picker
                         itemStyle={{marginTop: -70}}
@@ -149,6 +188,7 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                     <CustomizableButton
                         onPress={() => {
                             if (formValues.selectedCharacters.length === 0) {
+                                handleModal()
                                 return setError('Please select a few characters');
                             }
                             formValues.setStartGame(true);

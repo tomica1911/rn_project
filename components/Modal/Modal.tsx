@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import RNModal from "react-native-modal";
 type ModalProps = {
   isVisible: boolean;
@@ -18,7 +18,8 @@ export const Modal = ({
       animationOutTiming={400}
       backdropTransitionInTiming={200}
       backdropTransitionOutTiming={200}
-      {...props}>
+      {...props}
+    >
       {children}
     </RNModal>
   );

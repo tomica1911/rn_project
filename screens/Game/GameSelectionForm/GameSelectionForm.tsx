@@ -59,11 +59,8 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                     <Modal isVisible={isModalVisible}>
                         <Modal.Container>
                         <View>
-                            <Modal.Header title="You're just one step away!" />
+                            <Modal.Header title="Please select at least one character!" />
                             <Modal.Body>
-                            <Text>
-                                Want access? We just need your email address
-                            </Text>
                             </Modal.Body>
                             <Modal.Footer>
                             <View>
@@ -73,8 +70,8 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                         }}
                         stylesButton={{
                             marginTop: 10,
-                            width: 250,
-                            height: 50,
+                            width: 200,
+                            height: 60,
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -82,8 +79,9 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                             marginLeft: 5,
                             marginRight: 5,
                             backgroundColor: "#F7B42F",
+                            borderRadius: 20
                         }}
-                        title="Play"/>
+                        title="Got it"/>
                             </View>
                             </Modal.Footer>
                         </View>
@@ -204,6 +202,7 @@ export const GameSelectionForm = ({formValues}: GameSelectionFormProps) => {
                             marginLeft: 5,
                             marginRight: 5,
                             backgroundColor: "#F7B42F",
+                            borderRadius: 20
                         }}
                         title="Play"/>
                 </>

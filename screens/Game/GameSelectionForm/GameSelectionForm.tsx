@@ -57,7 +57,6 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
 
   const buttonColor = "#F7B42F";
 
-  const handleDecline = () => setIsModalVisible(() => !isModalVisible);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
@@ -134,11 +133,11 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               color: buttonColor,
             }}
           >
-            Select characters which you would like to practice
+            Select characters
           </Text>
           <View
             style={{
-              height: 100,
+              height: 110,
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -201,49 +200,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               color: buttonColor,
             }}
           >
-            Selected characters
-          </Text>
-          <View
-            style={{
-              height: 100,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
-          >
-            <FlatList
-              persistentScrollbar
-              keyExtractor={(item, index) => item.letter + index}
-              numColumns={5}
-              data={formValues.selectedCharacters}
-              renderItem={({ item }) => (
-                <CharacterTile
-                  character={item.letter}
-                  onPress={() => {
-                    const filteredSelectedCharacters =
-                      formValues.selectedCharacters.filter(
-                        (charObj: CharacterObject) =>
-                          item.letter !== charObj.letter
-                      );
-                    formValues.setFormValues({
-                      ...formValues,
-                      selectedCharacters: [...filteredSelectedCharacters],
-                    });
-                  }}
-                />
-              )}
-              style={{ width: "100%" }}
-            />
-          </View>
-          <Text
-            style={{
-              fontSize: 20,
-              marginTop: 10,
-              marginBottom: 10,
-              color: buttonColor,
-            }}
-          >
-            Select game mode
+            Select mode
           </Text>
           <Picker
             itemStyle={{ marginTop: -70 }}

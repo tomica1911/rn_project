@@ -22,8 +22,6 @@
     "expo": "~44.0.0",
     "expo-status-bar": "~1.2.0",
     "lodash": "^4.17.21",
-    "metro-config": "^0.71.0",
-    "node-sass": "^7.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-hook-form": "^7.32.1",
@@ -46,13 +44,7 @@
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
     "@types/yup": "^0.29.14",
-    "postcss": "^8.4.14",
-    "postcss-css-variables": "^0.18.0",
-    "postcss-load-config": "^4.0.1",
     "prettier": "^2.7.0",
-    "react-native-postcss-transformer": "^1.2.4",
-    "react-native-sass-transformer": "^2.0.0",
-    "sass": "^1.52.2",
     "typescript": "~4.3.5"
   },
   "private": true

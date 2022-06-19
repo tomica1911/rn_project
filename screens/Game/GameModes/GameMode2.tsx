@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
-import * as Progress from "react-native-progress";
 import { characters as charDB } from "../../../characters";
 import { getRandomNumberInRange } from "../../../utils/utils";
 import { ButtonGroup } from "@rneui/themed";
@@ -178,20 +177,6 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
             >
               {counter}
             </Text>
-          </View>
-          <View
-            style={{
-              margin: 10,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Progress.Pie
-              color={buttonColor}
-              progress={progress * 0.01}
-              size={50}
-            />
           </View>
           <View>
             <Text style={{ color: buttonColor, textAlign: "center" }}>

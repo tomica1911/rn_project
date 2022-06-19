@@ -1,7 +1,6 @@
 import { View, Text, TextInput, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
-import * as Progress from "react-native-progress";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { useCountdown } from "usehooks-ts";
 
@@ -130,20 +129,6 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
               value={textInputValue}
               style={{ backgroundColor: "white", width: 150 }}
               onChangeText={(answer: string) => handleTextInputChange(answer)}
-            />
-          </View>
-          <View
-            style={{
-              margin: 10,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Progress.Pie
-              color={buttonColor}
-              progress={progress * 0.01}
-              size={50}
             />
           </View>
         </>

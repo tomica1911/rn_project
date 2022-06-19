@@ -4,7 +4,7 @@ import { GameSelectionForm } from "../GameSelectionForm/GameSelectionForm";
 import { GameMode1 } from "../GameModes/GameMode1";
 import { GameMode2 } from "../GameModes/GameMode2";
 import { shuffle } from "lodash";
-import {AppLayout} from "../../../components/AppLayout/AppLayout";
+import { AppLayout } from "../../../components/AppLayout/AppLayout";
 
 export interface GameSelectionState {
   characters: AvailableCharacters;

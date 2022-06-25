@@ -1,79 +1,52 @@
+import { ModalConfiguration } from "./ModalConfiguration";
+import { Text, View } from "react-native";
+import { CustomizableButton } from "../CustomizableButton/CustomizableButton";
+import { STANDARDISED_STYLES } from "../../styles/styles";
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import RNModal from "react-native-modal";
-type ModalProps = {
-  isVisible: boolean;
-  children: React.ReactNode;
-  [x: string]: any;
-};
+
+interface ModalProps {
+  isModalVisible: boolean,
+  headerTitle: string,
+  headerText: string,
+  buttonTitle: string,
+  onPressButtonFn: () => void
+}
+
 export const Modal = ({
-  isVisible = false,
-  children,
-  ...props
-}: ModalProps) => {
-  return (
-    <RNModal
-      isVisible={isVisible}
-      animationInTiming={400}
-      animationOutTiming={400}
-      backdropTransitionInTiming={200}
-      backdropTransitionOutTiming={200}
-      {...props}
-    >
-      {children}
-    </RNModal>
-  );
-};
-
-const ModalContainer = ({ children }: { children: React.ReactNode }) => (
-  <View style={styles.container}>{children}</View>
+  isModalVisible,
+  headerTitle,
+  headerText,
+  buttonTitle,
+  onPressButtonFn
+}: ModalProps) => (
+  <ModalConfiguration isVisible={isModalVisible}>
+    <ModalConfiguration.Container>
+      <View>
+        <ModalConfiguration.Header title={headerTitle} />
+        <ModalConfiguration.Body>
+          <Text>{headerText}</Text>
+        </ModalConfiguration.Body>
+        <ModalConfiguration.Footer>
+          <View>
+            <CustomizableButton
+              onPress={() => {
+                onPressButtonFn();
+              }}
+              stylesButton={{
+                marginTop: 10,
+                height: 50,
+                ...STANDARDISED_STYLES.CENTER_CONTENT,
+                ...STANDARDISED_STYLES.BUTTON,
+                marginBottom: 10,
+                marginLeft: 5,
+                marginRight: 5,
+                backgroundColor: "#F7B42F",
+              }}
+              title={buttonTitle}
+            />
+          </View>
+        </ModalConfiguration.Footer>
+      </View>
+    </ModalConfiguration.Container>
+  </ModalConfiguration>
 );
-
-const ModalHeader = ({ title }: { title: string }) => (
-  <View style={styles.header}>
-    <Text style={styles.text}>{title}</Text>
-  </View>
-);
-
-const ModalBody = ({ children }: { children?: React.ReactNode }) => (
-  <View style={styles.body}>{children}</View>
-);
-
-const ModalFooter = ({ children }: { children?: React.ReactNode }) => (
-  <View style={styles.footer}>{children}</View>
-);
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#ffffff",
-    borderRadius: 25,
-    borderWidth: 1,
-    borderColor: "#000",
-    borderStyle: "solid",
-  },
-  header: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    paddingTop: 10,
-    textAlign: "center",
-    fontSize: 24,
-  },
-  body: {
-    justifyContent: "center",
-    paddingHorizontal: 15,
-    minHeight: 100,
-  },
-  footer: {
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    flexDirection: "row",
-  },
-});
-
-Modal.Header = ModalHeader;
-Modal.Container = ModalContainer;
-Modal.Body = ModalBody;
-Modal.Footer = ModalFooter;

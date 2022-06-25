@@ -3,8 +3,8 @@ import { ButtonGroup } from "@rneui/themed";
 import { SCREENS } from "../../constants";
 
 import React from "react";
-import { AppLayout } from "../../components/AppLayout/AppLayout";
-import {buttonStyle, COLOR_COMBINATION_1} from "../../styles/styles";
+import { STANDARDISED_STYLES } from "../../styles/styles";
+import { COLOR_COMBINATION_1 } from "../../styles/styles";
 
 //ToDo: add locale
 
@@ -12,18 +12,17 @@ import {buttonStyle, COLOR_COMBINATION_1} from "../../styles/styles";
 export const MainMenu = ({ navigation }: any): JSX.Element => {
   const buttonTitles = Object.values(SCREENS);
   return (
-      <View style={styles.container}>
-        <ButtonGroup
-          onPress={(buttonIndex) =>
-            navigation.navigate(buttonTitles[buttonIndex])
-          }
-          vertical
-          textStyle={{ color: "black" }}
-          containerStyle={styles.buttons}
-          buttons={buttonTitles}
-        />
-        {/*<GameSelection />*/}
-      </View>
+    <View style={styles.container}>
+      <ButtonGroup
+        onPress={(buttonIndex) =>
+          navigation.navigate(buttonTitles[buttonIndex])
+        }
+        vertical
+        textStyle={{ color: "black" }}
+        containerStyle={STANDARDISED_STYLES.BUTTON}
+        buttons={buttonTitles}
+      />
+    </View>
   );
 };
 
@@ -35,7 +34,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  buttons: {
-    ...buttonStyle
-  }
 });

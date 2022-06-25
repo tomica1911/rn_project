@@ -9,6 +9,8 @@ import {
 import { FlatList, Text, View, Platform } from "react-native";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { CharacterTile } from "../../../components/CharacterTile/CharacterTile";
+import { ModalConfiguration } from "../../../components/Modal/ModalConfiguration";
+import { STANDARDISED_STYLES } from "../../../styles/styles";
 import { Modal } from "../../../components/Modal/Modal";
 
 interface GameSelectionFormProps {
@@ -27,6 +29,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
   // const {userData} = useFirestore();
   const userData = {};
   const [error, setError] = useState<string>("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
   // @ts-ignore
   // const {characters} = useFirestore();
 
@@ -57,48 +60,21 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
 
   const buttonColor = "#F7B42F";
 
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const handleModal = () => setIsModalVisible(() => !isModalVisible);
-
   return (
     <>
       {!characters || !userData ? (
         <p>loading...</p>
       ) : (
         <>
-          <Modal isVisible={isModalVisible}>
-            <Modal.Container>
-              <View>
-                <Modal.Header title="You're just one step away!" />
-                <Modal.Body>
-                  <Text>Want access? We just need your email address</Text>
-                </Modal.Body>
-                <Modal.Footer>
-                  <View>
-                    <CustomizableButton
-                      onPress={() => {
-                        handleModal();
-                      }}
-                      stylesButton={{
-                        marginTop: 10,
-                        width: 250,
-                        height: 50,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginBottom: 10,
-                        marginLeft: 5,
-                        marginRight: 5,
-                        backgroundColor: "#F7B42F",
-                      }}
-                      title="Play"
-                    />
-                  </View>
-                </Modal.Footer>
-              </View>
-            </Modal.Container>
-          </Modal>
-
+          <Modal
+            isModalVisible={isModalVisible}
+            onPressButtonFn={() =>
+              setIsModalVisible((prevValue: boolean) => !prevValue)
+            }
+            buttonTitle="Back to selection"
+            headerTitle="You're just one step away"
+            headerText="Please select a few characters"
+          />
           <Text
             style={{
               fontSize: 20,
@@ -242,18 +218,15 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
           <CustomizableButton
             onPress={() => {
               if (formValues.selectedCharacters.length === 0) {
-                handleModal();
-                return setError("Please select a few characters");
+                return setIsModalVisible(true);
               }
               formValues.setStartGame(true);
             }}
             stylesButton={{
+              ...STANDARDISED_STYLES.CENTER_CONTENT,
+              ...STANDARDISED_STYLES.BUTTON,
               marginTop: 10,
-              width: 250,
               height: 50,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
               marginBottom: 10,
               marginLeft: 5,
               marginRight: 5,

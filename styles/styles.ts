@@ -3,7 +3,14 @@ export enum COLOR_COMBINATION_1 {
   COLOR_BLACK = "#111214",
 }
 
-export const buttonStyle = {
-  width: 200,
-  backgroundColor: COLOR_COMBINATION_1.COLOR_ORANGE,
+export const STANDARDISED_STYLES = {
+  BUTTON: {
+    width: 200,
+    backgroundColor: COLOR_COMBINATION_1.COLOR_ORANGE,
+  },
+  CENTER_CONTENT: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 };

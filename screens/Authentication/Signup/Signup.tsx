@@ -7,18 +7,29 @@ import { CustomizableButton } from "../../../components/CustomizableButton/Custo
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Modal } from "../../../components/Modal/Modal";
 
 const yupSchema = yup.object().shape({
   displayName: yup
     .string()
-    .required()
-    .matches(/^([0-9a-zA-Z]{1,16})$/),
-  password: yup.string().required(),
-  confirmPassword: yup.string().required(),
+    .required("Please choose a display name")
+    .matches(
+      /^([0-9a-zA-Z]{1,16})$/,
+      "Please enter a display name between of length between 1-16 letters"
+    ),
+  password: yup
+    .string()
+    .required("Please enter a password")
+    .min(8, "Minimum password length is 8 letters")
+    .matches(
+      /^([0-9a-zA-Z]{1,16}){8,}$/,
+      "Minimum password length is 8 letters"
+    ),
+  confirmPassword: yup.string().required("Please confirm your password"),
   email: yup
     .string()
-    .required()
-    .matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/),
+    .required("Please enter a valid email")
+    .email("Please enter a valid email address"),
 });
 
 export const Signup = (): JSX.Element => {
@@ -26,8 +37,11 @@ export const Signup = (): JSX.Element => {
     control,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm({
     resolver: yupResolver(yupSchema),
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
   });
   // // @ts-ignore
   // const { createDbEntryForUser } = useFirestore();
@@ -80,7 +94,6 @@ export const Signup = (): JSX.Element => {
     console.log(errors);
   }, [errors]);
 
-
   //ToDo: add proper type to any
   const onSubmit = (data: Record<string, any>) => {
     setLoading(true);
@@ -89,9 +102,20 @@ export const Signup = (): JSX.Element => {
     setLoading(false);
   };
 
+  const formHasErrors = Object.keys(errors).length > 0;
+
   //ToDo: make an independent component for the spinner
   return (
     <AppLayout>
+      <Modal
+        isModalVisible={formHasErrors}
+        onPressButtonFn={() => {
+          clearErrors();
+        }}
+        buttonTitle="Back to signup screen"
+        headerTitle="You're just one step away"
+        headerText={formHasErrors && Object.values(errors)[0].message}
+      />
       <View
         style={{
           flex: 1,

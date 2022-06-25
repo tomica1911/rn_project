@@ -40,7 +40,6 @@ export const Modal = ({
                 marginBottom: 10,
                 marginLeft: 5,
                 marginRight: 5,
-                backgroundColor: "#F7B42F",
               }}
               title={buttonTitle}
             />

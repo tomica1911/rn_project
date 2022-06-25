@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../../components/PasswordField/InputField";
@@ -7,12 +7,18 @@ import { CustomizableButton } from "../../../components/CustomizableButton/Custo
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Modal } from "../../../components/Modal/Modal";
 
 const yupSchema = yup.object().shape({
-  name: yup
+  email: yup
     .string()
-    .required(),
-  password: yup.string().required().matches(/^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$/),
+    .email("Please enter a valid email address")
+    .required("Please enter a valid email address"),
+  password: yup
+    .string()
+    .required("Please enter a password")
+    .min(8, "Please enter a valid password")
+    .matches(/^([0-9a-zA-Z]{1,16}){8,}$/, "Please enter a valid password"),
 });
 
 export const Login = (): JSX.Element => {
@@ -20,8 +26,11 @@ export const Login = (): JSX.Element => {
     control,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm({
     resolver: yupResolver(yupSchema),
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
   });
   // ToDo complete the loading functionality
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,8 +60,18 @@ export const Login = (): JSX.Element => {
     setLoading(false);
   };
 
+  const formHasErrors = Object.keys(errors).length > 0;
   return (
     <AppLayout>
+      <Modal
+        isModalVisible={formHasErrors}
+        onPressButtonFn={() => {
+          clearErrors();
+        }}
+        buttonTitle="Back to login screen"
+        headerTitle="You're just one step away"
+        headerText={formHasErrors && Object.values(errors)[0].message}
+      />
       <View
         style={{
           flex: 1,

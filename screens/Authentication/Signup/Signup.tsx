@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../../components/PasswordField/InputField";
@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Modal } from "../../../components/Modal/Modal";
+import { STANDARDISED_STYLES } from "../../../styles/styles";
 
 const yupSchema = yup.object().shape({
   displayName: yup
@@ -90,10 +91,6 @@ export const Signup = (): JSX.Element => {
   //   setLoading(false);
   // };
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
-
   //ToDo: add proper type to any
   const onSubmit = (data: Record<string, any>) => {
     setLoading(true);
@@ -109,10 +106,25 @@ export const Signup = (): JSX.Element => {
     <AppLayout>
       <Modal
         isModalVisible={formHasErrors}
-        onPressButtonFn={() => {
-          clearErrors();
-        }}
-        buttonTitle="Back to signup screen"
+        footerComponent={
+          <View>
+            <CustomizableButton
+              onPress={() => {
+                clearErrors();
+              }}
+              stylesButton={{
+                marginTop: 10,
+                height: 50,
+                ...STANDARDISED_STYLES.CENTER_CONTENT,
+                ...STANDARDISED_STYLES.BUTTON,
+                marginBottom: 10,
+                marginLeft: 5,
+                marginRight: 5,
+              }}
+              title="Back to signup screen"
+            />
+          </View>
+        }
         headerTitle="You're just one step away"
         headerText={formHasErrors && Object.values(errors)[0].message}
       />

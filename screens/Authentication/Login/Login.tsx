@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Modal } from "../../../components/Modal/Modal";
+import { STANDARDISED_STYLES } from "../../../styles/styles";
 
 const yupSchema = yup.object().shape({
   email: yup
@@ -65,10 +66,25 @@ export const Login = (): JSX.Element => {
     <AppLayout>
       <Modal
         isModalVisible={formHasErrors}
-        onPressButtonFn={() => {
-          clearErrors();
-        }}
-        buttonTitle="Back to login screen"
+        footerComponent={
+          <View>
+            <CustomizableButton
+              onPress={() => {
+                clearErrors();
+              }}
+              stylesButton={{
+                marginTop: 10,
+                height: 50,
+                ...STANDARDISED_STYLES.CENTER_CONTENT,
+                ...STANDARDISED_STYLES.BUTTON,
+                marginBottom: 10,
+                marginLeft: 5,
+                marginRight: 5,
+              }}
+              title="Back to login screen"
+            />
+          </View>
+        }
         headerTitle="You're just one step away"
         headerText={formHasErrors && Object.values(errors)[0].message}
       />

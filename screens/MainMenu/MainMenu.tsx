@@ -28,7 +28,7 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLOR_COMBINATION_1.COLOR_BLACK,
+    backgroundColor: COLOR_COMBINATION_1.BLACK,
     height: "100%",
     display: "flex",
     justifyContent: "center",

@@ -1,9 +1,0 @@
-import { View, Text } from 'react-native';
-
-export const Signup = (): JSX.Element => {
-    return (
-        <View>
-            <Text>GameFinished Screen</Text>
-        </View>
-    );
-};

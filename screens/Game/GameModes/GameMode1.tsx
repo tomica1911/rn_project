@@ -1,8 +1,16 @@
-import { View, Text, TextInput, ScrollView } from "react-native";
-import { useEffect, useState } from "react";
+import { View, Text, TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { useCountdown } from "usehooks-ts";
+import { Modal } from "../../../components/Modal/Modal";
+import { getPoints } from "../../../utils/utils";
+//@ts-expect-error
+import ProgressPie from "react-native-progress/Pie";
+import {
+  COLOR_COMBINATION_1,
+  STANDARDISED_STYLES,
+} from "../../../styles/styles";
 
 type GameModeOneProps = {
   //ToDo: take setStartGame (that after &) from one place
@@ -14,30 +22,21 @@ type GameModeOneProps = {
 export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
-  const [timeoutGame, setTimeoutGame] = useState<boolean>(false);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const [textInputValue, setTextInputValue] = useState<string>("");
-  const [
-    counter,
-    { start: startCountdown, stop: stopCountdown, reset: resetCountdown },
-  ] = useCountdown({
-    seconds: formValues.duration,
-    interval: 1000,
-    isIncrement: false,
-  });
+  const [counter, { start: startCountdown, reset: resetCountdown }] =
+    useCountdown({
+      seconds: formValues.duration,
+      interval: 1000,
+      isIncrement: false,
+    });
 
   useEffect(() => {
     startCountdown();
   }, []);
 
   console.log(formValues.selectedCharacters[currentCharIndex].equivalents);
-
-  // ToDo: component seems to rerender too many times after user finishes playing, try to reduce the number of rerender
-  // ToDo: gotten points should be dependent on how long a user was in a chosen game(replace instead of 100)...
-  // const getPoints = (durationOfGame: number, numberOfSelectedChars: number) => {
-  //     return (numberOfSelectedChars * 100 / formValues.duration) * 100;
-  // }
 
   //ToDo: try to trigger this function less often in TextInput component to optimize performance
   function handleTextInputChange(enteredValue: string) {
@@ -70,28 +69,69 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
     startCountdown();
     setCurrentCharIndex(0);
     setProgress(0);
-    setTimeoutGame(false);
     setThrowOutIncorrect(false);
     setGameCompleted(false);
   };
 
-  // refactor this
-  const buttonColor = "#F7B42F";
+  const getModalHeaderTitle = () => {
+    if (gameCompleted) {
+      return "Congratulations!";
+    } else {
+      return "Oh no!";
+    }
+  };
+
+  const getModalHeaderText = () => {
+    if (gameCompleted)
+      return `Congratulations, you've won ${Math.floor(
+        getPoints(
+          formValues.duration,
+          formValues.selectedCharacters.length - 1,
+          1
+        )
+      )} points`;
+    if (counter === 0) return "You have run out of time";
+    if (throwOutIncorrect) return "You have entered an incorrect value";
+  };
 
   return (
-    <ScrollView>
-      {/*{throwOutIncorrect && (<Text>*/}
-      {/*    Oh no, you have provided an incorrect answer!*/}
-      {/*</Text>)}*/}
-      {/*{(timeoutGame && !throwOutIncorrect) && (<Text>*/}
-      {/*    Oh no, time has run out!*/}
-      {/*</Text>)}*/}
-      {gameCompleted && (
-        <Text style={{ color: buttonColor, margin: 10 }}>
-          // ToDo: add number of points Congratulations, you've won some points!
-        </Text>
-      )}
-      {!timeoutGame && !gameCompleted && !throwOutIncorrect && (
+    <View>
+      <Modal
+        isModalVisible={gameCompleted || counter === 0 || throwOutIncorrect}
+        footerComponent={
+          <View>
+            <CustomizableButton
+              onPress={() => formValues.setStartGame(false)}
+              stylesButton={{
+                marginTop: 10,
+                height: 50,
+                ...STANDARDISED_STYLES.CENTER_CONTENT,
+                ...STANDARDISED_STYLES.BUTTON,
+                marginBottom: 10,
+                marginLeft: 5,
+                marginRight: 5,
+              }}
+              title="Back to selection"
+            />
+            <CustomizableButton
+              onPress={() => startAgainWithCurrentSettings()}
+              stylesButton={{
+                marginTop: 10,
+                height: 50,
+                ...STANDARDISED_STYLES.CENTER_CONTENT,
+                ...STANDARDISED_STYLES.BUTTON,
+                marginBottom: 10,
+                marginLeft: 5,
+                marginRight: 5,
+              }}
+              title="Try again"
+            />
+          </View>
+        }
+        headerTitle={getModalHeaderTitle()}
+        headerText={getModalHeaderText() ?? ""}
+      />
+      {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
         <>
           <View
             style={{
@@ -115,6 +155,14 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
               {counter}
             </Text>
           </View>
+          {/*//@ts-expect-error ToDo: remove this line and the error associated with it */}
+          <View style={STANDARDISED_STYLES.CENTER_CONTENT}>
+            <ProgressPie
+              color={COLOR_COMBINATION_1.ORANGE}
+              progress={progress * 0.01}
+              size={50}
+            />
+          </View>
           <View
             style={{
               margin: 5,
@@ -123,7 +171,7 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ color: buttonColor }}>Answer</Text>
+            <Text style={{ color: COLOR_COMBINATION_1.ORANGE }}>Answer</Text>
             {/*ToDo: Define layout component and set width to maximum*/}
             <TextInput
               value={textInputValue}
@@ -133,39 +181,6 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
           </View>
         </>
       )}
-      {(timeoutGame || throwOutIncorrect) && (
-        <CustomizableButton
-          title="Try Again"
-          onPress={() => startAgainWithCurrentSettings()}
-          stylesButton={{
-            color: "white",
-            marginLeft: 10,
-            marginRight: 10,
-            marginBottom: 1,
-            marginTop: 1,
-            height: 50,
-            backgroundColor: "#3E5494",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        />
-      )}
-      <CustomizableButton
-        onPress={() => formValues.setStartGame(false)}
-        title="Back to selection"
-        stylesButton={{
-          marginLeft: 10,
-          marginRight: 10,
-          marginBottom: 1,
-          marginTop: 1,
-          height: 50,
-          backgroundColor: "#F7B42F",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      />
-    </ScrollView>
+    </View>
   );
 };

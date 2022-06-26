@@ -9,8 +9,10 @@ import {
 import { FlatList, Text, View, Platform } from "react-native";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { CharacterTile } from "../../../components/CharacterTile/CharacterTile";
-import { ModalConfiguration } from "../../../components/Modal/ModalConfiguration";
-import { STANDARDISED_STYLES } from "../../../styles/styles";
+import {
+  COLOR_COMBINATION_1,
+  STANDARDISED_STYLES,
+} from "../../../styles/styles";
 import { Modal } from "../../../components/Modal/Modal";
 
 interface GameSelectionFormProps {
@@ -28,7 +30,6 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
   // @ts-ignore
   // const {userData} = useFirestore();
   const userData = {};
-  const [error, setError] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   // @ts-ignore
   // const {characters} = useFirestore();
@@ -58,8 +59,6 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
     return menuInputItems.map((item) => item);
   };
 
-  const buttonColor = "#F7B42F";
-
   return (
     <>
       {!characters || !userData ? (
@@ -68,10 +67,25 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
         <>
           <Modal
             isModalVisible={isModalVisible}
-            onPressButtonFn={() =>
-              setIsModalVisible((prevValue: boolean) => !prevValue)
+            footerComponent={
+              <View>
+                <CustomizableButton
+                  onPress={() =>
+                    setIsModalVisible((prevValue: boolean) => !prevValue)
+                  }
+                  stylesButton={{
+                    marginTop: 10,
+                    height: 50,
+                    ...STANDARDISED_STYLES.CENTER_CONTENT,
+                    ...STANDARDISED_STYLES.BUTTON,
+                    marginBottom: 10,
+                    marginLeft: 5,
+                    marginRight: 5,
+                  }}
+                  title="Back to selection"
+                />
+              </View>
             }
-            buttonTitle="Back to selection"
             headerTitle="You're just one step away"
             headerText="Please select a few characters"
           />
@@ -80,7 +94,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
-              color: buttonColor,
+              color: COLOR_COMBINATION_1.ORANGE,
             }}
           >
             Characters
@@ -106,7 +120,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
-              color: buttonColor,
+              color: COLOR_COMBINATION_1.ORANGE,
             }}
           >
             Select characters
@@ -173,7 +187,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
-              color: buttonColor,
+              color: COLOR_COMBINATION_1.ORANGE,
             }}
           >
             Select mode
@@ -198,7 +212,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
-              color: buttonColor,
+              color: COLOR_COMBINATION_1.ORANGE,
             }}
           >
             Select duration
@@ -230,7 +244,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               marginBottom: 10,
               marginLeft: 5,
               marginRight: 5,
-              backgroundColor: "#F7B42F",
+              backgroundColor: COLOR_COMBINATION_1.ORANGE,
             }}
             title="Play"
           />

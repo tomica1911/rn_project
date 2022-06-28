@@ -5,8 +5,7 @@ import { CustomizableButton } from "../../../components/CustomizableButton/Custo
 import { useCountdown } from "usehooks-ts";
 import { Modal } from "../../../components/Modal/Modal";
 import { getPoints } from "../../../utils/utils";
-//@ts-expect-error
-import ProgressPie from "react-native-progress/Pie";
+// import ProgressPie from "react-native-progress/Pie";
 import {
   COLOR_COMBINATION_1,
   STANDARDISED_STYLES,
@@ -155,14 +154,13 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
               {counter}
             </Text>
           </View>
-          {/*//@ts-expect-error ToDo: remove this line and the error associated with it */}
-          <View style={STANDARDISED_STYLES.CENTER_CONTENT}>
-            <ProgressPie
-              color={COLOR_COMBINATION_1.ORANGE}
-              progress={progress * 0.01}
-              size={50}
-            />
-          </View>
+          {/*<View style={STANDARDISED_STYLES.CENTER_CONTENT}>*/}
+          {/*  <ProgressPie*/}
+          {/*    color={COLOR_COMBINATION_1.ORANGE}*/}
+          {/*    progress={progress * 0.01}*/}
+          {/*    size={50}*/}
+          {/*  />*/}
+          {/*</View>*/}
           <View
             style={{
               margin: 5,

@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../../components/PasswordField/InputField";

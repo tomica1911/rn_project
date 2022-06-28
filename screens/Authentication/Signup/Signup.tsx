@@ -4,11 +4,16 @@ import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../../components/PasswordField/InputField";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm, FieldError } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Modal } from "../../../components/Modal/Modal";
-import { STANDARDISED_STYLES } from "../../../styles/styles";
+import {
+  COLOR_COMBINATION_1,
+  STANDARDISED_STYLES,
+} from "../../../styles/styles";
+import { useAuth } from "../../../contexts/authContext";
+import merge from "lodash/merge";
 
 const yupSchema = yup.object().shape({
   displayName: yup
@@ -33,7 +38,26 @@ const yupSchema = yup.object().shape({
     .email("Please enter a valid email address"),
 });
 
-export const Signup = (): JSX.Element => {
+//@ts-expect-error
+export const Signup = ({ navigation }): JSX.Element => {
+  // ToDo: remove ts-expect-error directives
+  const {
+    //@ts-expect-error
+    signup,
+    //@ts-expect-error
+    authLoading,
+    //@ts-expect-error
+    authErrors,
+    //@ts-expect-error
+    setAuthErrors,
+    //@ts-expect-error
+    currentUser,
+    //@ts-expect-error
+    sendVerificationEmail,
+    //@ts-expect-error
+    verificationEmailResent,
+  } = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -44,64 +68,29 @@ export const Signup = (): JSX.Element => {
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
+
+  const [clickable, setClickable] = useState(false);
+
   // // @ts-ignore
   // const { createDbEntryForUser } = useFirestore();
   // // ToDo complete the loading functionality
   const [loading, setLoading] = useState<boolean>(false);
-  // // @ts-expect-error
-  // const { signup } = useAuth();
 
-  //
-  // const registerUserWithFirebase = async (email: string, password: string) => {
-  //   try {
-  //     await signup(email, password)
-  //       .then((userCredential: any) => {
-  //         userCredential.user.sendEmailVerification();
-  //         return userCredential;
-  //       })
-  //       .then((userCredential: any) => {
-  //         userCredential.user.updateProfile({
-  //           displayName: values.displayName,
-  //         });
-  //       })
-  //       .then((res: any) => {
-  //         createDbEntryForUser(values.displayName);
-  //       })
-  //       .catch((error: Error) => {
-  //         setError(error.message);
-  //       });
-  //   } catch {
-  //     setError("Failed to create an account, please contact customer support!");
-  //   }
-  // };
-  //
-  // const onSubmitHandler = async (event: FormEvent) => {
-  //   event.preventDefault();
-  //   if (!/^([0-9a-zA-Z]{1,16})$/.test(values.displayName)) {
-  //     return setError("Display Name not valid, please try again");
-  //   }
-  //   if (values.password.length < 8) {
-  //     return setError("Password should contain atleast 8 characters!");
-  //   }
-  //   if (values.password !== values.repeatPassword) {
-  //     return setError("Passwords do not match!");
-  //   }
-  //   setLoading(true);
-  //   registerUserWithFirebase(values.email, values.password);
-  //   setLoading(false);
-  // };
-
-  //ToDo: add proper type to any
-  const onSubmit = (data: Record<string, any>) => {
-    setLoading(true);
-    console.log(errors);
-    // await loginUser(values.email, values.password);
-    setLoading(false);
+  const onFormSubmit = (data: FieldValues) => {
+    signup(data.displayName, data.password, data.confirmPassword, data.email);
   };
 
-  const formHasErrors = Object.keys(errors).length > 0;
+  if (currentUser) {
+    setTimeout(() => {
+      setClickable(true);
+    }, 30000);
+  }
+
+  const allErrors: FieldError = merge(errors, authErrors);
+  const formHasErrors = Object.keys(allErrors).length > 0;
 
   //ToDo: make an independent component for the spinner
+  // @ts-ignore
   return (
     <AppLayout>
       <Modal
@@ -111,6 +100,7 @@ export const Signup = (): JSX.Element => {
             <CustomizableButton
               onPress={() => {
                 clearErrors();
+                setAuthErrors(undefined);
               }}
               stylesButton={{
                 marginTop: 10,
@@ -126,15 +116,63 @@ export const Signup = (): JSX.Element => {
           </View>
         }
         headerTitle="You're just one step away"
-        headerText={formHasErrors && Object.values(errors)[0].message}
+        // @ts-ignore
+        headerText={Object.values(allErrors)[0]?.message}
       />
+      {currentUser && (
+        <Modal
+          isModalVisible={!!currentUser}
+          footerComponent={
+            <View>
+              <CustomizableButton
+                disabled={!clickable}
+                onPress={() => sendVerificationEmail(currentUser)}
+                stylesButton={{
+                  marginTop: 10,
+                  height: 50,
+                  width: 200,
+                  ...STANDARDISED_STYLES.CENTER_CONTENT,
+                  backgroundColor: clickable
+                    ? COLOR_COMBINATION_1.ORANGE
+                    : "gray",
+                  marginBottom: 10,
+                  marginLeft: 5,
+                  marginRight: 5,
+                }}
+                title="Resend email"
+              />
+              <CustomizableButton
+                onPress={() => navigation.navigate("Main Menu")}
+                stylesButton={{
+                  marginTop: 10,
+                  height: 50,
+                  ...STANDARDISED_STYLES.CENTER_CONTENT,
+                  ...STANDARDISED_STYLES.BUTTON,
+                  marginBottom: 10,
+                  marginLeft: 5,
+                  marginRight: 5,
+                }}
+                title="Back to main menu"
+              />
+            </View>
+          }
+          headerTitle="You're just one step away"
+          headerText={
+            currentUser.emailVerified
+              ? "You've verified your email."
+              : `You've created an account. Please verify your email. You can resend email after 30 seconds. ${
+                  verificationEmailResent ? `\n Verification email resent.` : ""
+                }`
+          }
+        />
+      )}
       <View
         style={{
           flex: 1,
           justifyContent: "center",
         }}
       >
-        {loading ? (
+        {loading || authLoading ? (
           //ToDo: move the loading icon to a seperate component
           <ActivityIndicator size="large" color="#F7B42F" />
         ) : (
@@ -168,7 +206,7 @@ export const Signup = (): JSX.Element => {
               control={control}
             />
             <CustomizableButton
-              onPress={handleSubmit(onSubmit)}
+              onPress={handleSubmit(onFormSubmit)}
               title="Signup"
               stylesButton={{
                 marginTop: 10,

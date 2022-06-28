@@ -1,5 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
-import { authFirebase } from "../firebase";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  getAuth,
+  signOut,
+  sendPasswordResetEmail,
+  updateEmail,
+  updatePassword,
+  updateProfile,
+  sendEmailVerification,
+  // onAuthStateChanged,
+  User,
+} from "firebase/auth";
 
 // ToDo: setup enviroment variables for this to work with production
 // ToDo: refactor this component so it uses typescript
@@ -13,61 +25,97 @@ interface AuthProviderProps {
   children: JSX.Element | JSX.Element[];
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [currentUser, setCurrentUser] = useState();
-  const [loading, setLoading] = useState(true);
+interface ErrorObj {
+  message: string;
+}
 
-  function signup(email: string, password: string) {
-    return authFirebase.createUserWithEmailAndPassword(email, password);
+type Error = {
+  [errorName: string]: ErrorObj;
+};
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [currentUser, setCurrentUser] = useState<User>();
+  const [authErrors, setAuthErrors] = useState<Error | undefined>(undefined);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [verificationEmailResent, setVerificationEmailResent] = useState<boolean>(false);
+  const auth = getAuth();
+
+  function signup(
+    displayName: string,
+    password: string,
+    confirmPassword: string,
+    email: string
+  ) {
+    setAuthLoading(true);
+    if (confirmPassword === password) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((user) => {
+          updateProfile(user.user, { displayName });
+          sendEmailVerification(user.user);
+          setCurrentUser(user.user);
+        })
+        .catch((error) => {
+          if (error.code === "auth/email-already-in-use") {
+            setAuthErrors({
+              emailAlreadyInUse: { message: "Email address already in use" },
+            });
+          }
+
+          if (error.code === "auth/invalid-email") {
+            setAuthErrors({
+              emailInvalid: { message: "Email address invalid" },
+            });
+          }
+
+          console.error(error);
+        });
+    }
+    setAuthLoading(false);
+  }
+
+  function sendVerificationEmail(user: User){
+    setVerificationEmailResent(true);
+    return sendEmailVerification(user)
   }
 
   function login(email: string, password: string) {
-    return authFirebase.signInWithEmailAndPassword(email, password);
+    return signInWithEmailAndPassword(auth, email, password);
   }
 
   function logout() {
-    return authFirebase.signOut();
+    return signOut(auth);
   }
 
-  function resetPassword(email: string) {
-    return authFirebase.sendPasswordResetEmail(email);
+  function resetUserPassword(email: string) {
+    return sendPasswordResetEmail(auth, email);
   }
 
-  function updateEmail(email: string) {
-    // @ts-expect-error
-    return currentUser.updateEmail(email);
+  function updateUserEmail(email: string) {
+    if (currentUser) {
+      return updateEmail(currentUser, email);
+    }
   }
 
-  function updatePassword(password: string) {
-    // @ts-expect-error
-    return currentUser.updatePassword(password);
+  function updateUserPassword(password: string) {
+    if (currentUser) {
+      return updatePassword(currentUser, password);
+    }
   }
 
-  useEffect(() => {
-    setLoading(true);
-    const unsubscribe = authFirebase.onAuthStateChanged(
-      (user: React.SetStateAction<undefined>) => {
-        if (user) {
-          // @ts-ignore
-          setCurrentUser(user);
-        }
-        setLoading(false);
-      }
-    );
-
-    return unsubscribe;
-  }, []);
-
-  const value = {
+  const values = {
     currentUser,
     login,
+    authErrors,
+    setAuthErrors,
     signup,
     logout,
-    resetPassword,
-    updateEmail,
-    updatePassword,
-    loading,
+    resetUserPassword,
+    updateUserEmail,
+    updateUserPassword,
+    authLoading,
+    sendVerificationEmail,
+    verificationEmailResent
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

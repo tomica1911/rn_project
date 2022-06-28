@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from "react"
-import {dbFirestoreFirebase, increment, addToArray} from "../firebase"
+import {dbFirestoreFirebase, increment, addToArray} from "../firebaseConfig"
 
 const FirestoreContext = React.createContext({})
 

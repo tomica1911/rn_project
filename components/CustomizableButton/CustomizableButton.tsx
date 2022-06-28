@@ -6,8 +6,9 @@ interface CustomizableButtonProps {
     title: string,
     stylesButton?: Record<string, string | number>,
     stylesText?: Record<string, string | number>,
+    disabled?: boolean
 }
 
-export const CustomizableButton = ({ onPress, title, stylesButton, stylesText }: CustomizableButtonProps) => <Pressable style={stylesButton} onPress={onPress}>
+export const CustomizableButton = ({ onPress, title, stylesButton, stylesText, disabled = false }: CustomizableButtonProps) => <Pressable disabled={disabled} style={stylesButton} onPress={onPress}>
     <Text style={stylesText}>{title}</Text>
 </Pressable>

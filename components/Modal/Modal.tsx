@@ -20,7 +20,7 @@ export const Modal = ({
       <View>
         <ModalConfiguration.Header title={headerTitle} />
         <ModalConfiguration.Body>
-          <Text>{headerText}</Text>
+          <Text style={{ textAlign: "center" }}>{headerText}</Text>
         </ModalConfiguration.Body>
         <ModalConfiguration.Footer>{footerComponent}</ModalConfiguration.Footer>
       </View>

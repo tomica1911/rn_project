@@ -4,11 +4,13 @@ import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../../components/PasswordField/InputField";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
-import { useForm } from "react-hook-form";
+import { FieldError, FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Modal } from "../../../components/Modal/Modal";
 import { STANDARDISED_STYLES } from "../../../styles/styles";
+import { useAuth } from "../../../contexts/authContext";
+import merge from "lodash/merge";
 
 const yupSchema = yup.object().shape({
   email: yup
@@ -22,7 +24,8 @@ const yupSchema = yup.object().shape({
     .matches(/^([0-9a-zA-Z]{1,16}){8,}$/, "Please enter a valid password"),
 });
 
-export const Login = (): JSX.Element => {
+//@ts-expect-error
+export const Login = ({ navigation }): JSX.Element => {
   const {
     control,
     handleSubmit,
@@ -33,35 +36,33 @@ export const Login = (): JSX.Element => {
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
+
+  // ToDo: remove ts-expect-error directives
+  const {
+    //@ts-expect-error
+    currentUser,
+    //@ts-expect-error
+    authErrors,
+    //@ts-expect-error
+    setAuthErrors,
+    //@ts-expect-error
+    login,
+  } = useAuth();
+
   // ToDo complete the loading functionality
   const [loading, setLoading] = useState<boolean>(false);
-  // const { login, currentUser } = useAuth();
-  // @ts-ignore
   // const { fetchUserData } = useFirestore();
-  //
-  // const loginUser = async (email: string, password: string) => {
-  //   login(email, password)
-  //     .then((user: any) => {
-  //       if (!currentUser.multiFactor.user.emailVerified) {
-  //         return setError("Please verify your email address!");
-  //       }
-  //       fetchUserData(currentUser.multiFactor.user.displayName);
-  //       // navigate("/gameSelection");
-  //     })
-  //     .catch((error: Error) => {
-  //       setError(error.message);
-  //     });
-  // };
 
-  //ToDo: add proper type to any
-  const onSubmit = (data: Record<string, any>) => {
-    setLoading(true);
-    console.log(errors);
-    // await loginUser(values.email, values.password);
-    setLoading(false);
+  const onFormSubmit = (data: FieldValues) => {
+    login(data.email, data.password);
+    if (currentUser) {
+      navigation.navigate("Main Menu");
+    }
   };
 
-  const formHasErrors = Object.keys(errors).length > 0;
+  const allErrors: FieldError = merge(errors, authErrors);
+  const formHasErrors = Object.keys(allErrors).length > 0;
+
   return (
     <AppLayout>
       <Modal
@@ -71,6 +72,7 @@ export const Login = (): JSX.Element => {
             <CustomizableButton
               onPress={() => {
                 clearErrors();
+                setAuthErrors(undefined);
               }}
               stylesButton={{
                 marginTop: 10,
@@ -86,7 +88,8 @@ export const Login = (): JSX.Element => {
           </View>
         }
         headerTitle="You're just one step away"
-        headerText={formHasErrors && Object.values(errors)[0].message}
+        // @ts-ignore
+        headerText={Object.values(allErrors)[0]?.message}
       />
       <View
         style={{
@@ -117,7 +120,7 @@ export const Login = (): JSX.Element => {
               placeholder="Enter password"
             />
             <CustomizableButton
-              onPress={handleSubmit(onSubmit)}
+              onPress={handleSubmit(onFormSubmit)}
               title="Login"
               stylesButton={{
                 marginTop: 10,

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -9,7 +9,6 @@ import {
   updatePassword,
   updateProfile,
   sendEmailVerification,
-  // onAuthStateChanged,
   User,
 } from "firebase/auth";
 
@@ -37,7 +36,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [currentUser, setCurrentUser] = useState<User>();
   const [authErrors, setAuthErrors] = useState<Error | undefined>(undefined);
   const [authLoading, setAuthLoading] = useState(false);
-  const [verificationEmailResent, setVerificationEmailResent] = useState<boolean>(false);
+  const [verificationEmailResent, setVerificationEmailResent] =
+    useState<boolean>(false);
   const auth = getAuth();
 
   function signup(
@@ -56,34 +56,67 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
-            setAuthErrors({
+            return setAuthErrors({
               emailAlreadyInUse: { message: "Email address already in use" },
             });
           }
 
           if (error.code === "auth/invalid-email") {
-            setAuthErrors({
+            return setAuthErrors({
               emailInvalid: { message: "Email address invalid" },
             });
           }
 
-          console.error(error);
+          return setAuthErrors({
+            unknownError: {
+              message:
+                "Unknown error, please contact customer support or try later",
+            },
+          });
         });
     }
     setAuthLoading(false);
   }
 
-  function sendVerificationEmail(user: User){
+  function sendVerificationEmail(user: User) {
     setVerificationEmailResent(true);
-    return sendEmailVerification(user)
+    return sendEmailVerification(user);
   }
 
   function login(email: string, password: string) {
-    return signInWithEmailAndPassword(auth, email, password);
+    setAuthLoading(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((user) => {
+        setCurrentUser(user.user);
+      })
+      .catch((error) => {
+        if (error.code === "auth/user-not-found") {
+          return setAuthErrors({
+            userNotFound: {
+              message: "User not found, did you enter your email correctly?",
+            },
+          });
+        }
+        if (error.code === "auth/wrong-password") {
+          return setAuthErrors({
+            wrongPassword: { message: "Password incorrect" },
+          });
+        }
+        return setAuthErrors({
+          unknownError: {
+            message:
+              "Unknown error, please contact customer support or try later",
+          },
+        });
+      });
+    setAuthLoading(false);
   }
 
   function logout() {
-    return signOut(auth);
+    setAuthLoading(true);
+    signOut(auth);
+    setCurrentUser(undefined);
+    setAuthLoading(false);
   }
 
   function resetUserPassword(email: string) {
@@ -114,7 +147,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     updateUserPassword,
     authLoading,
     sendVerificationEmail,
-    verificationEmailResent
+    verificationEmailResent,
   };
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;

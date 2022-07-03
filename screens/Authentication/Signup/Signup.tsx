@@ -73,10 +73,8 @@ export const Signup = ({ navigation }): JSX.Element => {
 
   // // @ts-ignore
   // const { createDbEntryForUser } = useFirestore();
-  // // ToDo complete the loading functionality
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const onFormSubmit = (data: FieldValues) => {
+  const onSignupFormSubmit = (data: FieldValues) => {
     signup(data.displayName, data.password, data.confirmPassword, data.email);
   };
 
@@ -172,7 +170,7 @@ export const Signup = ({ navigation }): JSX.Element => {
           justifyContent: "center",
         }}
       >
-        {loading || authLoading ? (
+        {authLoading ? (
           //ToDo: move the loading icon to a seperate component
           <ActivityIndicator size="large" color="#F7B42F" />
         ) : (
@@ -206,7 +204,7 @@ export const Signup = ({ navigation }): JSX.Element => {
               control={control}
             />
             <CustomizableButton
-              onPress={handleSubmit(onFormSubmit)}
+              onPress={handleSubmit(onSignupFormSubmit)}
               title="Signup"
               stylesButton={{
                 marginTop: 10,

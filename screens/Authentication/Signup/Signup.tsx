@@ -78,11 +78,12 @@ export const Signup = ({ navigation }): JSX.Element => {
     signup(data.displayName, data.password, data.confirmPassword, data.email);
   };
 
-  if (currentUser) {
-    setTimeout(() => {
-      setClickable(true);
-    }, 30000);
-  }
+  //ToDo: fix the timer issue
+  // if (currentUser) {
+  //   setTimeout(() => {
+  //     setClickable(true);
+  //   }, 30000);
+  // }
 
   const allErrors: FieldError = merge(errors, authErrors);
   const formHasErrors = Object.keys(allErrors).length > 0;

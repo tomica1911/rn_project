@@ -11,6 +11,7 @@ import {
   sendEmailVerification,
   User,
 } from "firebase/auth";
+import { useFirestore } from "./firebaseContext";
 
 // ToDo: setup enviroment variables for this to work with production
 // ToDo: refactor this component so it uses typescript
@@ -39,6 +40,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [verificationEmailResent, setVerificationEmailResent] =
     useState<boolean>(false);
   const auth = getAuth();
+  // @ts-expect-error
+  const { createDbEntryForUser, getDbEntryForUser } = useFirestore();
 
   function signup(
     displayName: string,
@@ -49,10 +52,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setAuthLoading(true);
     if (confirmPassword === password) {
       createUserWithEmailAndPassword(auth, email, password)
-        .then((user) => {
+        .then(async (user) => {
           updateProfile(user.user, { displayName });
           sendEmailVerification(user.user);
           setCurrentUser(user.user);
+          await createDbEntryForUser(user.user.uid);
+          await getDbEntryForUser(user.user.uid);
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -88,6 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signInWithEmailAndPassword(auth, email, password)
       .then((user) => {
         setCurrentUser(user.user);
+        getDbEntryForUser(user.user.uid);
       })
       .catch((error) => {
         if (error.code === "auth/user-not-found") {

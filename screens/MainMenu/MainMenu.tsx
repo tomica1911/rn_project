@@ -2,11 +2,12 @@ import { StyleSheet, View, Text } from "react-native";
 import { ButtonGroup } from "@rneui/themed";
 import { SCREENS } from "../../constants";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { STANDARDISED_STYLES } from "../../styles/styles";
 import { COLOR_COMBINATION_1 } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
+import { TipsOfTheDay } from "../../constants";
 
 //ToDo: add locale
 
@@ -17,11 +18,22 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
     currentUser,
   } = useAuth();
 
+  const getTipindex = useMemo(() => {
+    const currDayOfTheMonth = new Date().getDate();
+    const currentDayOfTheMonthString = currDayOfTheMonth.toString();
+
+    if (parseInt(currentDayOfTheMonthString) > 9) {
+      return parseInt(currentDayOfTheMonthString[1]);
+    } else {
+      return parseInt(currentDayOfTheMonthString[0]);
+    }
+  }, []);
+
   const buttonTitles = Object.values(SCREENS);
   const buttons = !currentUser
-    ? buttonTitles.filter((name) => name !== SCREENS.LOGOUT)
+    ? buttonTitles.filter((screenName) => !(screenName === SCREENS.LOGOUT || screenName === SCREENS.PROFILE || screenName === SCREENS.DASHBOARD))
     : buttonTitles.filter(
-        (name) => !(name === SCREENS.LOGIN || name === SCREENS.SIGNUP)
+        (screenName) => !(screenName === SCREENS.LOGIN || screenName === SCREENS.SIGNUP)
       );
 
   return (
@@ -31,16 +43,25 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
           backgroundColor: COLOR_COMBINATION_1.ORANGE,
           width: 300,
           borderRadius: 20,
-          height: 80,
+          height: 100,
           borderWidth: 5,
           borderColor: "white",
         }}
       >
         <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-          Tip of the day
+          Tip of the day:
         </Text>
-        <Text style={{ textAlign: "center", marginLeft: 30, marginRight: 30, overflow: "hidden", marginTop: 5, marginBottom: 20 }}>
-          Fortune favors the disciplined
+        <Text
+          style={{
+            textAlign: "center",
+            marginLeft: 30,
+            marginRight: 30,
+            overflow: "hidden",
+            marginTop: 5,
+            marginBottom: 20,
+          }}
+        >
+          {TipsOfTheDay[getTipindex]}
         </Text>
       </View>
       <View style={styles.container}>

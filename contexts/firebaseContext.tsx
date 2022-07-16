@@ -1,131 +1,80 @@
-import React, {useContext, useState, useEffect} from "react"
-import {dbFirestoreFirebase, increment, addToArray} from "../firebaseConfig"
+import React, {useContext, useMemo, useState} from "react";
+import {
+  getFirestore,
+  arrayUnion,
+  getDoc,
+  doc,
+  updateDoc,
+  DocumentData,
+} from "firebase/firestore";
+import { FirebaseApp } from "../firebaseConfig";
 
-const FirestoreContext = React.createContext({})
+const FirestoreContext = React.createContext({});
 
 export function useFirestore() {
-    return useContext(FirestoreContext)
+  return useContext(FirestoreContext);
 }
 
 interface FirestoreProviderProps {
-    children: JSX.Element | JSX.Element[]
+  children: JSX.Element | JSX.Element[];
 }
 
 //ToDo: define correct types
-export function FirestoreProvider({children}: FirestoreProviderProps) {
-    const [characters, setCharacters] = useState(false);
-    const [userData, setUserData] = useState();
-    const userDataCollection = dbFirestoreFirebase.collection("userData");
+export function FirestoreProvider({ children }: FirestoreProviderProps) {
+  const firestoreDatabase = getFirestore(FirebaseApp);
+  const [userFirestoreData, setUserFirestoreData] = useState<DocumentData | undefined>(undefined);
+  // const [characters, setCharacters] = useState(false);
 
-    useEffect(() => {
-        let isMounted = true;
-        dbFirestoreFirebase.collection("charData")
-            .get()
-            .then((querySnapshot: any) => {
-                const data = querySnapshot.docs.map((doc: any) => doc.data());
-                if (isMounted) {
-                    // @ts-ignore
-                    setCharacters(data[0]);
-                }
-            });
+  // ToDo: add types
+  const getUserData = (userUid: string) => {
+    //ToDo. add types, see if theres more specific query
+    getDoc(doc(firestoreDatabase, "userData", userUid))
+      .then((doc) => {
+        console.log("docData");
+        console.log(doc.data());
+        return setUserFirestoreData(Object.assign({}, doc.data()));
+      })
+      .catch((error: any) => console.log(error.message));
+  };
 
-        return () => {
-            isMounted = false
-        }
-    }, []);
-
-    const createDbEntryForUser = (displayName: string) => {
-        userDataCollection.doc(displayName).set({
-            dateCreated: new Date(),
-            displayName: displayName,
-            gameModesPlayed: {
-                gameModeOne: 0,
-                gameModeTwo: 0,
-            },
-            wonGames: 0,
-            lostGames: 0,
-            playedGames: 0,
-            mostWonPoints: 0,
-            wonPoints: 0,
-            gameDurations: []
-        })
-    }
-
-    const fetchUserData = async (displayName: string) => {
-        const dataUser = await userDataCollection.doc(displayName).get();
-        if(dataUser){
-            // @ts-ignore
-            setUserData(dataUser.data());
-        }
-    }
-
-    const getUserData = async () => {
-        if(userData) return userData;
-    }
-
-    const updateUserDisplayNameGames = async (displayName: string) => {
-        userDataCollection.doc(displayName).update({
-            displayName: displayName
-        })
-    }
-
-    const updateUserGameModesPlayed = (displayName: string, gameModeOneNumber: number, gameModeTwoNumber: number) => {
-        userDataCollection.doc(displayName).update({
-            gameModesPlayed: {
-                gameModeOne: gameModeOneNumber,
-                gameModeTwo: gameModeTwoNumber
-            }
-        })
-    }
-
-    const updateUserWonGames = (displayName: string) => {
-        userDataCollection.doc(displayName).update({
-            wonGames: increment
-        })
-    }
-
-    const updateGameDurations = (displayName: string, gameDuration: number) => {
-        userDataCollection.doc(displayName).update({
-            gameDurations: addToArray(gameDuration)
-        })
-    }
-
-    const updateUserLostGames = (displayName: string) => {
-        userDataCollection.doc(displayName).update({
-            lostGames: increment
-        })
-    }
-
-    const updateUserPlayedGames = (displayName: string) => {
-        userDataCollection.doc(displayName).update({
-            playedGames: increment
-        })
-    }
-
-    const updateUserWonPoints = (displayName: string) => {
-        userDataCollection.doc(displayName).update({
-            playedGames: increment
-        })
-    }
-
-    const value = {
+  // ToDo: add types
+  const updateUserData = ({
+    userUid,
+    characters,
+    gameMode,
+    status,
+    points,
+    duration,
+  }: any) => {
+    const data = {
+      datePlayed: Date.now(),
+      settings: {
         characters,
-        createDbEntryForUser,
-        updateUserWonGames,
-        updateUserDisplayNameGames,
-        updateUserWonPoints,
-        updateUserLostGames,
-        updateUserPlayedGames,
-        updateUserGameModesPlayed,
-        updateGameDurations,
-        fetchUserData,
-        getUserData,
-        userData
-    }
+        gameMode,
+        status,
+        points,
+        duration,
+      },
+    };
 
-    return (
-        <FirestoreContext.Provider value={value}>
-            {children}
-        </FirestoreContext.Provider>
-    )
+    updateDoc(doc(firestoreDatabase, "userData", userUid), {
+      playedGames: arrayUnion(data),
+    });
+  };
+
+  const values = useMemo(
+    () => ({
+      // characters,
+      userFirestoreData,
+      getUserData,
+      updateUserData,
+    }),
+    [userFirestoreData]
+  );
+
+  return (
+    <FirestoreContext.Provider value={values}>
+      {children}
+    </FirestoreContext.Provider>
+  );
 }

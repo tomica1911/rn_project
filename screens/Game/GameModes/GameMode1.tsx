@@ -10,26 +10,36 @@ import {
   COLOR_COMBINATION_1,
   STANDARDISED_STYLES,
 } from "../../../styles/styles";
+import { useFirestore } from "../../../contexts/firebaseContext";
+import { useAuth } from "../../../contexts/authContext";
+import {GameModes} from "../../../constants";
 
 type GameModeOneProps = {
   //ToDo: take setStartGame (that after &) from one place
-  formValues: Omit<GameSelectionState, "characters" | "selectedGameMode"> & {
+  formValues: Omit<GameSelectionState, "selectedGameMode"> & {
     setStartGame: (arg: boolean) => void;
   };
 };
 
 export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
+  //@ts-expect-error
+  const { updateUserData } = useFirestore();
+  //@ts-expect-error
+  const { currentUser } = useAuth();
+  const [reqSent, setReqSent] = useState<boolean>(false);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const [textInputValue, setTextInputValue] = useState<string>("");
-  const [counter, { start: startCountdown, reset: resetCountdown }] =
-    useCountdown({
-      seconds: formValues.duration,
-      interval: 1000,
-      isIncrement: false,
-    });
+  const [
+    counter,
+    { start: startCountdown, reset: resetCountdown, stop: stopCountdown },
+  ] = useCountdown({
+    seconds: formValues.duration,
+    interval: 1000,
+    isIncrement: false,
+  });
 
   useEffect(() => {
     startCountdown();
@@ -68,6 +78,7 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
     startCountdown();
     setCurrentCharIndex(0);
     setProgress(0);
+    setReqSent(false);
     setThrowOutIncorrect(false);
     setGameCompleted(false);
   };
@@ -80,17 +91,41 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
     }
   };
 
-  const getModalHeaderText = () => {
-    if (gameCompleted)
-      return `Congratulations, you've won ${Math.floor(
+  //@ts-expect-error
+  const updateUserStats = (status, points = 0) => {
+    if (currentUser && !reqSent) {
+      setReqSent((prevValue: boolean) => !prevValue);
+        return updateUserData({
+          userUid: currentUser.uid,
+          characters: formValues.characters,
+          gameMode: GameModes.ONE,
+          status,
+          points,
+          duration: formValues.duration,
+      })
+    }
+  };
+
+  const getModalHeaderTextAndUpdateUser = () => {
+    if (gameCompleted) {
+      const points = Math.floor(
         getPoints(
           formValues.duration,
           formValues.selectedCharacters.length - 1,
           1
         )
-      )} points`;
-    if (counter === 0) return "You have run out of time";
-    if (throwOutIncorrect) return "You have entered an incorrect value";
+      );
+      updateUserStats("gameCompleted", points);
+      return `Congratulations, you've won ${points} points`;
+    }
+    if (counter === 0) {
+      updateUserStats("timeout");
+      return "You have run out of time";
+    }
+    if (throwOutIncorrect) {
+      updateUserStats("incorrect");
+      return "You have entered an incorrect value";
+    }
   };
 
   return (
@@ -128,7 +163,7 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
           </View>
         }
         headerTitle={getModalHeaderTitle()}
-        headerText={getModalHeaderText() ?? ""}
+        headerText={getModalHeaderTextAndUpdateUser() ?? ""}
       />
       {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
         <>

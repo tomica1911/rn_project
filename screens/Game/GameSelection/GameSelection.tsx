@@ -5,12 +5,13 @@ import { GameMode1 } from "../GameModes/GameMode1";
 import { GameMode2 } from "../GameModes/GameMode2";
 import { shuffle } from "lodash";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
+import { GameModes } from "../../../constants";
 
 export interface GameSelectionState {
   characters: AvailableCharacters;
   duration: number;
   selectedCharacters: CharacterObject[];
-  selectedGameMode: string;
+  selectedGameMode: GameModes;
 }
 
 export const GameSelection = (): JSX.Element => {
@@ -19,7 +20,7 @@ export const GameSelection = (): JSX.Element => {
     characters: AvailableCharacters.HIRAGANA,
     duration: 2,
     selectedCharacters: [],
-    selectedGameMode: "1",
+    selectedGameMode: GameModes.ONE,
   });
 
   // ToDo: define proper type for any

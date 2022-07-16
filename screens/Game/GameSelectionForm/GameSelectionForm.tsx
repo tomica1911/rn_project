@@ -14,6 +14,7 @@ import {
   STANDARDISED_STYLES,
 } from "../../../styles/styles";
 import { Modal } from "../../../components/Modal/Modal";
+import { GameDurations } from "../../../constants";
 
 interface GameSelectionFormProps {
   //ToDo: check if all values from GameSelectionState are needed here and rename it to GameSelectionStateProps
@@ -225,7 +226,9 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
                 ? { width: 200, height: 70, backgroundColor: "white" }
                 : { width: 200, backgroundColor: "white" }
             }
-            onValueChange={(duration) => handleChange("duration", duration)}
+            onValueChange={(duration: GameDurations) =>
+              handleChange("duration", duration)
+            }
           >
             {renderDurationPickerItems()}
           </Picker>

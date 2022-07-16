@@ -7,7 +7,7 @@ import { Logout } from "../../screens/Authentication/Logout/Logout";
 import { Signup } from "../../screens/Authentication/Signup/Signup";
 import { Settings } from "../../screens/Settings/Settings";
 import { NavigationContainer } from "@react-navigation/native";
-import { Profile } from "../../screens/GameSettings/Profile";
+import { Profile } from "../../screens/Profile/Profile";
 
 const AppStack = createStackNavigator();
 
@@ -34,11 +34,7 @@ export const Stack = (): JSX.Element => {
           name="Play"
           component={GameSelection}
         />
-        <AppStack.Screen
-          options={styles}
-          name="Profile"
-          component={Profile}
-        />
+        <AppStack.Screen options={styles} name="Profile" component={Profile} />
         <AppStack.Screen
           options={styles}
           name="Dashboard"

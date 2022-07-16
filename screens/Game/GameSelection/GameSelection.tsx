@@ -5,11 +5,11 @@ import { GameMode1 } from "../GameModes/GameMode1";
 import { GameMode2 } from "../GameModes/GameMode2";
 import { shuffle } from "lodash";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
-import { GameModes } from "../../../constants";
+import { GameDurations, GameModes } from "../../../constants";
 
 export interface GameSelectionState {
   characters: AvailableCharacters;
-  duration: number;
+  duration: GameDurations;
   selectedCharacters: CharacterObject[];
   selectedGameMode: GameModes;
 }
@@ -18,7 +18,7 @@ export const GameSelection = (): JSX.Element => {
   const [startGame, setStartGame] = useState<boolean>(false);
   const [formValues, setFormValues] = useState<GameSelectionState>({
     characters: AvailableCharacters.HIRAGANA,
-    duration: 2,
+    duration: GameDurations.D2,
     selectedCharacters: [],
     selectedGameMode: GameModes.ONE,
   });

@@ -31,11 +31,24 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
 
   const buttonTitles = Object.values(SCREENS);
   const buttons = !currentUser
-    ? buttonTitles.filter((screenName) => !(screenName === SCREENS.LOGOUT || screenName === SCREENS.PROFILE || screenName === SCREENS.DASHBOARD))
+    ? buttonTitles.filter(
+        (screenName) =>
+          !(
+            screenName === SCREENS.LOGOUT ||
+            screenName === SCREENS.PROFILE ||
+            screenName === SCREENS.DASHBOARD ||
+            screenName === SCREENS.ACHIEVEMENTS
+          )
+      )
     : buttonTitles.filter(
-        (screenName) => !(screenName === SCREENS.LOGIN || screenName === SCREENS.SIGNUP)
+        (screenName) =>
+          !(screenName === SCREENS.LOGIN || screenName === SCREENS.SIGNUP)
       );
 
+  // ToDo: do all the ToDos
+  // ToDo: send emails to registered users
+  // ToDo: add push notifications
+  // ToDo: add ability to play games with friends
   return (
     <AppLayout>
       <View

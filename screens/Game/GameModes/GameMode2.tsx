@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import { characters as charDB } from "../../../characters";
@@ -14,7 +14,7 @@ import {
 } from "../../../styles/styles";
 import { useAuth } from "../../../contexts/authContext";
 import { useFirestore } from "../../../contexts/firebaseContext";
-import {GameModes} from "../../../constants";
+import { GameModes, Status } from "../../../constants";
 
 type GameModeTwoProps = {
   formValues: Omit<GameSelectionState, "selectedGameMode" | "setStartGame"> & {
@@ -163,8 +163,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
     }
   };
 
-  //@ts-expect-error
-  const updateUserStats = (status, points = 0) => {
+  const updateUserStats = (status: Status, points: number = 0) => {
     if (currentUser && !reqSent) {
       setReqSent((prevValue: boolean) => !prevValue);
       return updateUserData({
@@ -187,15 +186,16 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
           1
         )
       );
-      updateUserStats("win", points);
+
+      updateUserStats(Status.WIN, points);
       return `Congratulations, you've won ${points} points`;
     }
     if (counter === 0) {
-      updateUserStats("timeout");
+      updateUserStats(Status.TIMEOUT);
       return "You have run out of time";
     }
     if (throwOutIncorrect) {
-      updateUserStats("incorrect");
+      updateUserStats(Status.INCORRECT);
       return "You have entered an incorrect value";
     }
   };

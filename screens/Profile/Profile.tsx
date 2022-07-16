@@ -6,9 +6,9 @@ import {
   PointsGoalMilestones,
 } from "../../constants";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
-import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
-import { CustomizableButton } from "../../components/CustomizableButton/CustomizableButton";
+import { COLOR_COMBINATION_1 } from "../../styles/styles";
 
+// ToDo: add display name
 // @ts-expect-error
 export const Profile = ({ navigation }): JSX.Element => {
   return (
@@ -61,20 +61,6 @@ export const Profile = ({ navigation }): JSX.Element => {
           )
         )}
       </Picker>
-      <CustomizableButton
-        onPress={() => navigation.navigate("Main Menu")}
-        stylesButton={{
-          ...STANDARDISED_STYLES.CENTER_CONTENT,
-          ...STANDARDISED_STYLES.BUTTON,
-          marginTop: 10,
-          height: 50,
-          marginBottom: 10,
-          marginLeft: 5,
-          marginRight: 5,
-          backgroundColor: COLOR_COMBINATION_1.ORANGE,
-        }}
-        title="Back"
-      />
     </AppLayout>
   );
 };

@@ -1,13 +1,17 @@
-import React, {useContext, useMemo, useState} from "react";
+import React, { useContext, useMemo, useState } from "react";
 import {
   getFirestore,
   arrayUnion,
   getDoc,
   doc,
   updateDoc,
+  DocumentSnapshot,
   DocumentData,
 } from "firebase/firestore";
 import { FirebaseApp } from "../firebaseConfig";
+import { AvailableCharacters } from "../characters";
+import { GameModes, Status } from "../constants";
+import {UserFirestoreData} from "../types";
 
 const FirestoreContext = React.createContext({});
 
@@ -19,25 +23,48 @@ interface FirestoreProviderProps {
   children: JSX.Element | JSX.Element[];
 }
 
+export interface GameSettings {
+  characters: AvailableCharacters;
+  gameMode: GameModes;
+  status: Status;
+  points: number;
+  duration: number;
+}
+
+interface FirebaseContextValues {
+  userFirestoreData: DocumentData | undefined;
+  getUserData: (userId: string) => void;
+  updateUserData: ({
+    userUid,
+    characters,
+    gameMode,
+    status,
+    points,
+    duration,
+  }: GameSettings & { userUid: string }) => void;
+}
+
 //ToDo: define correct types
 export function FirestoreProvider({ children }: FirestoreProviderProps) {
   const firestoreDatabase = getFirestore(FirebaseApp);
-  const [userFirestoreData, setUserFirestoreData] = useState<DocumentData | undefined>(undefined);
+  const [userFirestoreData, setUserFirestoreData] = useState<
+    UserFirestoreData | undefined
+  >(undefined);
   // const [characters, setCharacters] = useState(false);
 
-  // ToDo: add types
-  const getUserData = (userUid: string) => {
-    //ToDo. add types, see if theres more specific query
+  const getUserData = (userUid: string): void => {
     getDoc(doc(firestoreDatabase, "userData", userUid))
-      .then((doc) => {
-        console.log("docData");
-        console.log(doc.data());
-        return setUserFirestoreData(Object.assign({}, doc.data()));
+      .then((doc: DocumentSnapshot) => {
+        return setUserFirestoreData(
+            // ToDo: see if you can remove Object.assign
+          Object.assign({}, doc.data()) as UserFirestoreData
+        );
       })
-      .catch((error: any) => console.log(error.message));
+      .catch((error: Error) =>
+        console.log(`Cannot get user data, error message: ${error.message}`)
+      );
   };
 
-  // ToDo: add types
   const updateUserData = ({
     userUid,
     characters,
@@ -45,8 +72,8 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
     status,
     points,
     duration,
-  }: any) => {
-    const data = {
+  }: GameSettings & { userUid: string }): void => {
+    const data: { datePlayed: number; settings: GameSettings } = {
       datePlayed: Date.now(),
       settings: {
         characters,
@@ -62,8 +89,8 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
     });
   };
 
-  const values = useMemo(
-    () => ({
+  const firebaseContextValues = useMemo(
+    (): FirebaseContextValues => ({
       // characters,
       userFirestoreData,
       getUserData,
@@ -73,7 +100,7 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
   );
 
   return (
-    <FirestoreContext.Provider value={values}>
+    <FirestoreContext.Provider value={firebaseContextValues}>
       {children}
     </FirestoreContext.Provider>
   );

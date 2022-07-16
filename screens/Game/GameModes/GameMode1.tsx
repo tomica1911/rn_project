@@ -1,4 +1,4 @@
-import { View, Text, TextInput } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
@@ -12,7 +12,7 @@ import {
 } from "../../../styles/styles";
 import { useFirestore } from "../../../contexts/firebaseContext";
 import { useAuth } from "../../../contexts/authContext";
-import {GameModes} from "../../../constants";
+import { GameModes, Status } from "../../../constants";
 
 type GameModeOneProps = {
   //ToDo: take setStartGame (that after &) from one place
@@ -91,8 +91,7 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
     }
   };
 
-  //@ts-expect-error
-  const updateUserStats = (status, points = 0) => {
+  const updateUserStats = (status: Status, points: number = 0) => {
     if (currentUser && !reqSent) {
       setReqSent((prevValue: boolean) => !prevValue);
         return updateUserData({
@@ -115,15 +114,15 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
           1
         )
       );
-      updateUserStats("gameCompleted", points);
+      updateUserStats(Status.WIN, points);
       return `Congratulations, you've won ${points} points`;
     }
     if (counter === 0) {
-      updateUserStats("timeout");
+      updateUserStats(Status.TIMEOUT);
       return "You have run out of time";
     }
     if (throwOutIncorrect) {
-      updateUserStats("incorrect");
+      updateUserStats(Status.INCORRECT);
       return "You have entered an incorrect value";
     }
   };

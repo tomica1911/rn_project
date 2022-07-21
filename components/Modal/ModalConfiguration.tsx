@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ViewStyle, TextStyle } from "react-native";
 import RNModal from "react-native-modal";
 import { STANDARDISED_STYLES } from "../../styles/styles";
 
@@ -27,12 +27,22 @@ export const ModalConfiguration = ({
   );
 };
 
-const ModalContainer = ({ children }: { children: React.ReactNode }) => (
-  <View style={styles.container}>{children}</View>
-);
+const ModalContainer = ({
+  children,
+  containerStyles,
+}: {
+  children: React.ReactNode;
+  containerStyles?: ViewStyle;
+}) => <View style={containerStyles ?? styles.container}>{children}</View>;
 
-const ModalHeader = ({ title }: { title: string }) => (
-  <View style={styles.header}>
+const ModalHeader = ({
+  title,
+  headerTitleStyles,
+}: {
+  title: string;
+  headerTitleStyles?: TextStyle;
+}) => (
+  <View style={headerTitleStyles ?? styles.header}>
     <Text style={styles.text}>{title}</Text>
   </View>
 );

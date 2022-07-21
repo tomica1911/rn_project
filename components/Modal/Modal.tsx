@@ -1,26 +1,37 @@
 import { ModalConfiguration } from "./ModalConfiguration";
-import { Text, View } from "react-native";
-import React, {ReactNode} from "react";
+import { Text, TextStyle, View, ViewStyle } from "react-native";
+import React, { ReactNode } from "react";
 
 interface ModalProps {
   isModalVisible: boolean;
   headerTitle: string;
+  headerTitleStyles?: TextStyle,
   headerText: string;
-  footerComponent: ReactNode
+  headerTextStyles?: TextStyle,
+  footerComponent: ReactNode;
+  containerStyles?: ViewStyle;
+  textStyles?: TextStyle;
 }
 
 export const Modal = ({
   isModalVisible,
   headerTitle,
+  headerTitleStyles,
   headerText,
   footerComponent,
+  containerStyles,
+  headerTextStyles,
 }: ModalProps) => (
   <ModalConfiguration isVisible={isModalVisible}>
-    <ModalConfiguration.Container>
+    <ModalConfiguration.Container containerStyles={containerStyles}>
       <View>
-        <ModalConfiguration.Header title={headerTitle} />
+        <ModalConfiguration.Header title={headerTitle} headerTitleStyles={headerTitleStyles} />
         <ModalConfiguration.Body>
-          <Text style={{ textAlign: "center" }}>{headerText}</Text>
+          <Text
+            style={Object.assign({ textAlign: "center" }, headerTextStyles)}
+          >
+            {headerText}
+          </Text>
         </ModalConfiguration.Body>
         <ModalConfiguration.Footer>{footerComponent}</ModalConfiguration.Footer>
       </View>

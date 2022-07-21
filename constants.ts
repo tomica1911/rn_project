@@ -5,9 +5,9 @@ export enum SCREENS {
   ACHIEVEMENTS = "Achievements",
   PREMIUM = "Premium",
   LOGIN = "Login",
-  LOGOUT = "Logout",
   SIGNUP = "Signup",
   SETTINGS = "Settings",
+  LOGOUT = "Logout",
 }
 
 export enum GameModes {
@@ -53,16 +53,79 @@ export const TipsOfTheDay = [
   "Tell me and I forget, teach me and I may remember, involve me and I learn.",
 ];
 
+export enum AchievementWorth {
+  WOOD = "WOOD",
+  SILVER = "SILVER",
+  GOLD = "GOLD",
+}
+
 export const AchievementsData = [
-  { level: 1, description: "Complete 100 competitive games" },
   {
-    level: 1,
-    description: "Gain 1000 points",
+    id: 1,
+    name: "",
+    worth: AchievementWorth.WOOD,
+    description: "Gain 1000 points.",
   },
-  { level: 2, description: "Complete 500 competitive games" },
-  { level: 2, description: "Gain 25000 points" },
-  { level: 3, description: "Complete 1000 competitive games" },
-  { level: 2, description: "Gain 75000 points" },
+  {
+    id: 2,
+    name: "",
+    level: AchievementWorth.WOOD,
+    description: "Complete 50 competitive games.",
+  },
+  {
+    id: 3,
+    name: "A star in making",
+    level: AchievementWorth.SILVER,
+    description: "Complete 500 competitive games.",
+  },
+  {
+    id: 4,
+    name: "Shine bright, like proxima.",
+    level: AchievementWorth.WOOD,
+    description: "Achieve your daily goal 5 times in a row.",
+  },
+  {
+    id: 5,
+    name: "One hundred thousand worlds away...",
+    level: AchievementWorth.SILVER,
+    description: "Gain 100 000 points.",
+  },
+  {
+    id: 6,
+    name: "My discipline, the paragon.",
+    level: AchievementWorth.SILVER,
+    description: "Achieve your daily goal 15 times in a row.",
+  },
+  {
+    id: 7,
+    name: "Remarkable, on 3 different levels!",
+    level: AchievementWorth.SILVER,
+    description: "Gain 50 000 points in 3 different character sets.",
+  },
+  {
+    id: 8,
+    name: "Diversity is the key",
+    level: AchievementWorth.GOLD,
+    description: "Gain 100 000 points in 3 different character sets.",
+  },
+  {
+    id: 9,
+    name: "My enemies are many, my equals are none...",
+    level: AchievementWorth.GOLD,
+    description: "Complete 1 000 competitive games.",
+  },
+  {
+    id: 10,
+    name: "Infinity, here I come!",
+    level: AchievementWorth.GOLD,
+    description: "Gain 1 000 000 points.",
+  },
+  {
+    id: 11,
+    name: "Discipline, I am your new master!",
+    level: AchievementWorth.GOLD,
+    description: "Achieve your daily goal 30 times in a row.",
+  },
 ];
 
 export const PointsGoalMilestones = [

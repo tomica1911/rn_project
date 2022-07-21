@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   Platform,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import {
   LineChart,
   BarChart,
@@ -16,12 +16,12 @@ import {
   StackedBarChart,
 } from "react-native-chart-kit";
 import Swiper from "react-native-swiper";
-import { GameSettings, useFirestore } from "../../contexts/firebaseContext";
+import { useFirestore } from "../../contexts/firebaseContext";
 import { useAuth } from "../../contexts/authContext";
 import { STANDARDISED_STYLES } from "../../styles/styles";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
-import { GameDurations, GameModes, Status } from "../../constants";
-import { GameData, UserFirestoreData } from "../../types";
+import { GameModes, Status } from "../../constants";
+import { GameData } from "../../types";
 import { Picker } from "@react-native-picker/picker";
 
 // @ts-expect-error

@@ -45,7 +45,9 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
           !(screenName === SCREENS.LOGIN || screenName === SCREENS.SIGNUP)
       );
 
+  // ToDo: Removes x's at Game Mode Chart in Dashboard
   // ToDo: do all the ToDos
+  // ToDo: make sure the app is compatible for iphone users
   // ToDo: send emails to registered users
   // ToDo: add push notifications
   // ToDo: add ability to play games with friends

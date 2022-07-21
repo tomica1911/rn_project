@@ -8,6 +8,7 @@ import { Signup } from "../../screens/Authentication/Signup/Signup";
 import { Settings } from "../../screens/Settings/Settings";
 import { NavigationContainer } from "@react-navigation/native";
 import { Profile } from "../../screens/Profile/Profile";
+import {Achievements} from "../../screens/Achievements/Achievements";
 
 const AppStack = createStackNavigator();
 
@@ -43,6 +44,7 @@ export const Stack = (): JSX.Element => {
         <AppStack.Screen options={styles} name="Login" component={Login} />
         <AppStack.Screen options={styles} name="Logout" component={Logout} />
         <AppStack.Screen options={styles} name="Signup" component={Signup} />
+        <AppStack.Screen options={styles} name="Achievements" component={Achievements} />
         <AppStack.Screen
           options={styles}
           name="Settings"

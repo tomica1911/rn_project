@@ -12,7 +12,7 @@ export enum AvailableCharacters {
 }
 
 export const characters: CharDB = {
-    //ToDo: all names shoul be lower-case
+    //ToDo: all names should be lower-case
     Hiragana: [
         {
             letter: "あ",

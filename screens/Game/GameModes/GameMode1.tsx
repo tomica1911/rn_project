@@ -1,11 +1,12 @@
-import { Text, TextInput, View } from "react-native";
+import {Text, TextInput, View, ViewStyle} from "react-native";
 import React, { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { useCountdown } from "usehooks-ts";
 import { Modal } from "../../../components/Modal/Modal";
 import { getPoints } from "../../../utils/utils";
-// import ProgressPie from "react-native-progress/Pie";
+// @ts-ignore
+import ProgressPie from "react-native-progress/Pie";
 import {
   COLOR_COMBINATION_1,
   STANDARDISED_STYLES,
@@ -32,12 +33,9 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const [textInputValue, setTextInputValue] = useState<string>("");
-  const [
-    counter,
-    { start: startCountdown, reset: resetCountdown, stop: stopCountdown },
-  ] = useCountdown({
-    seconds: formValues.duration,
-    interval: 1000,
+  const [counter, { startCountdown, resetCountdown }] = useCountdown({
+    countStart: formValues.duration,
+    intervalMs: 1000,
     isIncrement: false,
   });
 
@@ -94,14 +92,14 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
   const updateUserStats = (status: Status, points: number = 0) => {
     if (currentUser && !reqSent) {
       setReqSent((prevValue: boolean) => !prevValue);
-        return updateUserData({
-          userUid: currentUser.uid,
-          characters: formValues.characters,
-          gameMode: GameModes.ONE,
-          status,
-          points,
-          duration: formValues.duration,
-      })
+      return updateUserData({
+        userUid: currentUser.uid,
+        characters: formValues.characters,
+        gameMode: GameModes.ONE,
+        status,
+        points,
+        duration: formValues.duration,
+      });
     }
   };
 
@@ -188,13 +186,13 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
               {counter}
             </Text>
           </View>
-          {/*<View style={STANDARDISED_STYLES.CENTER_CONTENT}>*/}
-          {/*  <ProgressPie*/}
-          {/*    color={COLOR_COMBINATION_1.ORANGE}*/}
-          {/*    progress={progress * 0.01}*/}
-          {/*    size={50}*/}
-          {/*  />*/}
-          {/*</View>*/}
+          <View style={STANDARDISED_STYLES.CENTER_CONTENT as ViewStyle}>
+            <ProgressPie
+              color={COLOR_COMBINATION_1.ORANGE}
+              progress={progress * 0.01}
+              size={50}
+            />
+          </View>
           <View
             style={{
               margin: 5,

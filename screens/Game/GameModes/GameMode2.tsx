@@ -1,11 +1,12 @@
-import { Text, View } from "react-native";
+import {Text, View, ViewStyle} from "react-native";
 import React, { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import { characters as charDB } from "../../../characters";
 import { getPoints, getRandomNumberInRange } from "../../../utils/utils";
 import { ButtonGroup } from "@rneui/themed";
 import { useCountdown } from "usehooks-ts";
-// import ProgressPie from "react-native-progress/Pie";
+// @ts-ignore
+import ProgressPie from "react-native-progress/Pie";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { Modal } from "../../../components/Modal/Modal";
 import {
@@ -29,10 +30,10 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
   const [progress, setProgress] = useState(0);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
-  const [counter, { start: startCountdown, reset: resetCountdown }] =
+  const [counter, { startCountdown, resetCountdown }] =
     useCountdown({
-      seconds: formValues.duration,
-      interval: 1000,
+      countStart: formValues.duration,
+      intervalMs: 1000,
       isIncrement: false,
     });
   // @ts-expect-error
@@ -213,6 +214,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
     if (throwOutIncorrect) return "You have entered an incorrect value";
   };
 
+  // ToDo: randomize the order of appearing characters
   return (
     <View>
       <Modal
@@ -279,13 +281,14 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
               {counter}
             </Text>
           </View>
-          {/*<View style={STANDARDISED_STYLES.CENTER_CONTENT}>*/}
-          {/*  <ProgressPie*/}
-          {/*    color={COLOR_COMBINATION_1.ORANGE}*/}
-          {/*    progress={progress * 0.01}*/}
-          {/*    size={50}*/}
-          {/*  />*/}
-          {/*</View>*/}
+          {/* ToDo: try to remove the view style */}
+          <View style={STANDARDISED_STYLES.CENTER_CONTENT as ViewStyle}>
+            <ProgressPie
+              color={COLOR_COMBINATION_1.ORANGE}
+              progress={progress * 0.01}
+              size={50}
+            />
+          </View>
           <View>
             <Text
               style={{ color: COLOR_COMBINATION_1.ORANGE, textAlign: "center" }}

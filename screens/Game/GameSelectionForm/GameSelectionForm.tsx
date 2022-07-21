@@ -32,6 +32,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
   // const {userData} = useFirestore();
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [charSelectionVisible, setCharSelectionVisible] = useState(false);
   // @ts-ignore
   // const {characters} = useFirestore();
 
@@ -126,63 +127,99 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
           >
             Select characters
           </Text>
-          <View
-            style={{
-              height: 110,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
+          <CustomizableButton
+            onPress={() => setCharSelectionVisible(true)}
+            stylesButton={{
+              marginTop: 10,
+              height: 50,
+              ...STANDARDISED_STYLES.CENTER_CONTENT,
+              ...STANDARDISED_STYLES.BUTTON,
+              marginBottom: 10,
+              marginLeft: 5,
+              marginRight: 5,
             }}
-          >
-            <FlatList
-              persistentScrollbar
-              keyExtractor={(item, index) => item.letter + index}
-              numColumns={5}
-              data={characters.Hiragana}
-              renderItem={({ item }) => (
-                <CharacterTile
-                  selected={formValues.selectedCharacters.includes(item)}
-                  character={item.letter}
-                  onPress={() => {
-                    if (formValues.selectedCharacters.includes(item)) {
-                      return formValues.setFormValues(
-                        (prevValues: GameSelectionState) => {
-                          const withoutToBeRemoved =
-                            prevValues.selectedCharacters.filter(
-                              (charObj) => charObj.letter !== item.letter
-                            );
-                          return {
-                            ...prevValues,
-                            selectedCharacters: [...withoutToBeRemoved],
-                          };
+            title="Character Selection"
+          />
+          <Modal
+            containerStyles={{ backgroundColor: COLOR_COMBINATION_1.BLACK, borderColor: COLOR_COMBINATION_1.ORANGE, borderStyle: "solid", borderWidth: 10, borderRadius: 25 }}
+            headerTextStyles={{ color: COLOR_COMBINATION_1.ORANGE }}
+            headerTitleStyles={{ backgroundColor: COLOR_COMBINATION_1.ORANGE }}
+            isModalVisible={charSelectionVisible}
+            footerComponent={
+              <View
+                style={{
+                  height: 210,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <FlatList
+                  persistentScrollbar
+                  keyExtractor={(item, index) => item.letter + index}
+                  numColumns={5}
+                  data={characters.Hiragana}
+                  renderItem={({ item }) => (
+                    <CharacterTile
+                      selected={formValues.selectedCharacters.includes(item)}
+                      character={item.letter}
+                      onPress={() => {
+                        if (formValues.selectedCharacters.includes(item)) {
+                          return formValues.setFormValues(
+                            (prevValues: GameSelectionState) => {
+                              const withoutToBeRemoved =
+                                prevValues.selectedCharacters.filter(
+                                  (charObj) => charObj.letter !== item.letter
+                                );
+                              return {
+                                ...prevValues,
+                                selectedCharacters: [...withoutToBeRemoved],
+                              };
+                            }
+                          );
                         }
-                      );
-                    }
-                    return formValues.setFormValues(
-                      (prevValues: GameSelectionState) => {
-                        const duplicate = prevValues.selectedCharacters.find(
-                          (el: CharacterObject) => el.letter === item.letter
+                        return formValues.setFormValues(
+                          (prevValues: GameSelectionState) => {
+                            const duplicate =
+                              prevValues.selectedCharacters.find(
+                                (el: CharacterObject) =>
+                                  el.letter === item.letter
+                              );
+                            if (!duplicate) {
+                              return {
+                                ...prevValues,
+                                selectedCharacters: [
+                                  ...prevValues.selectedCharacters,
+                                  item,
+                                ],
+                              };
+                            }
+                            return {
+                              ...prevValues,
+                            };
+                          }
                         );
-                        if (!duplicate) {
-                          return {
-                            ...prevValues,
-                            selectedCharacters: [
-                              ...prevValues.selectedCharacters,
-                              item,
-                            ],
-                          };
-                        }
-                        return {
-                          ...prevValues,
-                        };
-                      }
-                    );
-                  }}
+                      }}
+                    />
+                  )}
+                  style={{ width: "100%" }}
                 />
-              )}
-              style={{ width: "100%" }}
-            />
-          </View>
+                <CustomizableButton
+                  onPress={() => setCharSelectionVisible(false)}
+                  stylesButton={{
+                    marginTop: 10,
+                    height: 50,
+                    alignSelf: "center",
+                    ...STANDARDISED_STYLES.CENTER_CONTENT,
+                    ...STANDARDISED_STYLES.BUTTON,
+                  }}
+                  title="Choose"
+                />
+              </View>
+            }
+            headerTitle="You're just one step away"
+            headerText={`Character selection \n\n Scroll down for more`}
+          />
           <Text
             style={{
               fontSize: 20,

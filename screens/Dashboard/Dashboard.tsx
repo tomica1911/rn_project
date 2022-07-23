@@ -238,7 +238,7 @@ export const Dashboard = ({ navigation }): JSX.Element => {
             </Text>
             <BarChart
               fromZero
-              yAxisSuffix="x"
+              yAxisSuffix=""
               yAxisLabel=""
               yAxisInterval={1} // optional, defaults to 1
               data={{

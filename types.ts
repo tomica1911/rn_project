@@ -1,10 +1,24 @@
-import { GameSettings } from "./contexts/firebaseContext";
+import {GameSettings} from "./contexts/firebaseContext";
 
 export interface GameData {
-  datePlayed: Date;
-  settings: GameSettings;
+    datePlayed: Date;
+    settings: GameSettings;
 }
 
 export interface UserFirestoreData {
-  playedGames: GameData[];
+    playedGames: GameData[];
+}
+
+export enum AchievementWorth {
+    BRONZE = "bronze",
+    SILVER = "silver",
+    GOLD = "gold"
+}
+
+export interface Achievement {
+    id: number,
+    worth: AchievementWorth,
+    description: string,
+    name: string,
+    achieved: boolean
 }

@@ -8,15 +8,16 @@ import { COLOR_COMBINATION_1 } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { TipsOfTheDay } from "../../constants";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../../types";
 
 //ToDo: add locale
 
 //ToDo: add types to navigation
-export const MainMenu = ({ navigation }: any): JSX.Element => {
-  const {
-    //@ts-expect-error
-    currentUser,
-  } = useAuth();
+export const MainMenu = ({
+  navigation,
+}: StackScreenProps<RootStackParamList, SCREENS.DASHBOARD>): JSX.Element => {
+  const { currentUser } = useAuth();
 
   const getTipindex = useMemo(() => {
     const currDayOfTheMonth = new Date().getDate();

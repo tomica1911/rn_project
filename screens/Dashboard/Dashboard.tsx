@@ -20,22 +20,22 @@ import { useFirestore } from "../../contexts/firebaseContext";
 import { useAuth } from "../../contexts/authContext";
 import { STANDARDISED_STYLES } from "../../styles/styles";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
-import { GameModes, Status } from "../../constants";
-import { GameData } from "../../types";
+import { GameModes, SCREENS, Status } from "../../constants";
+import { GameData, RootStackParamList } from "../../types";
 import { Picker } from "@react-native-picker/picker";
+import { StackScreenProps } from "@react-navigation/stack";
 
-// @ts-expect-error
-export const Dashboard = ({ navigation }): JSX.Element => {
-  // @ts-expect-error
+export const Dashboard = ({
+  navigation,
+}: StackScreenProps<RootStackParamList, SCREENS.DASHBOARD>): JSX.Element => {
   let { userFirestoreData, getUserData } = useFirestore();
-  // @ts-expect-error
   const { currentUser } = useAuth();
   useEffect(() => {
-    getUserData(currentUser.uid);
+    getUserData(currentUser!.uid);
   }, []);
 
   const getAverageGameDuration = () => {
-    const playedGamesDurations = userFirestoreData.playedGames.map(
+    const playedGamesDurations = userFirestoreData!.playedGames.map(
       (playedGame: any) => playedGame.settings.duration
     );
 
@@ -47,7 +47,6 @@ export const Dashboard = ({ navigation }): JSX.Element => {
         playedGamesDurations.length -
       1;
 
-    console.log(playedGamesDurations);
     return averageGameDuration.toFixed(1);
   };
 
@@ -58,7 +57,7 @@ export const Dashboard = ({ navigation }): JSX.Element => {
   };
 
   const getMostPlayedDuration = () => {
-    const playedGamesDurations = userFirestoreData.playedGames.map(
+    const playedGamesDurations = userFirestoreData!.playedGames.map(
       (playedGame: any) => playedGame.settings.duration
     );
     const durationCounts: Record<string, number> = {};
@@ -83,7 +82,7 @@ export const Dashboard = ({ navigation }): JSX.Element => {
   };
 
   const getPointsWon = () => {
-    const mappedPoints = userFirestoreData.playedGames.map(
+    const mappedPoints = userFirestoreData!.playedGames.map(
       (playedGame: GameData) => playedGame.settings.points
     );
     const totalPoints = mappedPoints.reduce(
@@ -98,7 +97,7 @@ export const Dashboard = ({ navigation }): JSX.Element => {
     const statusCount = Object.values(Status)
       .map((status: Status) => {
         return {
-          [status]: userFirestoreData.playedGames.filter(
+          [status]: userFirestoreData!.playedGames.filter(
             (gamePlayed: GameData) => gamePlayed.settings.status == status
           ).length,
         };
@@ -157,14 +156,10 @@ export const Dashboard = ({ navigation }): JSX.Element => {
             backgroundColor: "white",
           }}
           prevButton={
-            <Text style={{ fontSize: 50, color: "#F7B42F" }}>
-              {"<"}
-            </Text>
+            <Text style={{ fontSize: 50, color: "#F7B42F" }}>{"<"}</Text>
           }
           nextButton={
-            <Text style={{ fontSize: 50, color: "#F7B42F" }}>
-              {">"}
-            </Text>
+            <Text style={{ fontSize: 50, color: "#F7B42F" }}>{">"}</Text>
           }
           buttonWrapperStyle={{
             marginTop: 50,
@@ -251,7 +246,7 @@ export const Dashboard = ({ navigation }): JSX.Element => {
                   {
                     data: [
                       ...Object.values(GameModes).map((gameMode: string) => {
-                        return userFirestoreData.playedGames.reduce(
+                        return userFirestoreData!.playedGames.reduce(
                           (prevValue: any, currValue: any) =>
                             currValue.settings.gameMode == gameMode
                               ? prevValue + 1

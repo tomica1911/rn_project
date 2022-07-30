@@ -23,9 +23,7 @@ type GameModeOneProps = {
 };
 
 export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
-  //@ts-expect-error
   const { updateUserData } = useFirestore();
-  //@ts-expect-error
   const { currentUser } = useAuth();
   const [reqSent, setReqSent] = useState<boolean>(false);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);

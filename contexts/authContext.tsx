@@ -11,11 +11,38 @@ import {
   sendEmailVerification,
   User,
 } from "firebase/auth";
-import { useFirestore } from "./firebaseContext";
+
+interface AuthContextProps {
+  currentUser: User | undefined;
+  login: Function;
+  logout: Function;
+  authErrors: Error | undefined;
+  setAuthErrors: Function;
+  signup: Function;
+  resetUserPassword: Function;
+  updateUserEmail: Function;
+  updateUserPassword: Function;
+  authLoading: boolean;
+  sendVerificationEmail: Function;
+  verificationEmailResent: boolean;
+}
 
 // ToDo: setup enviroment variables for this to work with production
 // ToDo: refactor this component so it uses typescript
-const AuthContext = React.createContext({});
+const AuthContext = React.createContext<AuthContextProps>({
+  currentUser: undefined,
+  login: () => {},
+  authErrors: undefined,
+  setAuthErrors: () => {},
+  signup: () => {},
+  logout: () => {},
+  resetUserPassword: () => {},
+  updateUserEmail: () => {},
+  updateUserPassword: () => {},
+  authLoading: false,
+  sendVerificationEmail: () => {},
+  verificationEmailResent: false,
+});
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -40,8 +67,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [verificationEmailResent, setVerificationEmailResent] =
     useState<boolean>(false);
   const auth = getAuth();
-  // @ts-expect-error
-  const { createDbEntryForUser, getDbEntryForUser } = useFirestore();
 
   function signup(
     displayName: string,
@@ -56,7 +81,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
           updateProfile(user.user, { displayName });
           sendEmailVerification(user.user);
           setCurrentUser(user.user);
-          await createDbEntryForUser(user.user.uid);
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -106,7 +130,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
             wrongPassword: { message: "Password incorrect" },
           });
         }
-        console.log(error.message);
         return setAuthErrors({
           unknownError: {
             message:

@@ -28,13 +28,9 @@ interface GameSelectionFormProps {
 //ToDo: add return type to the component (GameSelectionFormProps)
 export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
   //ToDo: make commented lines of code work
-  // @ts-ignore
-  // const {userData} = useFirestore();
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [charSelectionVisible, setCharSelectionVisible] = useState(false);
-  // @ts-ignore
-  // const {characters} = useFirestore();
 
   const availableCharacters = Object.values(AvailableCharacters);
   // ToDo: add appropriate value to any

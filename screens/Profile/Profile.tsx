@@ -2,15 +2,16 @@ import { Text, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import React from "react";
 import {
-  GamesPlayedGoalMilestones,
-  PointsGoalMilestones,
+    GamesPlayedGoalMilestones,
+    PointsGoalMilestones, SCREENS,
 } from "../../constants";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { COLOR_COMBINATION_1 } from "../../styles/styles";
+import {StackScreenProps} from "@react-navigation/stack";
+import {RootStackParamList} from "../../types";
 
 // ToDo: add display name
-// @ts-expect-error
-export const Profile = ({ navigation }): JSX.Element => {
+export const Profile = ({ navigation }: StackScreenProps<RootStackParamList, SCREENS.PROFILE>): JSX.Element => {
   return (
     <AppLayout>
       <Text style={{ color: COLOR_COMBINATION_1.ORANGE, textAlign: "center" }}>

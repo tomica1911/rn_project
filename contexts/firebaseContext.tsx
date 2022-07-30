@@ -11,9 +11,19 @@ import {
 import { FirebaseApp } from "../firebaseConfig";
 import { AvailableCharacters } from "../characters";
 import { GameModes, Status } from "../constants";
-import {UserFirestoreData} from "../types";
+import { UserFirestoreData } from "../types";
 
-const FirestoreContext = React.createContext({});
+interface FirestoreContextProps {
+  userFirestoreData: DocumentData | undefined;
+  getUserData: Function;
+  updateUserData: Function;
+}
+
+const FirestoreContext = React.createContext<FirestoreContextProps>({
+  userFirestoreData: undefined,
+  getUserData: () => {},
+  updateUserData: () => {},
+});
 
 export function useFirestore() {
   return useContext(FirestoreContext);
@@ -56,7 +66,7 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
     getDoc(doc(firestoreDatabase, "userData", userUid))
       .then((doc: DocumentSnapshot) => {
         return setUserFirestoreData(
-            // ToDo: see if you can remove Object.assign
+          // ToDo: see if you can remove Object.assign
           Object.assign({}, doc.data()) as UserFirestoreData
         );
       })

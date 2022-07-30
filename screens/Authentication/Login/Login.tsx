@@ -41,21 +41,10 @@ export const Login = ({
     reValidateMode: "onSubmit",
   });
 
-  // ToDo: remove ts-expect-error directives
-  const {
-    //@ts-expect-error
-    currentUser,
-    //@ts-expect-error
-    authErrors,
-    //@ts-expect-error
-    setAuthErrors,
-    //@ts-expect-error
-    login,
-  } = useAuth();
+  const { currentUser, authErrors, setAuthErrors, login } = useAuth();
 
   // ToDo complete the loading functionality
   const [loading, setLoading] = useState<boolean>(false);
-  // const { fetchUserData } = useFirestore();
 
   useEffect(
     () => currentUser && navigation.navigate(SCREENS.MAIN),
@@ -66,6 +55,7 @@ export const Login = ({
     login(data.email, data.password);
   };
 
+  //@ts-expect-error
   const allErrors: FieldError = merge(errors, authErrors);
   const formHasErrors = Object.keys(allErrors).length > 0;
 

@@ -14,6 +14,9 @@ import {
 } from "../../../styles/styles";
 import { useAuth } from "../../../contexts/authContext";
 import merge from "lodash/merge";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../../../types";
+import { SCREENS } from "../../../constants";
 
 const yupSchema = yup.object().shape({
   displayName: yup
@@ -38,23 +41,17 @@ const yupSchema = yup.object().shape({
     .email("Please enter a valid email address"),
 });
 
-//@ts-expect-error
-export const Signup = ({ navigation }): JSX.Element => {
+export const Signup = ({
+  navigation,
+}: StackScreenProps<RootStackParamList, SCREENS.SIGNUP>): JSX.Element => {
   // ToDo: remove ts-expect-error directives
   const {
-    //@ts-expect-error
     signup,
-    //@ts-expect-error
     authLoading,
-    //@ts-expect-error
     authErrors,
-    //@ts-expect-error
     setAuthErrors,
-    //@ts-expect-error
     currentUser,
-    //@ts-expect-error
     sendVerificationEmail,
-    //@ts-expect-error
     verificationEmailResent,
   } = useAuth();
 
@@ -71,9 +68,6 @@ export const Signup = ({ navigation }): JSX.Element => {
 
   const [clickable, setClickable] = useState(false);
 
-  // // @ts-ignore
-  // const { createDbEntryForUser } = useFirestore();
-
   const onSignupFormSubmit = (data: FieldValues) => {
     signup(data.displayName, data.password, data.confirmPassword, data.email);
   };
@@ -85,6 +79,7 @@ export const Signup = ({ navigation }): JSX.Element => {
   //   }, 30000);
   // }
 
+  //@ts-expect-error
   const allErrors: FieldError = merge(errors, authErrors);
   const formHasErrors = Object.keys(allErrors).length > 0;
 
@@ -141,7 +136,7 @@ export const Signup = ({ navigation }): JSX.Element => {
                 title="Resend email"
               />
               <CustomizableButton
-                onPress={() => navigation.navigate("Main Menu")}
+                onPress={() => navigation.navigate(SCREENS.MAIN)}
                 stylesButton={{
                   marginTop: 10,
                   height: 50,

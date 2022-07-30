@@ -8,16 +8,15 @@ import {
   STANDARDISED_STYLES,
 } from "../../../styles/styles";
 import { Modal } from "../../../components/Modal/Modal";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../../../types";
+import { SCREENS } from "../../../constants";
 
-//@ts-expect-error
-export const Logout = ({ navigation }): JSX.Element => {
+export const Logout = ({
+  navigation,
+}: StackScreenProps<RootStackParamList, SCREENS.LOGOUT>): JSX.Element => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // ToDo: remove ts-expect-error directives
-  const {
-    //@ts-expect-error
-    logout,
-  } = useAuth();
+  const { logout } = useAuth();
 
   return (
     <AppLayout>
@@ -26,7 +25,7 @@ export const Logout = ({ navigation }): JSX.Element => {
         footerComponent={
           <View>
             <CustomizableButton
-              onPress={() => navigation.navigate("Main Menu")}
+              onPress={() => navigation.navigate(SCREENS.MAIN)}
               stylesButton={{
                 marginTop: 10,
                 height: 50,
@@ -53,7 +52,7 @@ export const Logout = ({ navigation }): JSX.Element => {
           Oh no, are you sure you want to leave?
         </Text>
         <CustomizableButton
-          onPress={() => navigation.navigate("Main Menu")}
+          onPress={() => navigation.navigate(SCREENS.MAIN)}
           stylesButton={{
             marginTop: 10,
             height: 50,

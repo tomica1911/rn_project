@@ -1,7 +1,11 @@
 import { View, Text } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../../types";
+import { SCREENS } from "../../constants";
 
-//@ts-expect-error
-export const Settings = ({ navigation }) => {
+export const Settings = ({
+  navigation,
+}: StackScreenProps<RootStackParamList, SCREENS.PROFILE>) => {
   // ToDo: add payment options tab
   // ToDo: add ability to change subscription
   // ToDo: add ability to cancel subscription

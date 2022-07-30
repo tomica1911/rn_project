@@ -36,9 +36,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
       intervalMs: 1000,
       isIncrement: false,
     });
-  // @ts-expect-error
   const { currentUser } = useAuth();
-  //@ts-expect-error
   const { updateUserData } = useFirestore();
 
   useEffect(() => {

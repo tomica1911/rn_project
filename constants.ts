@@ -2,6 +2,7 @@ import { Achievement, AchievementWorth } from "./types";
 
 export enum SCREENS {
   PLAY = "Play",
+  MAIN = "Main",
   PROFILE = "Profile",
   DASHBOARD = "Dashboard",
   ACHIEVEMENTS = "Achievements",

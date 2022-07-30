@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../../components/PasswordField/InputField";
@@ -11,6 +11,9 @@ import { Modal } from "../../../components/Modal/Modal";
 import { STANDARDISED_STYLES } from "../../../styles/styles";
 import { useAuth } from "../../../contexts/authContext";
 import merge from "lodash/merge";
+import { RootStackParamList } from "../../../types";
+import { StackScreenProps } from "@react-navigation/stack";
+import { SCREENS } from "../../../constants";
 
 const yupSchema = yup.object().shape({
   email: yup
@@ -23,9 +26,10 @@ const yupSchema = yup.object().shape({
     .min(8, "Please enter a valid password")
     .matches(/^([0-9a-zA-Z]{1,16}){8,}$/, "Please enter a valid password"),
 });
-
-//@ts-expect-error
-export const Login = ({ navigation }): JSX.Element => {
+// ToDo: add login with google, facebook and phone number
+export const Login = ({
+  navigation,
+}: StackScreenProps<RootStackParamList, SCREENS.LOGIN>): JSX.Element => {
   const {
     control,
     handleSubmit,
@@ -53,11 +57,13 @@ export const Login = ({ navigation }): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false);
   // const { fetchUserData } = useFirestore();
 
+  useEffect(
+    () => currentUser && navigation.navigate(SCREENS.MAIN),
+    [currentUser]
+  );
+
   const onFormSubmit = (data: FieldValues) => {
     login(data.email, data.password);
-    if (currentUser) {
-      navigation.navigate("Main Menu");
-    }
   };
 
   const allErrors: FieldError = merge(errors, authErrors);

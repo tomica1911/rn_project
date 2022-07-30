@@ -25,7 +25,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.tomica1911.rnproject"
+      "package": "com.tomica1911.rnproject",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

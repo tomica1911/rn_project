@@ -57,7 +57,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
           sendEmailVerification(user.user);
           setCurrentUser(user.user);
           await createDbEntryForUser(user.user.uid);
-          await getDbEntryForUser(user.user.uid);
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -93,7 +92,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signInWithEmailAndPassword(auth, email, password)
       .then((user) => {
         setCurrentUser(user.user);
-        getDbEntryForUser(user.user.uid);
       })
       .catch((error) => {
         if (error.code === "auth/user-not-found") {
@@ -108,6 +106,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             wrongPassword: { message: "Password incorrect" },
           });
         }
+        console.log(error.message);
         return setAuthErrors({
           unknownError: {
             message:

@@ -55,8 +55,10 @@ export const Login = ({
     login(data.email, data.password);
   };
 
-  //@ts-expect-error
-  const allErrors: FieldError = merge(errors, authErrors);
+  const allErrors: FieldError | Pick<FieldError, "message"> = merge(
+    errors,
+    authErrors
+  );
   const formHasErrors = Object.keys(allErrors).length > 0;
 
   return (

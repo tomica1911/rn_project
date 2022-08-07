@@ -44,7 +44,6 @@ const yupSchema = yup.object().shape({
 export const Signup = ({
   navigation,
 }: StackScreenProps<RootStackParamList, SCREENS.SIGNUP>): JSX.Element => {
-  // ToDo: remove ts-expect-error directives
   const {
     signup,
     authLoading,
@@ -79,12 +78,13 @@ export const Signup = ({
   //   }, 30000);
   // }
 
-  //@ts-expect-error
-  const allErrors: FieldError = merge(errors, authErrors);
+  const allErrors: FieldError | Pick<FieldError, "message"> = merge(
+    errors,
+    authErrors
+  );
   const formHasErrors = Object.keys(allErrors).length > 0;
 
   //ToDo: make an independent component for the spinner
-  // @ts-ignore
   return (
     <AppLayout>
       <Modal

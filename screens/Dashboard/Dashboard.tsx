@@ -129,6 +129,7 @@ export const Dashboard = ({
   // ToDo: add Contribution Graph for daily goals
   // ToDo: add Pie Chart for different game characters
   // ToDo: try to use AppLayout for the swiper, remove as any for styles
+  // ToDo: add statistics for achievements
   return (
     <>
       {!userFirestoreData ? (

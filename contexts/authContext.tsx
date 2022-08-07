@@ -28,7 +28,6 @@ interface AuthContextProps {
 }
 
 // ToDo: setup enviroment variables for this to work with production
-// ToDo: refactor this component so it uses typescript
 const AuthContext = React.createContext<AuthContextProps>({
   currentUser: undefined,
   login: () => {},

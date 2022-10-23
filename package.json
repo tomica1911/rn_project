@@ -52,7 +52,8 @@
     "react-navigation-stack": "^2.10.4",
     "ts-node": "^10.9.1",
     "usehooks-ts": "^2.5.4",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "react-native-svg": "12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

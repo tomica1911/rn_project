@@ -1,4 +1,4 @@
-import {Text, View, ViewStyle} from "react-native";
+import { Text, View, ViewStyle } from "react-native";
 import React, { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import { characters as charDB } from "../../../characters";
@@ -28,23 +28,21 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
   const [buttonGroupValues, setButtonGroupValues] = useState<string[]>([]);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isHelperCalled, setIsHelperCalled] = useState(false);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
-  const [counter, { startCountdown, resetCountdown }] =
-    useCountdown({
-      countStart: formValues.duration,
-      intervalMs: 1000,
-      isIncrement: false,
-    });
+  const [counter, { startCountdown, resetCountdown }] = useCountdown({
+    countStart: formValues.duration,
+    intervalMs: 1000,
+    isIncrement: false,
+  });
   const { currentUser } = useAuth();
   const { updateUserData } = useFirestore();
 
   useEffect(() => {
     startCountdown();
   }, []);
-
-  console.log(counter);
-  console.log(formValues.selectedCharacters[currentCharIndex].equivalents);
 
   // ToDo: add some proper typings and refactor this function and the function above
   const updateButtons = (buttonIndex: number) => {
@@ -82,44 +80,32 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
 
   const setValuesForButtonGroup = (): void => {
     const values = [];
-    let randomCharIndex = getRandomNumberInRange(
-      0,
-      charDB[formValues.characters].length - 1
-    );
+    const lettersArray = charDB.filter(
+      (arrayItem) => arrayItem.setName === formValues.characters
+    )[0].letters;
+    let randomCharIndex = getRandomNumberInRange(0, lettersArray.length - 1);
     let randomEquivalentIndex = getRandomNumberInRange(
       0,
-      charDB[formValues.characters][randomCharIndex].equivalents.length - 1
+      lettersArray[randomCharIndex].equivalents.length - 1
     );
     values.push(
-      charDB[formValues.characters][randomCharIndex].equivalents[
-        randomEquivalentIndex
-      ]
+      lettersArray[randomCharIndex].equivalents[randomEquivalentIndex]
     );
-    randomCharIndex = getRandomNumberInRange(
-      0,
-      charDB[formValues.characters].length - 1
-    );
+    randomCharIndex = getRandomNumberInRange(0, lettersArray.length - 1);
     randomEquivalentIndex = getRandomNumberInRange(
       0,
-      charDB[formValues.characters][randomCharIndex].equivalents.length - 1
+      lettersArray[randomCharIndex].equivalents.length - 1
     );
     values.push(
-      charDB[formValues.characters][randomCharIndex].equivalents[
-        randomEquivalentIndex
-      ]
+      lettersArray[randomCharIndex].equivalents[randomEquivalentIndex]
     );
-    randomCharIndex = getRandomNumberInRange(
-      0,
-      charDB[formValues.characters].length - 1
-    );
+    randomCharIndex = getRandomNumberInRange(0, lettersArray.length - 1);
     randomEquivalentIndex = getRandomNumberInRange(
       0,
-      charDB[formValues.characters][randomCharIndex].equivalents.length - 1
+      lettersArray[randomCharIndex].equivalents.length - 1
     );
     values.push(
-      charDB[formValues.characters][randomCharIndex].equivalents[
-        randomEquivalentIndex
-      ]
+      lettersArray[randomCharIndex].equivalents[randomEquivalentIndex]
     );
     let notFound: boolean = true;
     for (
@@ -135,7 +121,12 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
         notFound = false;
       }
     }
+
     if (notFound) {
+      randomEquivalentIndex = getRandomNumberInRange(
+        0,
+        formValues.selectedCharacters[currentCharIndex].equivalents.length - 1
+      );
       values[getRandomNumberInRange(0, values.length - 1)] =
         formValues.selectedCharacters[currentCharIndex].equivalents[
           randomEquivalentIndex
@@ -178,7 +169,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
 
   const getModalHeaderTextAndUpdateUser = () => {
     if (gameCompleted) {
-      const points = Math.floor(
+      let points = Math.floor(
         getPoints(
           formValues.duration,
           formValues.selectedCharacters.length - 1,
@@ -186,8 +177,12 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
         )
       );
 
+      if (isHelperCalled) {
+        points = 0;
+      }
+
       updateUserStats(Status.WIN, points);
-      return `Congratulations, you've won ${points} points`;
+      return `Congratulations, you've won ${points} points.`;
     }
     if (counter === 0) {
       updateUserStats(Status.TIMEOUT);
@@ -195,21 +190,8 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
     }
     if (throwOutIncorrect) {
       updateUserStats(Status.INCORRECT);
-      return "You have entered an incorrect value";
+      return "You have entered an incorrect value.";
     }
-  };
-
-  const getModalHeaderText = () => {
-    if (gameCompleted)
-      return `Congratulations, you've won ${Math.floor(
-        getPoints(
-          formValues.duration,
-          formValues.selectedCharacters.length - 1,
-          1
-        )
-      )} points`;
-    if (counter === 0) return "You have run out of time";
-    if (throwOutIncorrect) return "You have entered an incorrect value";
   };
 
   // ToDo: randomize the order of appearing characters
@@ -248,7 +230,19 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
           </View>
         }
         headerTitle={getModalHeaderTitle()}
-        headerText={getModalHeaderTextAndUpdateUser() ?? ""}
+        headerText={
+          (
+            <>
+              <Text>{getModalHeaderTextAndUpdateUser()}</Text>
+              {"\n"}
+              {isHelperCalled && (
+                <Text style={{ fontWeight: "bold" }}>
+                  Points resetted to 0 because of using help.
+                </Text>
+              )}
+            </>
+          ) ?? ""
+        }
       />
       {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
         <>
@@ -265,7 +259,15 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 150 }}>
+            <Text
+              style={{
+                fontSize:
+                  formValues.selectedCharacters[currentCharIndex].letter
+                    .length > 0
+                    ? 50
+                    : 150,
+              }}
+            >
               {formValues.selectedCharacters[currentCharIndex].letter}
             </Text>
           </View>
@@ -298,6 +300,67 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
               onPress={(buttonIndex: number) => updateButtons(buttonIndex)}
             />
           </View>
+          <View
+            style={{
+              marginTop: 20,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignSelf: "center",
+            }}
+          >
+            <CustomizableButton
+              onPress={() => {
+                setIsHelperCalled(true);
+                setIsModalVisible(true);
+              }}
+              title="Help"
+              stylesText={{ textDecorationLine: "underline", color: "white" }}
+              stylesButton={{
+                color: "white",
+                textDecorationLine: "underline",
+              }}
+            />
+          </View>
+          <Modal
+            isModalVisible={isModalVisible}
+            footerComponent={
+              <View>
+                <CustomizableButton
+                  onPress={() =>
+                    setIsModalVisible((prevValue: boolean) => !prevValue)
+                  }
+                  stylesButton={{
+                    marginTop: 10,
+                    height: 50,
+                    ...STANDARDISED_STYLES.CENTER_CONTENT,
+                    ...STANDARDISED_STYLES.BUTTON,
+                    marginBottom: 10,
+                    marginLeft: 5,
+                    marginRight: 5,
+                  }}
+                  title="Continue"
+                />
+              </View>
+            }
+            headerTitle="Help"
+            headerText={
+              <Text>
+                Ability to earn points for this round{" "}
+                <Text style={{ fontWeight: "bold" }}>removed</Text>. Suggested
+                solutions:{" "}
+                <Text style={{ fontWeight: "bold" }}>
+                  {formValues.selectedCharacters[
+                    currentCharIndex
+                  ].equivalents.reduce((accumulator, currentLetter, index) =>
+                    index === 0
+                      ? accumulator + currentLetter
+                      : accumulator + ", " + currentLetter
+                  )}
+                </Text>
+              </Text>
+            }
+          />
         </>
       )}
     </View>

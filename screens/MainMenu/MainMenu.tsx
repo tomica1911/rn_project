@@ -5,20 +5,14 @@ import { SCREENS } from "../../constants";
 import React, { useMemo } from "react";
 import { STANDARDISED_STYLES } from "../../styles/styles";
 import { COLOR_COMBINATION_1 } from "../../styles/styles";
-import { useAuth } from "../../contexts/authContext";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { TipsOfTheDay } from "../../constants";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../../types";
+import { useAuth } from "../../contexts/authContext";
 
 //ToDo: add locale
-
 //ToDo: add types to navigation
-export const MainMenu = ({
-  navigation,
-}: StackScreenProps<RootStackParamList, SCREENS.DASHBOARD>): JSX.Element => {
+export const MainMenu = ({ navigation }: any): JSX.Element => {
   const { currentUser } = useAuth();
-
   const getTipindex = useMemo(() => {
     const currDayOfTheMonth = new Date().getDate();
     const currentDayOfTheMonthString = currDayOfTheMonth.toString();
@@ -30,22 +24,15 @@ export const MainMenu = ({
     }
   }, []);
 
-  const buttonTitles = Object.values(SCREENS);
+  const buttonTitles = Object.values(SCREENS).filter(
+    (screenName) => screenName !== SCREENS.MAIN
+  );
   const buttons = !currentUser
-    ? buttonTitles.filter(
-        (screenName) =>
-          !(
-            screenName === SCREENS.LOGOUT ||
-            screenName === SCREENS.PROFILE ||
-            screenName === SCREENS.DASHBOARD ||
-            screenName === SCREENS.ACHIEVEMENTS
-          )
-      )
+    ? buttonTitles.filter((screenName) => screenName !== SCREENS.SIGNUP)
     : buttonTitles.filter(
         (screenName) =>
-          !(screenName === SCREENS.LOGIN || screenName === SCREENS.SIGNUP)
+          !(screenName === SCREENS.LOGIN || screenName === SCREENS.LOGOUT)
       );
-
   // ToDo: warn user about exiting the app with pressing back button
   // ToDo: Add snapshot & unit tests
   // ToDo: Do all the ToDos
@@ -83,7 +70,9 @@ export const MainMenu = ({
       </View>
       <View style={styles.container}>
         <ButtonGroup
-          onPress={(buttonIndex) => navigation.navigate(buttons[buttonIndex])}
+          onPress={(buttonIndex) =>
+            navigation.navigate(buttons[buttonIndex])
+          }
           vertical
           textStyle={{ color: "black" }}
           containerStyle={STANDARDISED_STYLES.BUTTON}

@@ -1,4 +1,4 @@
-import {Text, TextInput, View, ViewStyle} from "react-native";
+import { Text, TextInput, View, ViewStyle } from "react-native";
 import React, { useEffect, useState } from "react";
 import { GameSelectionState } from "../GameSelection/GameSelection";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
@@ -28,6 +28,8 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
   const [reqSent, setReqSent] = useState<boolean>(false);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isHelperCalled, setIsHelperCalled] = useState(false);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const [textInputValue, setTextInputValue] = useState<string>("");
@@ -103,13 +105,16 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
 
   const getModalHeaderTextAndUpdateUser = () => {
     if (gameCompleted) {
-      const points = Math.floor(
+      let points = Math.floor(
         getPoints(
           formValues.duration,
           formValues.selectedCharacters.length - 1,
           1
         )
       );
+      if (isHelperCalled) {
+        points = 0;
+      }
       updateUserStats(Status.WIN, points);
       return `Congratulations, you've won ${points} points`;
     }
@@ -164,8 +169,45 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
         <>
           <View
             style={{
-              width: 200,
-              height: 200,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 5,
+              justifyContent: "space-between",
+            }}
+          >
+            <View
+              style={{ alignSelf: "flex-end", marginBottom: 5, marginRight: 5 }}
+            >
+              <ProgressPie
+                color={COLOR_COMBINATION_1.ORANGE}
+                progress={progress * 0.01}
+                size={20}
+              />
+            </View>
+            <View>
+              <Text
+                style={{
+                  color: COLOR_COMBINATION_1.ORANGE,
+                  alignSelf: "center",
+                }}
+              >
+                Answer
+              </Text>
+              {/*ToDo: Define layout component and set width to maximum*/}
+              <TextInput
+                value={textInputValue}
+                style={{ backgroundColor: "white", width: 100 }}
+                onChangeText={(answer: string) =>
+                  handleTextInputChange(answer.toLowerCase())
+                }
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              width: 150,
+              height: 150,
               backgroundColor: "#DFDFD9",
               borderStyle: "solid",
               borderWidth: 5,
@@ -175,7 +217,15 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: 150 }}>
+            <Text
+              style={{
+                fontSize:
+                  formValues.selectedCharacters[currentCharIndex].letter
+                    .length > 0
+                    ? 50
+                    : 100,
+              }}
+            >
               {formValues.selectedCharacters[currentCharIndex].letter}
             </Text>
           </View>
@@ -184,29 +234,68 @@ export const GameMode1 = ({ formValues }: GameModeOneProps): JSX.Element => {
               {counter}
             </Text>
           </View>
-          <View style={STANDARDISED_STYLES.CENTER_CONTENT as ViewStyle}>
-            <ProgressPie
-              color={COLOR_COMBINATION_1.ORANGE}
-              progress={progress * 0.01}
-              size={50}
-            />
-          </View>
           <View
             style={{
-              margin: 5,
+              marginTop: 5,
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
+              alignSelf: "center",
             }}
           >
-            <Text style={{ color: COLOR_COMBINATION_1.ORANGE }}>Answer</Text>
-            {/*ToDo: Define layout component and set width to maximum*/}
-            <TextInput
-              value={textInputValue}
-              style={{ backgroundColor: "white", width: 150 }}
-              onChangeText={(answer: string) => handleTextInputChange(answer)}
+            <CustomizableButton
+              onPress={() => {
+                setIsHelperCalled(true);
+                setIsModalVisible(true);
+              }}
+              title="Help"
+              stylesText={{ textDecorationLine: "underline", color: "white" }}
+              stylesButton={{
+                color: "white",
+                textDecorationLine: "underline",
+              }}
             />
           </View>
+          {/* Extract this component somewhere else and use it in the other game mode*/}
+          <Modal
+            isModalVisible={isModalVisible}
+            footerComponent={
+              <View>
+                <CustomizableButton
+                  onPress={() =>
+                    setIsModalVisible((prevValue: boolean) => !prevValue)
+                  }
+                  stylesButton={{
+                    marginTop: 10,
+                    height: 50,
+                    ...STANDARDISED_STYLES.CENTER_CONTENT,
+                    ...STANDARDISED_STYLES.BUTTON,
+                    marginBottom: 10,
+                    marginLeft: 5,
+                    marginRight: 5,
+                  }}
+                  title="Continue"
+                />
+              </View>
+            }
+            headerTitle="Help"
+            headerText={
+              <Text>
+                Ability to earn points for this round{" "}
+                <Text style={{ fontWeight: "bold" }}>removed</Text>. Suggested
+                solutions:{" "}
+                <Text style={{ fontWeight: "bold" }}>
+                  {formValues.selectedCharacters[
+                    currentCharIndex
+                  ].equivalents.reduce((accumulator, currentLetter, index) =>
+                    index === 0
+                      ? accumulator + currentLetter
+                      : accumulator + ", " + currentLetter
+                  )}
+                </Text>
+              </Text>
+            }
+          />
         </>
       )}
     </View>

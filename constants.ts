@@ -1,16 +1,9 @@
-import { Achievement, AchievementWorth } from "./types";
-
 export enum SCREENS {
-  PLAY = "Play",
   MAIN = "Main",
-  PROFILE = "Profile",
-  DASHBOARD = "Dashboard",
-  ACHIEVEMENTS = "Achievements",
-  PREMIUM = "Premium",
+  PLAY = "Play",
   LOGIN = "Login",
-  SIGNUP = "Signup",
-  SETTINGS = "Settings",
   LOGOUT = "Logout",
+  SIGNUP = "Sign Up"
 }
 
 export enum GameModes {
@@ -54,98 +47,4 @@ export const TipsOfTheDay = [
   "Change your language and you change your thoughts.",
   "Stay focused.",
   "Tell me and I forget, teach me and I may remember, involve me and I learn.",
-];
-
-export const WorthColorMapperObject = {
-  [AchievementWorth.BRONZE]: "#CD7F32",
-  [AchievementWorth.SILVER]: "#C0C0C0",
-  [AchievementWorth.GOLD]: "#FFD700",
-};
-
-export const Achievements: Achievement[] = [
-  {
-    id: 1,
-    name: "A willingful beginner.",
-    worth: AchievementWorth.BRONZE,
-    description: "Gain 1000 points.",
-    achieved: false
-  },
-  {
-    id: 2,
-    name: "Beginning-ful.",
-    worth: AchievementWorth.BRONZE,
-    description: "Complete 50 competitive games.",
-    achieved: false
-  },
-  {
-    id: 3,
-    name: "A star in making.",
-    worth: AchievementWorth.BRONZE,
-    description: "Achieve your daily goal 5 times in a row.",
-    achieved: false
-  },
-  {
-    id: 4,
-    name: "Shine bright, like proxima.",
-    worth: AchievementWorth.SILVER,
-    description: "Complete 500 competitive games.",
-    achieved: false
-  },
-  {
-    id: 5,
-    name: "One hundred thousand worlds away...",
-    worth: AchievementWorth.SILVER,
-    description: "Gain 100 000 points.",
-    achieved: false
-  },
-  {
-    id: 6,
-    name: "My discipline, the paragon.",
-    worth: AchievementWorth.SILVER,
-    description: "Achieve your daily goal 15 times in a row.",
-    achieved: false
-  },
-  {
-    id: 7,
-    name: "Remarkable, on 3 different levels!",
-    worth: AchievementWorth.SILVER,
-    description: "Gain 50 000 points in 3 different character sets.",
-    achieved: false
-  },
-  {
-    id: 8,
-    name: "Diversity is the key",
-    worth: AchievementWorth.GOLD,
-    description: "Gain 100 000 points in 3 different character sets.",
-    achieved: false
-  },
-  {
-    id: 9,
-    name: "My enemies are many, my equals are none...",
-    worth: AchievementWorth.GOLD,
-    description: "Complete 1 000 competitive games.",
-    achieved: false
-  },
-  {
-    id: 10,
-    name: "Infinity, here I come!",
-    worth: AchievementWorth.GOLD,
-    description: "Gain 1 000 000 points.",
-    achieved: false
-  },
-  {
-    id: 11,
-    name: "Discipline, I am your new master!",
-    worth: AchievementWorth.GOLD,
-    description: "Achieve your daily goal 30 times in a row.",
-    achieved: false
-  },
-];
-
-export const PointsGoalMilestones = [
-  100, 300, 500, 1000, 2000, 3000, 5000, 7000, 10000,
-];
-
-export const GamesPlayedGoalMilestones = [
-  5, 10, 15, 20, 25, 30, 35, 40, 45, 50,
 ];

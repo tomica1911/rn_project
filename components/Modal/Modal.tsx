@@ -6,7 +6,7 @@ interface ModalProps {
   isModalVisible: boolean;
   headerTitle: string;
   headerTitleStyles?: TextStyle,
-  headerText: string;
+  headerText: string | JSX.Element;
   headerTextStyles?: TextStyle,
   footerComponent: ReactNode;
   containerStyles?: ViewStyle;

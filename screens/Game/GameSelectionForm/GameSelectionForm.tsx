@@ -99,7 +99,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
           </Text>
           <Picker
             itemStyle={{ marginTop: -70 }}
-            selectedValue={Object.values(AvailableCharacters)[0]}
+            selectedValue={formValues.characters}
             style={
               Platform.OS === "ios"
                 ? { width: 200, height: 70, backgroundColor: "white" }
@@ -137,7 +137,13 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
             title="Character Selection"
           />
           <Modal
-            containerStyles={{ backgroundColor: COLOR_COMBINATION_1.BLACK, borderColor: COLOR_COMBINATION_1.ORANGE, borderStyle: "solid", borderWidth: 10, borderRadius: 25 }}
+            containerStyles={{
+              backgroundColor: COLOR_COMBINATION_1.BLACK,
+              borderColor: COLOR_COMBINATION_1.ORANGE,
+              borderStyle: "solid",
+              borderWidth: 10,
+              borderRadius: 25,
+            }}
             headerTextStyles={{ color: COLOR_COMBINATION_1.ORANGE }}
             headerTitleStyles={{ backgroundColor: COLOR_COMBINATION_1.ORANGE }}
             isModalVisible={charSelectionVisible}
@@ -154,7 +160,11 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
                   persistentScrollbar
                   keyExtractor={(item, index) => item.letter + index}
                   numColumns={5}
-                  data={characters.Hiragana}
+                  data={
+                    characters.filter(
+                      (arrayItem) => arrayItem.setName === formValues.characters
+                    )[0].letters
+                  }
                   renderItem={({ item }) => (
                     <CharacterTile
                       selected={formValues.selectedCharacters.includes(item)}

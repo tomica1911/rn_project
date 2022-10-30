@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { GameSelectionState } from "../GameSelection/GameSelection";
 import { Picker } from "@react-native-picker/picker";
 import {
   AvailableCharacters,
@@ -14,7 +13,10 @@ import {
   STANDARDISED_STYLES,
 } from "../../../styles/styles";
 import { Modal } from "../../../components/Modal/Modal";
-import { GameDurations } from "../../../constants";
+import {GameDurations, SUBSCREENS} from "../../../constants";
+import { shuffle } from "lodash";
+import { AppLayout } from "../../../components/AppLayout/AppLayout";
+import { GameSelectionState } from "../../../types";
 
 interface GameSelectionFormProps {
   //ToDo: check if all values from GameSelectionState are needed here and rename it to GameSelectionStateProps
@@ -26,8 +28,14 @@ interface GameSelectionFormProps {
 }
 
 //ToDo: add return type to the component (GameSelectionFormProps)
-export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
+export const GameSelectionForm = ({ navigation }: any) => {
   //ToDo: make commented lines of code work
+  const [formValues, setFormValues] = useState<GameSelectionState>({
+    characters: AvailableCharacters.HIRAGANA,
+    duration: GameDurations.D2,
+    selectedCharacters: [],
+    selectedGameMode: SUBSCREENS.GAME_MODE_ONE,
+  });
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [charSelectionVisible, setCharSelectionVisible] = useState(false);
@@ -35,7 +43,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
   const availableCharacters = Object.values(AvailableCharacters);
   // ToDo: add appropriate value to any
   const handleChange = (key: keyof GameSelectionState, value: any) => {
-    formValues.setFormValues({ ...formValues, [key]: value });
+    setFormValues({ ...formValues, [key]: value });
   };
 
   // ToDo: see if this can be refactored
@@ -58,7 +66,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
   };
 
   return (
-    <>
+    <AppLayout>
       {!characters || !userData ? (
         <p>loading...</p>
       ) : (
@@ -89,7 +97,6 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
           />
           <Text
             style={{
-              fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
               color: COLOR_COMBINATION_1.ORANGE,
@@ -115,7 +122,6 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
           </Picker>
           <Text
             style={{
-              fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
               color: COLOR_COMBINATION_1.ORANGE,
@@ -171,7 +177,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
                       character={item.letter}
                       onPress={() => {
                         if (formValues.selectedCharacters.includes(item)) {
-                          return formValues.setFormValues(
+                          return setFormValues(
                             (prevValues: GameSelectionState) => {
                               const withoutToBeRemoved =
                                 prevValues.selectedCharacters.filter(
@@ -184,7 +190,7 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
                             }
                           );
                         }
-                        return formValues.setFormValues(
+                        return setFormValues(
                           (prevValues: GameSelectionState) => {
                             const duplicate =
                               prevValues.selectedCharacters.find(
@@ -228,7 +234,6 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
           />
           <Text
             style={{
-              fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
               color: COLOR_COMBINATION_1.ORANGE,
@@ -248,12 +253,11 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               handleChange("selectedGameMode", gameMode)
             }
           >
-            <Picker.Item key="key1" label="Game Mode 1" value={1} />
-            <Picker.Item key="key2" label="Game Mode 2" value={2} />
+            <Picker.Item key="key1" label="Game Mode 1" value={SUBSCREENS.GAME_MODE_ONE} />
+            <Picker.Item key="key2" label="Game Mode 2" value={SUBSCREENS.GAME_MODE_TWO} />
           </Picker>
           <Text
             style={{
-              fontSize: 20,
               marginTop: 10,
               marginBottom: 10,
               color: COLOR_COMBINATION_1.ORANGE,
@@ -280,7 +284,12 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
               if (formValues.selectedCharacters.length === 0) {
                 return setIsModalVisible(true);
               }
-              formValues.setStartGame(true);
+              navigation.navigate(formValues.selectedGameMode, {
+                formValues: {
+                  ...formValues,
+                  selectedCharacters: shuffle(formValues.selectedCharacters),
+                },
+              });
             }}
             stylesButton={{
               ...STANDARDISED_STYLES.CENTER_CONTENT,
@@ -296,6 +305,6 @@ export const GameSelectionForm = ({ formValues }: GameSelectionFormProps) => {
           />
         </>
       )}
-    </>
+    </AppLayout>
   );
 };

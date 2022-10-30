@@ -1,6 +1,5 @@
-import { Text, View, ViewStyle } from "react-native";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import React, { useEffect, useState } from "react";
-import { GameSelectionState } from "../GameSelection/GameSelection";
 import { characters as charDB } from "../../../characters";
 import { getPoints, getRandomNumberInRange } from "../../../utils/utils";
 import { ButtonGroup } from "@rneui/themed";
@@ -15,15 +14,17 @@ import {
 } from "../../../styles/styles";
 import { useAuth } from "../../../contexts/authContext";
 import { useFirestore } from "../../../contexts/firebaseContext";
-import { GameModes, Status } from "../../../constants";
+import { SCREENS, Status } from "../../../constants";
+import { AppLayout } from "../../../components/AppLayout/AppLayout";
+//
+// type GameModeTwoProps = {
+//   formValues: Omit<GameSelectionState, "selectedGameMode" | "setStartGame"> & {
+//     setStartGame: (arg: boolean) => void;
+//   };
+// };
 
-type GameModeTwoProps = {
-  formValues: Omit<GameSelectionState, "selectedGameMode" | "setStartGame"> & {
-    setStartGame: (arg: boolean) => void;
-  };
-};
-
-export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
+export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
+  const formValues = route.params.formValues;
   const [reqSent, setReqSent] = useState<boolean>(false);
   const [buttonGroupValues, setButtonGroupValues] = useState<string[]>([]);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
@@ -32,11 +33,12 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
   const [isHelperCalled, setIsHelperCalled] = useState(false);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
-  const [counter, { startCountdown, resetCountdown }] = useCountdown({
-    countStart: formValues.duration,
-    intervalMs: 1000,
-    isIncrement: false,
-  });
+  const [counter, { startCountdown, resetCountdown, stopCountdown }] =
+    useCountdown({
+      countStart: formValues.duration,
+      intervalMs: 1000,
+      isIncrement: false,
+    });
   const { currentUser } = useAuth();
   const { updateUserData } = useFirestore();
 
@@ -55,6 +57,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
         // ToDo: think about what should happen at the end
         if (currentCharIndex + 1 == formValues.selectedCharacters.length) {
           setGameCompleted(true);
+          stopCountdown();
         } else {
           setCurrentCharIndex((prevCurrentIndex) => prevCurrentIndex + 1);
           setProgress(
@@ -138,7 +141,9 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
   const startAgainWithCurrentSettings = () => {
     resetCountdown();
     startCountdown();
+    setIsModalVisible(false);
     setCurrentCharIndex(0);
+    setIsHelperCalled(false);
     setProgress(0);
     setThrowOutIncorrect(false);
     setGameCompleted(false);
@@ -159,7 +164,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
       return updateUserData({
         userUid: currentUser.uid,
         characters: formValues.characters,
-        gameMode: GameModes.TWO,
+        gameMode: SCREENS.GAME_MODE_TWO,
         status,
         points: points,
         duration: formValues.duration,
@@ -182,7 +187,7 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
       }
 
       updateUserStats(Status.WIN, points);
-      return `Congratulations, you've won ${points} points.`;
+      return `You've won ${points} points.`;
     }
     if (counter === 0) {
       updateUserStats(Status.TIMEOUT);
@@ -196,173 +201,188 @@ export const GameMode2 = ({ formValues }: GameModeTwoProps): JSX.Element => {
 
   // ToDo: randomize the order of appearing characters
   return (
-    <View>
-      <Modal
-        isModalVisible={gameCompleted || counter === 0 || throwOutIncorrect}
-        footerComponent={
-          <View>
-            <CustomizableButton
-              onPress={() => formValues.setStartGame(false)}
-              stylesButton={{
-                marginTop: 10,
-                height: 50,
-                ...STANDARDISED_STYLES.CENTER_CONTENT,
-                ...STANDARDISED_STYLES.BUTTON,
-                marginBottom: 10,
-                marginLeft: 5,
-                marginRight: 5,
-              }}
-              title="Back to selection"
-            />
-            <CustomizableButton
-              onPress={() => startAgainWithCurrentSettings()}
-              stylesButton={{
-                marginTop: 10,
-                height: 50,
-                ...STANDARDISED_STYLES.CENTER_CONTENT,
-                ...STANDARDISED_STYLES.BUTTON,
-                marginBottom: 10,
-                marginLeft: 5,
-                marginRight: 5,
-              }}
-              title="Try again"
-            />
-          </View>
-        }
-        headerTitle={getModalHeaderTitle()}
-        headerText={
-          (
-            <>
-              <Text>{getModalHeaderTextAndUpdateUser()}</Text>
-              {"\n"}
-              {isHelperCalled && (
-                <Text style={{ fontWeight: "bold" }}>
-                  Points resetted to 0 because of using help.
-                </Text>
-              )}
-            </>
-          ) ?? ""
-        }
-      />
-      {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
-        <>
-          <View
-            style={{
-              width: 200,
-              height: 200,
-              backgroundColor: "#DFDFD9",
-              borderStyle: "solid",
-              borderWidth: 5,
-              borderColor: "#F7B42F",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize:
-                  formValues.selectedCharacters[currentCharIndex].letter
-                    .length > 0
-                    ? 50
-                    : 150,
-              }}
-            >
-              {formValues.selectedCharacters[currentCharIndex].letter}
-            </Text>
-          </View>
-          <View style={{ margin: 5 }}>
-            <Text
-              style={{
-                alignSelf: "center",
-                color: "#F7B42F",
-              }}
-            >
-              {counter}
-            </Text>
-          </View>
-          {/* ToDo: try to remove the view style */}
-          <View style={STANDARDISED_STYLES.CENTER_CONTENT as ViewStyle}>
-            <ProgressPie
-              color={COLOR_COMBINATION_1.ORANGE}
-              progress={progress * 0.01}
-              size={50}
-            />
-          </View>
-          <View>
-            <Text
-              style={{ color: COLOR_COMBINATION_1.ORANGE, textAlign: "center" }}
-            >
-              Choose a correct answer
-            </Text>
-            <ButtonGroup
-              buttons={buttonGroupValues}
-              onPress={(buttonIndex: number) => updateButtons(buttonIndex)}
-            />
-          </View>
-          <View
-            style={{
-              marginTop: 20,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignSelf: "center",
-            }}
-          >
-            <CustomizableButton
-              onPress={() => {
-                setIsHelperCalled(true);
-                setIsModalVisible(true);
-              }}
-              title="Help"
-              stylesText={{ textDecorationLine: "underline", color: "white" }}
-              stylesButton={{
-                color: "white",
-                textDecorationLine: "underline",
-              }}
-            />
-          </View>
-          <Modal
-            isModalVisible={isModalVisible}
-            footerComponent={
-              <View>
-                <CustomizableButton
-                  onPress={() =>
-                    setIsModalVisible((prevValue: boolean) => !prevValue)
-                  }
-                  stylesButton={{
-                    marginTop: 10,
-                    height: 50,
-                    ...STANDARDISED_STYLES.CENTER_CONTENT,
-                    ...STANDARDISED_STYLES.BUTTON,
-                    marginBottom: 10,
-                    marginLeft: 5,
-                    marginRight: 5,
-                  }}
-                  title="Continue"
-                />
-              </View>
-            }
-            headerTitle="Help"
-            headerText={
-              <Text>
-                Ability to earn points for this round{" "}
-                <Text style={{ fontWeight: "bold" }}>removed</Text>. Suggested
-                solutions:{" "}
-                <Text style={{ fontWeight: "bold" }}>
-                  {formValues.selectedCharacters[
-                    currentCharIndex
-                  ].equivalents.reduce((accumulator, currentLetter, index) =>
-                    index === 0
-                      ? accumulator + currentLetter
-                      : accumulator + ", " + currentLetter
-                  )}
-                </Text>
+    <AppLayout>
+      <View>
+        <Modal
+          isModalVisible={gameCompleted || counter === 0 || throwOutIncorrect}
+          footerComponent={
+            <View>
+              <CustomizableButton
+                onPress={() =>
+                  navigation.navigate(SCREENS.PLAY, { subsequent: true })
+                }
+                stylesButton={styles.modalBackButton}
+                title="Back to selection"
+              />
+              <CustomizableButton
+                onPress={() => startAgainWithCurrentSettings()}
+                stylesButton={styles.modalTryAgainButton}
+                title="Try again"
+              />
+            </View>
+          }
+          headerTitle={getModalHeaderTitle()}
+          headerText={
+            (
+              <>
+                <Text>{getModalHeaderTextAndUpdateUser()}</Text>
+                {"\n"}
+                {isHelperCalled && !(counter === 0) && (
+                  <Text>Points resetted to 0 because of using help.</Text>
+                )}
+              </>
+            ) ?? ""
+          }
+        />
+        {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
+          <>
+            <View style={styles.characterBox}>
+              <Text
+                style={{
+                  fontSize:
+                    formValues.selectedCharacters[currentCharIndex].letter
+                      .length > 0
+                      ? 50
+                      : 150,
+                }}
+              >
+                {formValues.selectedCharacters[currentCharIndex].letter}
               </Text>
-            }
-          />
-        </>
-      )}
-    </View>
+            </View>
+            <View style={{ margin: 5 }}>
+              <Text style={styles.counterNumber}>{counter}</Text>
+            </View>
+            {/* ToDo: try to remove the view style */}
+            <View style={STANDARDISED_STYLES.CENTER_CONTENT as ViewStyle}>
+              <ProgressPie
+                color={COLOR_COMBINATION_1.ORANGE}
+                progress={progress * 0.01}
+                size={50}
+              />
+            </View>
+            <View>
+              <Text style={styles.chooseAnswerText}>
+                Choose a correct answer
+              </Text>
+              <ButtonGroup
+                buttons={buttonGroupValues}
+                onPress={(buttonIndex: number) => updateButtons(buttonIndex)}
+              />
+            </View>
+            <View style={styles.helperContainer}>
+              <CustomizableButton
+                onPress={() => {
+                  setIsHelperCalled(true);
+                  setIsModalVisible(true);
+                }}
+                title="Help"
+                stylesText={styles.helpButton}
+                stylesButton={styles.helpButton}
+              />
+            </View>
+            <Modal
+              isModalVisible={isModalVisible}
+              footerComponent={
+                <View>
+                  <CustomizableButton
+                    onPress={() =>
+                      setIsModalVisible((prevValue: boolean) => !prevValue)
+                    }
+                    stylesButton={styles.modalContinueButton}
+                    title="Continue"
+                  />
+                </View>
+              }
+              headerTitle="Help"
+              headerText={
+                <Text>
+                  Ability to earn points for this round{" "}
+                  <Text style={styles.underlinedText}>removed.</Text>
+                  {"\n"}
+                  {"\n"} Suggested solutions:{"\n"}
+                  <Text>
+                    {formValues.selectedCharacters[
+                      currentCharIndex
+                    ].equivalents.reduce(
+                      (
+                        accumulator: string,
+                        currentLetter: string,
+                        index: number
+                      ) =>
+                        index === 0
+                          ? accumulator + currentLetter
+                          : accumulator + ", " + currentLetter
+                    )}
+                  </Text>
+                </Text>
+              }
+            />
+          </>
+        )}
+      </View>
+    </AppLayout>
   );
 };
+
+const styles = StyleSheet.create({
+  modalBackButton: {
+    marginTop: 10,
+    height: 50,
+    ...STANDARDISED_STYLES.CENTER_CONTENT,
+    ...STANDARDISED_STYLES.BUTTON,
+    marginBottom: 10,
+    marginLeft: 5,
+    marginRight: 5,
+  } as any,
+  modalTryAgainButton: {
+    marginTop: 10,
+    height: 50,
+    ...STANDARDISED_STYLES.CENTER_CONTENT,
+    ...STANDARDISED_STYLES.BUTTON,
+    marginBottom: 10,
+    marginLeft: 5,
+    marginRight: 5,
+  } as any,
+  characterBox: {
+    width: 200,
+    height: 200,
+    backgroundColor: "#DFDFD9",
+    borderStyle: "solid",
+    borderWidth: 5,
+    borderColor: "#F7B42F",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  counterNumber: {
+    alignSelf: "center",
+    color: "#F7B42F",
+  },
+  chooseAnswerText: {
+    color: COLOR_COMBINATION_1.ORANGE,
+    textAlign: "center",
+  },
+  helperContainer: {
+    marginTop: 20,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  helpButton: {
+    color: "white",
+    textDecorationLine: "underline",
+  },
+  modalContinueButton: {
+    marginTop: 10,
+    height: 50,
+    ...STANDARDISED_STYLES.CENTER_CONTENT,
+    ...STANDARDISED_STYLES.BUTTON,
+    marginBottom: 10,
+    marginLeft: 5,
+    marginRight: 5,
+  } as any,
+  underlinedText: {
+    textDecorationLine: "underline",
+  },
+});

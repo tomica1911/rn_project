@@ -9,8 +9,6 @@ import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { TipsOfTheDay } from "../../constants";
 import { useAuth } from "../../contexts/authContext";
 
-//ToDo: add locale
-//ToDo: add types to navigation
 export const MainMenu = ({ navigation }: any): JSX.Element => {
   const { currentUser } = useAuth();
   const getTipindex = useMemo(() => {
@@ -27,54 +25,25 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
   const buttonTitles = Object.values(SCREENS).filter(
     (screenName) => screenName !== SCREENS.MAIN
   );
-  const buttons = !currentUser
-    ? buttonTitles.filter((screenName) => screenName !== SCREENS.SIGNUP)
-    : buttonTitles.filter(
+
+  const buttons = currentUser
+    ? buttonTitles.filter(
         (screenName) =>
-          !(screenName === SCREENS.LOGIN || screenName === SCREENS.LOGOUT)
-      );
-  // ToDo: warn user about exiting the app with pressing back button
-  // ToDo: Add snapshot & unit tests
-  // ToDo: Do all the ToDos
-  // ToDo: Make sure the app is compatible for iphone users
-  // ToDo: Send emails to registered users
-  // ToDo: Add push notifications
-  // ToDo: Add ability to play games with friends
+          screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
+      )
+    : buttonTitles.filter((screenName) => !(screenName === SCREENS.LOGOUT));
+
   return (
     <AppLayout>
-      <View
-        style={{
-          backgroundColor: COLOR_COMBINATION_1.ORANGE,
-          width: 300,
-          borderRadius: 20,
-          height: 100,
-          borderWidth: 5,
-          borderColor: "white",
-        }}
-      >
-        <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-          Tip of the day:
-        </Text>
-        <Text
-          style={{
-            textAlign: "center",
-            marginLeft: 30,
-            marginRight: 30,
-            overflow: "hidden",
-            marginTop: 5,
-            marginBottom: 20,
-          }}
-        >
-          {TipsOfTheDay[getTipindex]}
-        </Text>
+      <View style={styles.quoteBox}>
+        <Text style={styles.quoteHeadline}>Quote of the day:</Text>
+        <Text style={styles.quoteText}>{TipsOfTheDay[getTipindex]}</Text>
       </View>
       <View style={styles.container}>
         <ButtonGroup
-          onPress={(buttonIndex) =>
-            navigation.navigate(buttons[buttonIndex])
-          }
+          onPress={(buttonIndex) => navigation.navigate(buttons[buttonIndex])}
           vertical
-          textStyle={{ color: "black" }}
+          textStyle={styles.buttonGroup}
           containerStyle={STANDARDISED_STYLES.BUTTON}
           buttons={buttons}
         />
@@ -91,4 +60,38 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  quoteText: {
+    textAlign: "center",
+    marginLeft: 30,
+    marginRight: 30,
+    overflow: "hidden",
+    marginTop: 5,
+    marginBottom: 20,
+  },
+  quoteBox: {
+    backgroundColor: COLOR_COMBINATION_1.ORANGE,
+    width: 300,
+    borderRadius: 20,
+    height: 100,
+    borderWidth: 5,
+    borderColor: "white",
+  },
+  quoteHeadline: {
+    textAlign: "center",
+  },
+  buttonGroup: {
+    color: "black",
+  },
 });
+
+//ToDos
+//______________________________________________________________________________________________________________________
+// ToDo: warn user about exiting the app with pressing back button
+// ToDo: Add snapshot & unit tests
+// ToDo: Do all the ToDos
+// ToDo: Make sure the app is compatible for iphone users
+// ToDo: Send emails to registered users
+// ToDo: Add push notifications
+// ToDo: Add ability to play games with friends
+// ToDo: add locale
+// ToDo: add types to navigation

@@ -1,14 +1,11 @@
 export enum SCREENS {
   MAIN = "Main",
   PLAY = "Play",
+  GAME_MODE_ONE = "Game Mode 1",
+  GAME_MODE_TWO = "Game Mode 1",
   LOGIN = "Login",
   LOGOUT = "Logout",
-  SIGNUP = "Sign Up"
-}
-
-export enum GameModes {
-  ONE = "1",
-  TWO = "2",
+  SIGNUP = "Sign Up",
 }
 
 export enum GameDurations {

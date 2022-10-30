@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { View } from "react-native";
+import { COLOR_COMBINATION_1 } from "../../styles/styles";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -16,7 +17,7 @@ export const AppLayout = ({ children }: AppLayoutProps): JSX.Element => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: "#111214",
+        backgroundColor: COLOR_COMBINATION_1.BLACK,
       }}
     >
       {children}

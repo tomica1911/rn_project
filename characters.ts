@@ -15,299 +15,299 @@ export const characters: { setName: AvailableCharacters; letters: CharacterObjec
     letters: [
       {
         letter: "あ",
-        equivalents: ["A"],
+        equivalents: ["a"],
       },
       {
         letter: "い",
-        equivalents: ["I"],
+        equivalents: ["i"],
       },
       {
         letter: "う",
-        equivalents: ["U"],
+        equivalents: ["u"],
       },
       {
         letter: "え",
-        equivalents: ["E"],
+        equivalents: ["e"],
       },
       {
         letter: "お",
-        equivalents: ["O"],
+        equivalents: ["o"],
       },
       {
         letter: "か",
-        equivalents: ["KA"],
+        equivalents: ["ka"],
       },
       {
         letter: "が",
-        equivalents: ["GA"],
+        equivalents: ["ga"],
       },
       {
         letter: "き",
-        equivalents: ["KI"],
+        equivalents: ["ki"],
       },
       {
         letter: "ぎ",
-        equivalents: ["GI"],
+        equivalents: ["gi"],
       },
       {
         letter: "く",
-        equivalents: ["KU"],
+        equivalents: ["ku"],
       },
       {
         letter: "ぐ",
-        equivalents: ["GU"],
+        equivalents: ["gu"],
       },
       {
         letter: "け",
-        equivalents: ["KE"],
+        equivalents: ["ke"],
       },
       {
         letter: "げ",
-        equivalents: ["GE"],
+        equivalents: ["ge"],
       },
       {
         letter: "こ",
-        equivalents: ["KO"],
+        equivalents: ["ko"],
       },
       {
         letter: "ご",
-        equivalents: ["GO"],
+        equivalents: ["go"],
       },
       {
         letter: "さ",
-        equivalents: ["SA"],
+        equivalents: ["sa"],
       },
       {
         letter: "ざ",
-        equivalents: ["ZA"],
+        equivalents: ["za"],
       },
       {
         letter: "し",
-        equivalents: ["SI"],
+        equivalents: ["si"],
       },
       {
         letter: "じ",
-        equivalents: ["ZI"],
+        equivalents: ["zi"],
       },
       {
         letter: "す",
-        equivalents: ["SU"],
+        equivalents: ["su"],
       },
       {
         letter: "ず",
-        equivalents: ["ZU"],
+        equivalents: ["zu"],
       },
       {
         letter: "せ",
-        equivalents: ["SE"],
+        equivalents: ["se"],
       },
       {
         letter: "ぜ",
-        equivalents: ["ZE"],
+        equivalents: ["ze"],
       },
       {
         letter: "そ",
-        equivalents: ["SO"],
+        equivalents: ["so"],
       },
       {
         letter: "ぞ",
-        equivalents: ["ZO"],
+        equivalents: ["zo"],
       },
       {
         letter: "た",
-        equivalents: ["TA"],
+        equivalents: ["ta"],
       },
       {
         letter: "だ",
-        equivalents: ["DA"],
+        equivalents: ["da"],
       },
       {
         letter: "ち",
-        equivalents: ["TI"],
+        equivalents: ["ti"],
       },
       {
         letter: "ぢ",
-        equivalents: ["DI"],
+        equivalents: ["di"],
       },
       {
         letter: "つ",
-        equivalents: ["TU"],
+        equivalents: ["tu"],
       },
       {
         letter: "づ",
-        equivalents: ["DU"],
+        equivalents: ["du"],
       },
       {
         letter: "て",
-        equivalents: ["TE"],
+        equivalents: ["te"],
       },
       {
         letter: "で",
-        equivalents: ["DE"],
+        equivalents: ["de"],
       },
       {
         letter: "と",
-        equivalents: ["TO"],
+        equivalents: ["to"],
       },
       {
         letter: "ど",
-        equivalents: ["DO"],
+        equivalents: ["do"],
       },
       {
         letter: "な",
-        equivalents: ["NA"],
+        equivalents: ["na"],
       },
       {
         letter: "に",
-        equivalents: ["NI"],
+        equivalents: ["ni"],
       },
       {
         letter: "ぬ",
-        equivalents: ["NU"],
+        equivalents: ["nu"],
       },
       {
         letter: "ね",
-        equivalents: ["NE"],
+        equivalents: ["ne"],
       },
       {
         letter: "の",
-        equivalents: ["NO"],
+        equivalents: ["no"],
       },
       {
         letter: "は",
-        equivalents: ["HA"],
+        equivalents: ["ha"],
       },
       {
         letter: "ば",
-        equivalents: ["BA"],
+        equivalents: ["ba"],
       },
       {
         letter: "ぱ",
-        equivalents: ["PA"],
+        equivalents: ["pa"],
       },
       {
         letter: "ひ",
-        equivalents: ["HI"],
+        equivalents: ["hi"],
       },
       {
         letter: "び",
-        equivalents: ["BI"],
+        equivalents: ["bi"],
       },
       {
         letter: "ぴ",
-        equivalents: ["PI"],
+        equivalents: ["pi"],
       },
       {
         letter: "ふ",
-        equivalents: ["HU"],
+        equivalents: ["hu"],
       },
       {
         letter: "ぶ",
-        equivalents: ["BU"],
+        equivalents: ["bu"],
       },
       {
         letter: "ぷ",
-        equivalents: ["PU"],
+        equivalents: ["pu"],
       },
       {
         letter: "へ",
-        equivalents: ["HE"],
+        equivalents: ["he"],
       },
       {
         letter: "べ",
-        equivalents: ["BE"],
+        equivalents: ["be"],
       },
       {
         letter: "ぺ",
-        equivalents: ["PE"],
+        equivalents: ["pe"],
       },
       {
         letter: "ほ",
-        equivalents: ["HO"],
+        equivalents: ["ho"],
       },
       {
         letter: "ぼ",
-        equivalents: ["BO"],
+        equivalents: ["bo"],
       },
       {
         letter: "ぽ",
-        equivalents: ["PO"],
+        equivalents: ["po"],
       },
       {
         letter: "ま",
-        equivalents: ["MA"],
+        equivalents: ["ma"],
       },
       {
         letter: "み",
-        equivalents: ["MI"],
+        equivalents: ["mi"],
       },
       {
         letter: "む",
-        equivalents: ["MU"],
+        equivalents: ["mu"],
       },
       {
         letter: "め",
-        equivalents: ["ME"],
+        equivalents: ["me"],
       },
       {
         letter: "も",
-        equivalents: ["MO"],
+        equivalents: ["mo"],
       },
       {
         letter: "や",
-        equivalents: ["YA"],
+        equivalents: ["ya"],
       },
       {
         letter: "ゆ",
-        equivalents: ["YU"],
+        equivalents: ["yu"],
       },
       {
         letter: "よ",
-        equivalents: ["YO"],
+        equivalents: ["yo"],
       },
       {
         letter: "ら",
-        equivalents: ["RA"],
+        equivalents: ["ra"],
       },
       {
         letter: "り",
-        equivalents: ["RI"],
+        equivalents: ["ri"],
       },
       {
         letter: "る",
-        equivalents: ["RU"],
+        equivalents: ["ru"],
       },
       {
         letter: "れ",
-        equivalents: ["RE"],
+        equivalents: ["re"],
       },
       {
         letter: "ろ",
-        equivalents: ["RO"],
+        equivalents: ["ro"],
       },
       {
         letter: "わ",
-        equivalents: ["WA"],
+        equivalents: ["wa"],
       },
       {
         letter: "ゐ",
-        equivalents: ["WI"],
+        equivalents: ["wi"],
       },
       {
         letter: "ゑ",
-        equivalents: ["WE"],
+        equivalents: ["we"],
       },
       {
         letter: "を",
-        equivalents: ["WO"],
+        equivalents: ["wo"],
       },
       {
         letter: "ん",
-        equivalents: ["N"],
+        equivalents: ["n"],
       },
       {
         letter: "ゔ",
-        equivalents: ["VU"],
+        equivalents: ["vu"],
       },
     ],
   },

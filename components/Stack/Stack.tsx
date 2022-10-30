@@ -1,15 +1,21 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { MainMenu } from "../../screens/MainMenu/MainMenu";
-import { GameSelection } from "../../screens/Game/GameSelection/GameSelection";
 import { NavigationContainer } from "@react-navigation/native";
 import { SCREENS } from "../../constants";
+import { COLOR_COMBINATION_1 } from "../../styles/styles";
+import { GameMode1 } from "../../screens/Game/GameModes/GameMode1";
+import { GameMode2 } from "../../screens/Game/GameModes/GameMode2";
+import { Logout } from "../../screens/Logout/Logout";
+import { Signup } from "../../screens/Signup/Signup";
+import { Login } from "../../screens/Login/Login";
+import { GameSelectionForm } from "../../screens/Game/GameSelectionForm/GameSelectionForm";
 
 const AppStack = createStackNavigator();
 
 export const Stack = (): JSX.Element => {
   const styles = {
     headerStyle: {
-      backgroundColor: "#111214",
+      backgroundColor: COLOR_COMBINATION_1.BLACK,
     },
     headerTintColor: "#F7B42F",
     headerTitleStyle: {
@@ -28,7 +34,32 @@ export const Stack = (): JSX.Element => {
         <AppStack.Screen
           options={styles}
           name={SCREENS.PLAY}
-          component={GameSelection}
+          component={GameSelectionForm}
+        />
+        <AppStack.Screen
+          options={styles}
+          name={SCREENS.LOGIN}
+          component={Login}
+        />
+        <AppStack.Screen
+          options={styles}
+          name={SCREENS.LOGOUT}
+          component={Logout}
+        />
+        <AppStack.Screen
+          options={styles}
+          name={SCREENS.SIGNUP}
+          component={Signup}
+        />
+        <AppStack.Screen
+          options={styles}
+          name={SCREENS.GAME_MODE_ONE}
+          component={GameMode1}
+        />
+        <AppStack.Screen
+          options={styles}
+          name={SCREENS.GAME_MODE_TWO}
+          component={GameMode2}
         />
       </AppStack.Navigator>
     </NavigationContainer>

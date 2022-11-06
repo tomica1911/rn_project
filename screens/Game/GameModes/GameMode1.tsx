@@ -45,9 +45,6 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     startCountdown();
   }, []);
 
-  console.log(formValues.selectedCharacters[currentCharIndex].equivalents);
-
-  //ToDo: try to trigger this function less often in TextInput component to optimize performance
   function handleTextInputChange(enteredValue: string) {
     setTextInputValue(enteredValue);
     if (
@@ -86,13 +83,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     setGameCompleted(false);
   };
 
-  const getModalHeaderTitle = () => {
-    if (gameCompleted) {
-      return "Congratulations!";
-    } else {
-      return "Oh no!";
-    }
-  };
+  const getModalHeaderTitle = () => gameCompleted ? "Congratulations!" : "Oh no!";
 
   const updateUserStats = (status: Status, points: number = 0) => {
     if (currentUser && !reqSent) {
@@ -169,7 +160,6 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
               </View>
               <View>
                 <Text style={styles.inputFieldText}>Answer</Text>
-                {/*ToDo: Define layout component and set width to maximum*/}
                 <TextInput
                   value={textInputValue}
                   style={styles.inputField}
@@ -335,3 +325,9 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
+
+//ToDos
+//______________________________________________________________________________________________________________________
+//ToDo: try to trigger this function less often in TextInput component to optimize performance (handleTextInputChange)
+/*ToDo: Define layout component and set width to maximum, locate the code under text component with "Answer"*/
+// ToDo: think about what should happen at the end, location -> if (currentCharIndex + 1 == formValues.selectedCharacters.length) {

@@ -150,13 +150,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     setReqSent(false);
   };
 
-  const getModalHeaderTitle = () => {
-    if (gameCompleted) {
-      return "Congratulations!";
-    } else {
-      return "Oh no!";
-    }
-  };
+  const getModalHeaderTitle = () => gameCompleted ? "Congratulations!" : "Oh no!";
 
   const updateUserStats = (status: Status, points: number = 0) => {
     if (currentUser && !reqSent) {

@@ -12,41 +12,41 @@ export const Logout = ({ navigation }: any): JSX.Element => {
   const { logout } = useAuth();
 
   return (
-    <AppLayout>
-      <Modal
-        isModalVisible={isModalVisible}
-        footerComponent={
-          <View>
-            <CustomizableButton
+      <AppLayout>
+        <Modal
+            isModalVisible={isModalVisible}
+            footerComponent={
+              <View>
+                <CustomizableButton
+                    onPress={() => navigation.navigate(SCREENS.MAIN)}
+                    stylesButton={styles.modalButton}
+                    title="Back to main menu"
+                />
+              </View>
+            }
+            headerTitle="Logged out"
+            headerText="You have been logged out"
+        />
+        <View style={styles.logoutContainer}>
+          <Text style={styles.logoutText}>
+            Oh no, are you sure you want to leave?
+          </Text>
+          <CustomizableButton
               onPress={() => navigation.navigate(SCREENS.MAIN)}
-              stylesButton={styles.modalButton}
-              title="Back to main menu"
-            />
-          </View>
-        }
-        headerTitle="Logged out"
-        headerText="You have been logged out"
-      />
-      <View style={styles.logoutContainer}>
-        <Text style={styles.logoutText}>
-          Oh no, are you sure you want to leave?
-        </Text>
-        <CustomizableButton
-          onPress={() => navigation.navigate(SCREENS.MAIN)}
-          stylesButton={styles.primaryButton}
-          title="Nawh, just kidding!"
-        />
-        <CustomizableButton
-          onPress={() => {
-            logout();
-            setIsModalVisible(true);
-          }}
-          stylesButton={styles.secondaryButton}
-          stylesText={styles.secondaryButtonText}
-          title="Log out"
-        />
-      </View>
-    </AppLayout>
+              stylesButton={styles.primaryButton}
+              title="Nawh, just kidding!"
+          />
+          <CustomizableButton
+              onPress={() => {
+                logout();
+                setIsModalVisible(true);
+              }}
+              stylesButton={styles.secondaryButton}
+              stylesText={styles.secondaryButtonText}
+              title="Log out"
+          />
+        </View>
+      </AppLayout>
   );
 };
 

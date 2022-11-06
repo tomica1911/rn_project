@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
 import { useController } from "react-hook-form";
+import merge from "lodash/merge";
 
 interface PasswordFieldProps {
   placeholder?: string;
@@ -11,6 +12,11 @@ interface PasswordFieldProps {
   name: string;
   //ToDo: add proper types for control
   control: any;
+  multiline?: boolean;
+  numberOfLines?: number;
+  maxLength?: number;
+  // ToDo: find more appropriate type
+  additionalInputFieldStyles?: Record<any, any>
 }
 
 //ToDo: refactor component
@@ -19,6 +25,10 @@ export const InputField = ({
   showHidePasswordAbility,
   name,
   control,
+  multiline = false,
+  additionalInputFieldStyles,
+  numberOfLines = 1,
+    maxLength = 100
 }: PasswordFieldProps) => {
   const { field } = useController({
     control,
@@ -36,10 +46,13 @@ export const InputField = ({
   return (
     <View style={styles.inputContainer}>
       <TextInput
-        style={stylesObj}
+        style={!additionalInputFieldStyles ? stylesObj : merge(stylesObj, additionalInputFieldStyles)}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
         placeholder={placeholder}
         autoCapitalize="none"
         autoCorrect={false}
+        maxLength={maxLength}
         textContentType="newPassword"
         secureTextEntry={showHidePasswordAbility ? passwordVisibility : false}
         value={field.value}
@@ -72,7 +85,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    height: 35,
   },
   inputField: {
     textAlign: "center",

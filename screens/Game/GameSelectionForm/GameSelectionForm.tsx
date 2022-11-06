@@ -13,7 +13,7 @@ import {
   STANDARDISED_STYLES,
 } from "../../../styles/styles";
 import { Modal } from "../../../components/Modal/Modal";
-import {GameDurations, SUBSCREENS} from "../../../constants";
+import {GameDurations, SCREENS} from "../../../constants";
 import { shuffle } from "lodash";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { GameSelectionState } from "../../../types";
@@ -34,7 +34,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
     characters: AvailableCharacters.HIRAGANA,
     duration: GameDurations.D2,
     selectedCharacters: [],
-    selectedGameMode: SUBSCREENS.GAME_MODE_ONE,
+    selectedGameMode: SCREENS.GAME_MODE_ONE,
   });
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -253,8 +253,8 @@ export const GameSelectionForm = ({ navigation }: any) => {
               handleChange("selectedGameMode", gameMode)
             }
           >
-            <Picker.Item key="key1" label="Game Mode 1" value={SUBSCREENS.GAME_MODE_ONE} />
-            <Picker.Item key="key2" label="Game Mode 2" value={SUBSCREENS.GAME_MODE_TWO} />
+            <Picker.Item key="key1" label="Game Mode 1" value={SCREENS.GAME_MODE_ONE} />
+            <Picker.Item key="key2" label="Game Mode 2" value={SCREENS.GAME_MODE_TWO} />
           </Picker>
           <Text
             style={{

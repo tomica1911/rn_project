@@ -1,16 +1,29 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Button } from "react-native";
 import { ButtonGroup } from "@rneui/themed";
 import { SCREENS } from "../../constants";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { STANDARDISED_STYLES } from "../../styles/styles";
 import { COLOR_COMBINATION_1 } from "../../styles/styles";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { TipsOfTheDay } from "../../constants";
 import { useAuth } from "../../contexts/authContext";
+// import {
+//   InterstitialAd,
+//   AdEventType,
+//   TestIds,
+// } from "react-native-google-mobile-ads";
+//
+// const adUnitId = TestIds.INTERSTITIAL;
+//
+// const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
+//   requestNonPersonalizedAdsOnly: true,
+//   keywords: ["fashion", "clothing"],
+// });
 
 export const MainMenu = ({ navigation }: any): JSX.Element => {
   const { currentUser } = useAuth();
+  // const [loaded, setLoaded] = useState(false);
   const getTipindex = useMemo(() => {
     const currDayOfTheMonth = new Date().getDate();
     const currentDayOfTheMonthString = currDayOfTheMonth.toString();
@@ -22,8 +35,26 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
     }
   }, []);
 
+  // useEffect(() => {
+  //   const unsubscribe = interstitial.addAdEventListener(
+  //     AdEventType.LOADED,
+  //     () => {
+  //       setLoaded(true);
+  //     }
+  //   );
+  //
+  //   // Start loading the interstitial straight away
+  //   interstitial.load();
+  //
+  //   // Unsubscribe from events on unmount
+  //   return unsubscribe;
+  // }, []);
+
   const buttonTitles = Object.values(SCREENS).filter(
-    (screenName) => screenName !== SCREENS.MAIN
+    (screenName) =>
+      screenName !== SCREENS.MAIN &&
+      screenName !== SCREENS.GAME_MODE_ONE &&
+      screenName !== SCREENS.GAME_MODE_TWO
   );
 
   const buttons = currentUser
@@ -35,6 +66,12 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
 
   return (
     <AppLayout>
+      {/*<Button*/}
+      {/*  title="Show Interstitial"*/}
+      {/*  onPress={() => {*/}
+      {/*    // interstitial.show();*/}
+      {/*  }}*/}
+      {/*/>*/}
       <View style={styles.quoteBox}>
         <Text style={styles.quoteHeadline}>Quote of the day:</Text>
         <Text style={styles.quoteText}>{TipsOfTheDay[getTipindex]}</Text>

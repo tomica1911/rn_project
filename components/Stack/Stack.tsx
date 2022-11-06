@@ -7,6 +7,8 @@ import { GameMode1 } from "../../screens/Game/GameModes/GameMode1";
 import { GameMode2 } from "../../screens/Game/GameModes/GameMode2";
 import { Logout } from "../../screens/Logout/Logout";
 import { Signup } from "../../screens/Signup/Signup";
+import { About } from "../../screens/About/About";
+import { Contact } from "../../screens/Contact/Contact";
 import { Login } from "../../screens/Login/Login";
 import { GameSelectionForm } from "../../screens/Game/GameSelectionForm/GameSelectionForm";
 
@@ -60,6 +62,16 @@ export const Stack = (): JSX.Element => {
           options={styles}
           name={SCREENS.GAME_MODE_TWO}
           component={GameMode2}
+        />
+        <AppStack.Screen
+            options={styles}
+            name={SCREENS.ABOUT}
+            component={About}
+        />
+        <AppStack.Screen
+            options={styles}
+            name={SCREENS.CONTACT}
+            component={Contact}
         />
       </AppStack.Navigator>
     </NavigationContainer>

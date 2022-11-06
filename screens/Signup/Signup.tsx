@@ -77,7 +77,6 @@ export const Signup = ({ navigation }: any): JSX.Element => {
   );
   const formHasErrors = Object.keys(allErrors).length > 0;
 
-  //ToDo: make an independent component for the spinner
   return (
     <AppLayout>
       <Modal
@@ -216,3 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F7B42F",
   },
 });
+
+//ToDos
+//______________________________________________________________________________________________________________________
+//ToDo: make an independent component for the spinner

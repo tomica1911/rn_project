@@ -5,6 +5,7 @@
   "build": {
     "preview": {
       "android": {
+        "developmentClient": true,
         "buildType": "apk"
       }
     },

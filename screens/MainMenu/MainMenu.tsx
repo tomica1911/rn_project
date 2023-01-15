@@ -1,29 +1,19 @@
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { ButtonGroup } from "@rneui/themed";
-import { SCREENS } from "../../constants";
+import { SCREENS, TipsOfTheDay } from "../../constants";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { STANDARDISED_STYLES } from "../../styles/styles";
-import { COLOR_COMBINATION_1 } from "../../styles/styles";
+import React, { useMemo } from "react";
+import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
-import { TipsOfTheDay } from "../../constants";
 import { useAuth } from "../../contexts/authContext";
-// import {
-//   InterstitialAd,
-//   AdEventType,
-//   TestIds,
-// } from "react-native-google-mobile-ads";
-//
-// const adUnitId = TestIds.INTERSTITIAL;
-//
-// const interstitial = InterstitialAd.createForAdRequest(adUnitId, {
-//   requestNonPersonalizedAdsOnly: true,
-//   keywords: ["fashion", "clothing"],
-// });
 
 export const MainMenu = ({ navigation }: any): JSX.Element => {
   const { currentUser } = useAuth();
-  // const [loaded, setLoaded] = useState(false);
   const getTipindex = useMemo(() => {
     const currDayOfTheMonth = new Date().getDate();
     const currentDayOfTheMonthString = currDayOfTheMonth.toString();
@@ -34,21 +24,6 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
       return parseInt(currentDayOfTheMonthString[0]);
     }
   }, []);
-
-  // useEffect(() => {
-  //   const unsubscribe = interstitial.addAdEventListener(
-  //     AdEventType.LOADED,
-  //     () => {
-  //       setLoaded(true);
-  //     }
-  //   );
-  //
-  //   // Start loading the interstitial straight away
-  //   interstitial.load();
-  //
-  //   // Unsubscribe from events on unmount
-  //   return unsubscribe;
-  // }, []);
 
   const buttonTitles = Object.values(SCREENS).filter(
     (screenName) =>
@@ -66,12 +41,6 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
 
   return (
     <AppLayout>
-      {/*<Button*/}
-      {/*  title="Show Interstitial"*/}
-      {/*  onPress={() => {*/}
-      {/*    // interstitial.show();*/}
-      {/*  }}*/}
-      {/*/>*/}
       <View style={styles.quoteBox}>
         <Text style={styles.quoteHeadline}>Quote of the day:</Text>
         <Text style={styles.quoteText}>{TipsOfTheDay[getTipindex]}</Text>
@@ -84,6 +53,9 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
           containerStyle={STANDARDISED_STYLES.BUTTON}
           buttons={buttons}
         />
+        <View style={{ position: "absolute", bottom: 0 }}>
+          <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
+        </View>
       </View>
     </AppLayout>
   );

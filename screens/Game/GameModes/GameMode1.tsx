@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { useCountdown } from "usehooks-ts";
 import { Modal } from "../../../components/Modal/Modal";
-import { getPoints } from "../../../utils/utils";
+import {
+  getPoints,
+  getRandomNumberInRange,
+  showInterstitalAd,
+} from "../../../utils/utils";
 // @ts-ignore
 import { ProgressPie } from "react-native-progress/Pie";
 import {
@@ -14,13 +18,6 @@ import { useFirestore } from "../../../contexts/firebaseContext";
 import { useAuth } from "../../../contexts/authContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
-
-// type GameModeOneProps = {
-//ToDo: take setStartGame (that after &) from one place
-//   formValues: Omit<GameSelectionState, "selectedGameMode"> & {
-//     setStartGame: (arg: boolean) => void;
-//   };
-// };
 
 export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   const formValues = route.params.formValues;
@@ -42,10 +39,18 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     });
 
   useEffect(() => {
+    const randomNumberInRange = getRandomNumberInRange(0, 100);
+
+    if (gameCompleted && randomNumberInRange <= 20) {
+      showInterstitalAd();
+    }
+  }, [gameCompleted]);
+
+  useEffect(() => {
     startCountdown();
   }, []);
 
-  function handleTextInputChange(enteredValue: string) {
+  async function handleTextInputChange(enteredValue: string) {
     setTextInputValue(enteredValue);
     if (
       formValues.selectedCharacters[currentCharIndex].equivalents.includes(
@@ -55,8 +60,8 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
       if (currentCharIndex + 1 <= formValues.selectedCharacters.length) {
         // ToDo: think about what should happen at the end
         if (currentCharIndex + 1 == formValues.selectedCharacters.length) {
-          setGameCompleted(true);
           stopCountdown();
+          setGameCompleted(true);
         } else {
           setCurrentCharIndex((prevCurrentIndex) => prevCurrentIndex + 1);
           setTextInputValue("");
@@ -72,6 +77,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   }
 
   const startAgainWithCurrentSettings = () => {
+    setGameCompleted(false);
     resetCountdown();
     startCountdown();
     setCurrentCharIndex(0);
@@ -80,10 +86,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     setProgress(0);
     setReqSent(false);
     setThrowOutIncorrect(false);
-    setGameCompleted(false);
   };
-
-  const getModalHeaderTitle = () => gameCompleted ? "Congratulations!" : "Oh no!";
 
   const updateUserStats = (status: Status, points: number = 0) => {
     if (currentUser && !reqSent) {
@@ -124,30 +127,36 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     }
   };
 
+  // @ts-ignore
   return (
     <AppLayout>
       <View>
-        <Modal
-          isModalVisible={gameCompleted || counter === 0 || throwOutIncorrect}
-          footerComponent={
-            <View>
-              <CustomizableButton
-                onPress={() =>
-                  navigation.navigate(SCREENS.PLAY, { subsequent: true })
-                }
-                stylesButton={styles.modalBackButton}
-                title="Back to selection"
-              />
-              <CustomizableButton
-                onPress={() => startAgainWithCurrentSettings()}
-                stylesButton={styles.modalStartAgainButton}
-                title="Try again"
-              />
-            </View>
-          }
-          headerTitle={getModalHeaderTitle()}
-          headerText={getModalHeaderTextAndUpdateUser() ?? ""}
-        />
+        {/*/ This condition has to be here or else after the modal is closed, a new modal gets rendered for a very brief time /*/}
+        {(gameCompleted || counter === 0 || throwOutIncorrect) && (
+          <Modal
+            isModalVisible={gameCompleted || counter === 0 || throwOutIncorrect}
+            footerComponent={
+              <View>
+                <CustomizableButton
+                  onPress={() =>
+                    navigation.navigate(SCREENS.PLAY, { subsequent: true })
+                  }
+                  stylesButton={styles.modalBackButton}
+                  title="Back to selection"
+                />
+                <CustomizableButton
+                  onPress={() => startAgainWithCurrentSettings()}
+                  stylesButton={styles.modalStartAgainButton}
+                  title="Try again"
+                />
+              </View>
+            }
+            headerTitle={
+              throwOutIncorrect || counter === 0 ? "Oh no!" : "Congratulations!"
+            }
+            headerText={getModalHeaderTextAndUpdateUser() ?? ""}
+          />
+        )}
         {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
           <>
             <View style={styles.inputContainer}>
@@ -179,6 +188,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
                       : 100,
                 }}
               >
+                {/*{formValues.selectedCharacters[currentCharIndex].equivalents[0]}*/}
                 {formValues.selectedCharacters[currentCharIndex].letter}
               </Text>
             </View>

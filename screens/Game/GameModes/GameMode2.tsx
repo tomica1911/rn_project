@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import React, { useEffect, useState } from "react";
 import { characters as charDB } from "../../../characters";
-import { getPoints, getRandomNumberInRange } from "../../../utils/utils";
+import {getPoints, getRandomNumberInRange, showInterstitalAd} from "../../../utils/utils";
 import { ButtonGroup } from "@rneui/themed";
 import { useCountdown } from "usehooks-ts";
 // @ts-ignore
@@ -16,12 +16,6 @@ import { useAuth } from "../../../contexts/authContext";
 import { useFirestore } from "../../../contexts/firebaseContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
-//
-// type GameModeTwoProps = {
-//   formValues: Omit<GameSelectionState, "selectedGameMode" | "setStartGame"> & {
-//     setStartGame: (arg: boolean) => void;
-//   };
-// };
 
 export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
   const formValues = route.params.formValues;
@@ -76,6 +70,14 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
       startCountdown();
     }
   };
+
+  useEffect(() => {
+    const randomNumberInRange = getRandomNumberInRange(0, 100);
+
+    if (gameCompleted && randomNumberInRange <= 20) {
+      showInterstitalAd();
+    }
+  }, [gameCompleted]);
 
   useEffect(() => {
     setValuesForButtonGroup();
@@ -150,8 +152,6 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     setReqSent(false);
   };
 
-  const getModalHeaderTitle = () => gameCompleted ? "Congratulations!" : "Oh no!";
-
   const updateUserStats = (status: Status, points: number = 0) => {
     if (currentUser && !reqSent) {
       setReqSent((prevValue: boolean) => !prevValue);
@@ -197,37 +197,42 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
   return (
     <AppLayout>
       <View>
-        <Modal
-          isModalVisible={gameCompleted || counter === 0 || throwOutIncorrect}
-          footerComponent={
-            <View>
-              <CustomizableButton
-                onPress={() =>
-                  navigation.navigate(SCREENS.PLAY, { subsequent: true })
-                }
-                stylesButton={styles.modalBackButton}
-                title="Back to selection"
-              />
-              <CustomizableButton
-                onPress={() => startAgainWithCurrentSettings()}
-                stylesButton={styles.modalTryAgainButton}
-                title="Try again"
-              />
-            </View>
-          }
-          headerTitle={getModalHeaderTitle()}
-          headerText={
-            (
-              <>
-                <Text>{getModalHeaderTextAndUpdateUser()}</Text>
-                {"\n"}
-                {isHelperCalled && !(counter === 0) && (
-                  <Text>Points resetted to 0 because of using help.</Text>
-                )}
-              </>
-            ) ?? ""
-          }
-        />
+        {/*/ This condition has to be here or else after the modal is closed, a new modal gets rendered for a very brief time /*/}
+        {(gameCompleted || counter === 0 || throwOutIncorrect) && (
+          <Modal
+            isModalVisible={gameCompleted || counter === 0 || throwOutIncorrect}
+            footerComponent={
+              <View>
+                <CustomizableButton
+                  onPress={() =>
+                    navigation.navigate(SCREENS.PLAY, { subsequent: true })
+                  }
+                  stylesButton={styles.modalBackButton}
+                  title="Back to selection"
+                />
+                <CustomizableButton
+                  onPress={() => startAgainWithCurrentSettings()}
+                  stylesButton={styles.modalTryAgainButton}
+                  title="Try again"
+                />
+              </View>
+            }
+            headerTitle={
+              throwOutIncorrect || counter === 0 ? "Oh no!" : "Congratulations!"
+            }
+            headerText={
+              (
+                <>
+                  <Text>{getModalHeaderTextAndUpdateUser()}</Text>
+                  {"\n"}
+                  {isHelperCalled && !(counter === 0) && (
+                    <Text>Points resetted to 0 because of using help.</Text>
+                  )}
+                </>
+              ) ?? ""
+            }
+          />
+        )}
         {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
           <>
             <View style={styles.characterBox}>

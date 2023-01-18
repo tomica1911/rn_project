@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { useCountdown } from "usehooks-ts";
 import { Modal } from "../../../components/Modal/Modal";
+import { shuffle } from "lodash";
 import {
   getPoints,
   getRandomNumberInRange,
-  showInterstitalAd,
+  // showInterstitalAd,
 } from "../../../utils/utils";
 // @ts-ignore
 import { ProgressPie } from "react-native-progress/Pie";
@@ -20,7 +21,7 @@ import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 
 export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
-  const formValues = route.params.formValues;
+  const [formValues, setFormValues] = useState(route.params.formValues);
   const { updateUserData } = useFirestore();
   const { currentUser } = useAuth();
   const [reqSent, setReqSent] = useState<boolean>(false);
@@ -42,7 +43,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     const randomNumberInRange = getRandomNumberInRange(0, 100);
 
     if (gameCompleted && randomNumberInRange <= 20) {
-      showInterstitalAd();
+      // showInterstitalAd();
     }
   }, [gameCompleted]);
 
@@ -52,14 +53,10 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
 
   async function handleTextInputChange(enteredValue: string) {
     setTextInputValue(enteredValue);
-    if (
-      formValues.selectedCharacters[currentCharIndex].equivalents.includes(
-        enteredValue
-      )
-    ) {
+    const currentChar = formValues.selectedCharacters[currentCharIndex];
+    if (currentChar.equivalents.includes(enteredValue)) {
       if (currentCharIndex + 1 <= formValues.selectedCharacters.length) {
-        // ToDo: think about what should happen at the end
-        if (currentCharIndex + 1 == formValues.selectedCharacters.length) {
+        if (currentCharIndex + 1 === formValues.selectedCharacters.length) {
           stopCountdown();
           setGameCompleted(true);
         } else {
@@ -77,6 +74,10 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   }
 
   const startAgainWithCurrentSettings = () => {
+    // setFormValues({
+    //   ...formValues,
+    //   selectedCharacters: shuffle(formValues.selectedCharacters),
+    // });
     setGameCompleted(false);
     resetCountdown();
     startCountdown();

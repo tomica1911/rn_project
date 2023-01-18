@@ -1,7 +1,11 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { characters as charDB } from "../../../characters";
-import {getPoints, getRandomNumberInRange, showInterstitalAd} from "../../../utils/utils";
+import {
+  getPoints,
+  getRandomNumberInRange,
+  showInterstitalAd,
+} from "../../../utils/utils";
 import { ButtonGroup } from "@rneui/themed";
 import { useCountdown } from "usehooks-ts";
 // @ts-ignore
@@ -16,9 +20,10 @@ import { useAuth } from "../../../contexts/authContext";
 import { useFirestore } from "../../../contexts/firebaseContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
+import { shuffle } from "lodash";
 
 export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
-  const formValues = route.params.formValues;
+  const [formValues, setFormValues] = useState(route.params.formValues);
   const [reqSent, setReqSent] = useState<boolean>(false);
   const [buttonGroupValues, setButtonGroupValues] = useState<string[]>([]);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
@@ -75,7 +80,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     const randomNumberInRange = getRandomNumberInRange(0, 100);
 
     if (gameCompleted && randomNumberInRange <= 20) {
-      showInterstitalAd();
+      // showInterstitalAd();
     }
   }, [gameCompleted]);
 
@@ -83,8 +88,11 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     setValuesForButtonGroup();
   }, [currentCharIndex]);
 
-  const setValuesForButtonGroup = (): void => {
+  const setValuesForButtonGroup = (shouldShuffle: boolean = false): void => {
     const values = [];
+    const chars = shouldShuffle
+      ? shuffle(formValues.selectedCharacters)
+      : formValues.selectedCharacters;
     const lettersArray = charDB.filter(
       (arrayItem) => arrayItem.setName === formValues.characters
     )[0].letters;
@@ -113,16 +121,8 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
       lettersArray[randomCharIndex].equivalents[randomEquivalentIndex]
     );
     let notFound: boolean = true;
-    for (
-      let i = 0;
-      i < formValues.selectedCharacters[currentCharIndex].equivalents.length;
-      i++
-    ) {
-      if (
-        values.includes(
-          formValues.selectedCharacters[currentCharIndex].equivalents[i]
-        )
-      ) {
+    for (let i = 0; i < chars[currentCharIndex].equivalents.length; i++) {
+      if (values.includes(chars[currentCharIndex].equivalents[i])) {
         notFound = false;
       }
     }
@@ -130,17 +130,25 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     if (notFound) {
       randomEquivalentIndex = getRandomNumberInRange(
         0,
-        formValues.selectedCharacters[currentCharIndex].equivalents.length - 1
+        chars[currentCharIndex].equivalents.length - 1
       );
+      console.log(chars[currentCharIndex]);
+      console.log(chars[currentCharIndex].equivalents[randomEquivalentIndex]);
       values[getRandomNumberInRange(0, values.length - 1)] =
-        formValues.selectedCharacters[currentCharIndex].equivalents[
-          randomEquivalentIndex
-        ];
+        chars[currentCharIndex].equivalents[randomEquivalentIndex];
+    }
+
+    if (shouldShuffle) {
+      setFormValues({
+        ...formValues,
+        selectedCharacters: chars,
+      });
     }
     setButtonGroupValues(values);
   };
 
   const startAgainWithCurrentSettings = () => {
+    setValuesForButtonGroup(true);
     resetCountdown();
     startCountdown();
     setIsModalVisible(false);

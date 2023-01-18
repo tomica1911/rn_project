@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import { ButtonGroup } from "@rneui/themed";
 import { SCREENS, TipsOfTheDay } from "../../constants";
-import {
-  BannerAd,
-  BannerAdSize,
-  TestIds,
-} from "react-native-google-mobile-ads";
+// import {
+//   BannerAd,
+//   BannerAdSize,
+//   TestIds,
+// } from "react-native-google-mobile-ads";
 
 import React, { useMemo } from "react";
 import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
@@ -53,9 +53,9 @@ export const MainMenu = ({ navigation }: any): JSX.Element => {
           containerStyle={STANDARDISED_STYLES.BUTTON}
           buttons={buttons}
         />
-        <View style={{ position: "absolute", bottom: 0 }}>
-          <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
-        </View>
+        {/*<View style={{ position: "absolute", bottom: 0 }}>*/}
+        {/*  <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />*/}
+        {/*</View>*/}
       </View>
     </AppLayout>
   );

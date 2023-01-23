@@ -13,10 +13,11 @@ import {
   STANDARDISED_STYLES,
 } from "../../../styles/styles";
 import { Modal } from "../../../components/Modal/Modal";
-import {GameDurations, SCREENS} from "../../../constants";
+import { GameDurations, SCREENS } from "../../../constants";
 import { shuffle } from "lodash";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { GameSelectionState } from "../../../types";
+import { playButtonSoundOnExecution } from "../../../utils/soundUtils";
 
 interface GameSelectionFormProps {
   //ToDo: check if all values from GameSelectionState are needed here and rename it to GameSelectionStateProps
@@ -77,16 +78,13 @@ export const GameSelectionForm = ({ navigation }: any) => {
               <View>
                 <CustomizableButton
                   onPress={() =>
-                    setIsModalVisible((prevValue: boolean) => !prevValue)
+                    playButtonSoundOnExecution(() =>
+                      setIsModalVisible((prevValue: boolean) => !prevValue)
+                    )
                   }
                   stylesButton={{
                     marginTop: 10,
-                    height: 50,
-                    ...STANDARDISED_STYLES.CENTER_CONTENT,
-                    ...STANDARDISED_STYLES.BUTTON,
-                    marginBottom: 10,
-                    marginLeft: 5,
-                    marginRight: 5,
+                    width: "100%",
                   }}
                   title="Back to selection"
                 />
@@ -130,17 +128,16 @@ export const GameSelectionForm = ({ navigation }: any) => {
             Select characters
           </Text>
           <CustomizableButton
-            onPress={() => setCharSelectionVisible(true)}
+            onPress={() =>
+              playButtonSoundOnExecution(() => setCharSelectionVisible(true))
+            }
             stylesButton={{
               marginTop: 10,
-              height: 50,
               ...STANDARDISED_STYLES.CENTER_CONTENT,
               ...STANDARDISED_STYLES.BUTTON,
-              marginBottom: 10,
-              marginLeft: 5,
-              marginRight: 5,
+              fontSize: 50,
             }}
-            title="Character Selection"
+            title="Selection"
           />
           <Modal
             containerStyles={{
@@ -175,56 +172,55 @@ export const GameSelectionForm = ({ navigation }: any) => {
                     <CharacterTile
                       selected={formValues.selectedCharacters.includes(item)}
                       character={item.letter}
-                      onPress={() => {
-                        if (formValues.selectedCharacters.includes(item)) {
+                      onPress={() =>
+                        playButtonSoundOnExecution(() => {
+                          if (formValues.selectedCharacters.includes(item)) {
+                            return setFormValues(
+                              (prevValues: GameSelectionState) => {
+                                const withoutToBeRemoved =
+                                  prevValues.selectedCharacters.filter(
+                                    (charObj) => charObj.letter !== item.letter
+                                  );
+                                return {
+                                  ...prevValues,
+                                  selectedCharacters: [...withoutToBeRemoved],
+                                };
+                              }
+                            );
+                          }
                           return setFormValues(
                             (prevValues: GameSelectionState) => {
-                              const withoutToBeRemoved =
-                                prevValues.selectedCharacters.filter(
-                                  (charObj) => charObj.letter !== item.letter
+                              const duplicate =
+                                prevValues.selectedCharacters.find(
+                                  (el: CharacterObject) =>
+                                    el.letter === item.letter
                                 );
+                              if (!duplicate) {
+                                return {
+                                  ...prevValues,
+                                  selectedCharacters: [
+                                    ...prevValues.selectedCharacters,
+                                    item,
+                                  ],
+                                };
+                              }
                               return {
                                 ...prevValues,
-                                selectedCharacters: [...withoutToBeRemoved],
                               };
                             }
                           );
-                        }
-                        return setFormValues(
-                          (prevValues: GameSelectionState) => {
-                            const duplicate =
-                              prevValues.selectedCharacters.find(
-                                (el: CharacterObject) =>
-                                  el.letter === item.letter
-                              );
-                            if (!duplicate) {
-                              return {
-                                ...prevValues,
-                                selectedCharacters: [
-                                  ...prevValues.selectedCharacters,
-                                  item,
-                                ],
-                              };
-                            }
-                            return {
-                              ...prevValues,
-                            };
-                          }
-                        );
-                      }}
+                        })
+                      }
                     />
                   )}
                   style={{ width: "100%" }}
                 />
                 <CustomizableButton
-                  onPress={() => setCharSelectionVisible(false)}
-                  stylesButton={{
-                    marginTop: 10,
-                    height: 50,
-                    alignSelf: "center",
-                    ...STANDARDISED_STYLES.CENTER_CONTENT,
-                    ...STANDARDISED_STYLES.BUTTON,
-                  }}
+                  onPress={() =>
+                    playButtonSoundOnExecution(() =>
+                      setCharSelectionVisible(false)
+                    )
+                  }
                   title="Choose"
                 />
               </View>
@@ -253,8 +249,16 @@ export const GameSelectionForm = ({ navigation }: any) => {
               handleChange("selectedGameMode", gameMode)
             }
           >
-            <Picker.Item key="key1" label="Game Mode 1" value={SCREENS.GAME_MODE_ONE} />
-            <Picker.Item key="key2" label="Game Mode 2" value={SCREENS.GAME_MODE_TWO} />
+            <Picker.Item
+              key="key1"
+              label="Game Mode 1"
+              value={SCREENS.GAME_MODE_ONE}
+            />
+            <Picker.Item
+              key="key2"
+              label="Game Mode 2"
+              value={SCREENS.GAME_MODE_TWO}
+            />
           </Picker>
           <Text
             style={{
@@ -280,27 +284,19 @@ export const GameSelectionForm = ({ navigation }: any) => {
             {renderDurationPickerItems()}
           </Picker>
           <CustomizableButton
-            onPress={() => {
-              if (formValues.selectedCharacters.length === 0) {
-                return setIsModalVisible(true);
-              }
-              navigation.navigate(formValues.selectedGameMode, {
-                formValues: {
-                  ...formValues,
-                  selectedCharacters: shuffle(formValues.selectedCharacters),
-                },
-              });
-            }}
-            stylesButton={{
-              ...STANDARDISED_STYLES.CENTER_CONTENT,
-              ...STANDARDISED_STYLES.BUTTON,
-              marginTop: 10,
-              height: 50,
-              marginBottom: 10,
-              marginLeft: 5,
-              marginRight: 5,
-              backgroundColor: COLOR_COMBINATION_1.ORANGE,
-            }}
+            onPress={() =>
+              playButtonSoundOnExecution(() => {
+                if (formValues.selectedCharacters.length === 0) {
+                  return setIsModalVisible(true);
+                }
+                navigation.navigate(formValues.selectedGameMode, {
+                  formValues: {
+                    ...formValues,
+                    selectedCharacters: shuffle(formValues.selectedCharacters),
+                  },
+                });
+              })
+            }
             title="Play"
           />
         </>

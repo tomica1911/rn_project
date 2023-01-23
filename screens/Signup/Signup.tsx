@@ -88,7 +88,6 @@ export const Signup = ({ navigation }: any): JSX.Element => {
                 clearErrors();
                 setAuthErrors(undefined);
               }}
-              stylesButton={styles.errorModalButton}
               title="Back to signup screen"
             />
           </View>
@@ -105,16 +104,10 @@ export const Signup = ({ navigation }: any): JSX.Element => {
               <CustomizableButton
                 disabled={!clickable}
                 onPress={() => sendVerificationEmail(currentUser)}
-                stylesButton={merge(styles.resendEmailModalButton, {
-                  backgroundColor: clickable
-                    ? COLOR_COMBINATION_1.ORANGE
-                    : "gray",
-                })}
                 title="Resend email"
               />
               <CustomizableButton
                 onPress={() => navigation.navigate(SCREENS.MAIN)}
-                stylesButton={styles.backModalButton}
                 title="Back to main menu"
               />
             </View>
@@ -160,7 +153,6 @@ export const Signup = ({ navigation }: any): JSX.Element => {
             <CustomizableButton
               onPress={handleSubmit(onSignupFormSubmit)}
               title="Signup"
-              stylesButton={styles.signupButton}
             />
           </>
         )}
@@ -170,33 +162,6 @@ export const Signup = ({ navigation }: any): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  errorModalButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
-  resendEmailModalButton: {
-    marginTop: 10,
-    height: 50,
-    width: 200,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
-  backModalButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
   formContainer: {
     flex: 1,
     justifyContent: "center",
@@ -204,15 +169,6 @@ const styles = StyleSheet.create({
   fieldLabel: {
     color: "#F7B42F",
     textAlign: "center",
-  },
-  signupButton: {
-    marginTop: 10,
-    width: 200,
-    height: 35,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F7B42F",
   },
 });
 

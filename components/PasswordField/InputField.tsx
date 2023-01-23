@@ -16,7 +16,7 @@ interface PasswordFieldProps {
   numberOfLines?: number;
   maxLength?: number;
   // ToDo: find more appropriate type
-  additionalInputFieldStyles?: Record<any, any>
+  additionalInputFieldStyles?: Record<any, any>;
 }
 
 //ToDo: refactor component
@@ -28,7 +28,7 @@ export const InputField = ({
   multiline = false,
   additionalInputFieldStyles,
   numberOfLines = 1,
-    maxLength = 100
+  maxLength = 100,
 }: PasswordFieldProps) => {
   const { field } = useController({
     control,
@@ -46,7 +46,11 @@ export const InputField = ({
   return (
     <View style={styles.inputContainer}>
       <TextInput
-        style={!additionalInputFieldStyles ? stylesObj : merge(stylesObj, additionalInputFieldStyles)}
+        style={
+          !additionalInputFieldStyles
+            ? stylesObj
+            : merge(stylesObj, additionalInputFieldStyles)
+        }
         multiline={multiline}
         numberOfLines={numberOfLines}
         placeholder={placeholder}
@@ -77,10 +81,14 @@ export const InputField = ({
 const styles = StyleSheet.create({
   inputContainer: {
     paddingRight: 20,
+    margin: 10,
+    height: 50,
     backgroundColor: "white",
     width: 200,
-    flexDirection: "row",
     borderColor: "#d7d7d7",
+    borderWidth: 1,
+    borderRadius: 8,
+    flexDirection: "row",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -94,3 +102,28 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
 });
+
+// const styles = StyleSheet.create({
+//   inputContainer: {
+//     paddingRight: 20,
+//     backgroundColor: "white",
+//     flexDirection: "row",
+//     borderColor: "#d7d7d7",
+//     borderWidth: 1,
+//     borderRadius: 8,
+//     display: "flex",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     alignSelf: "center",
+//     marginTop: 20,
+//   },
+//   inputField: {
+//     textAlign: "center",
+//     padding: 12,
+//     fontSize: 18,
+//     color: "#232323",
+//   },
+//   placeholder: {
+//     marginLeft: 20,
+//   },
+// });

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
@@ -8,7 +8,6 @@ import { FieldError, FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Modal } from "../../components/Modal/Modal";
-import { STANDARDISED_STYLES } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import merge from "lodash/merge";
 import { SCREENS } from "../../constants";
@@ -68,7 +67,6 @@ export const Contact = ({ navigation }: any): JSX.Element => {
                 clearErrors();
                 setAuthErrors(undefined);
               }}
-              stylesButton={styles.errorModalButton}
               title="Back to login screen"
             />
           </View>
@@ -105,7 +103,6 @@ export const Contact = ({ navigation }: any): JSX.Element => {
             <CustomizableButton
               onPress={handleSubmit(onFormSubmit)}
               title="Send"
-              stylesButton={styles.formButton}
             />
           </>
         )}
@@ -115,15 +112,6 @@ export const Contact = ({ navigation }: any): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  errorModalButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
   formContainer: {
     flex: 1,
     justifyContent: "center",
@@ -131,13 +119,5 @@ const styles = StyleSheet.create({
   fieldLabel: {
     color: "#F7B42F",
     textAlign: "center",
-  },
-  formButton: {
-    marginTop: 10,
-    height: 35,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F7B42F",
   },
 });

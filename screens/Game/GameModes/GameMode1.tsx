@@ -74,10 +74,10 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   }
 
   const startAgainWithCurrentSettings = () => {
-    // setFormValues({
-    //   ...formValues,
-    //   selectedCharacters: shuffle(formValues.selectedCharacters),
-    // });
+    setFormValues({
+      ...formValues,
+      selectedCharacters: shuffle(formValues.selectedCharacters),
+    });
     setGameCompleted(false);
     resetCountdown();
     startCountdown();
@@ -142,12 +142,10 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
                   onPress={() =>
                     navigation.navigate(SCREENS.PLAY, { subsequent: true })
                   }
-                  stylesButton={styles.modalBackButton}
                   title="Back to selection"
                 />
                 <CustomizableButton
                   onPress={() => startAgainWithCurrentSettings()}
-                  stylesButton={styles.modalStartAgainButton}
                   title="Try again"
                 />
               </View>
@@ -203,8 +201,6 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
                   setIsModalVisible(true);
                 }}
                 title="Help"
-                stylesText={styles.helpButtonText}
-                stylesButton={styles.helpButton}
               />
             </View>
             {/* Extract this component somewhere else and use it in the other game mode*/}
@@ -216,7 +212,6 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
                     onPress={() =>
                       setIsModalVisible((prevValue: boolean) => !prevValue)
                     }
-                    stylesButton={styles.modalContinueButton}
                     title="Continue"
                   />
                 </View>
@@ -252,24 +247,6 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  modalBackButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
-  modalStartAgainButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
   inputContainer: {
     display: "flex",
     flexDirection: "row",
@@ -315,23 +292,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
   },
-  helpButton: {
-    color: "white",
-    textDecorationLine: "underline",
-  },
-  helpButtonText: {
-    textDecorationLine: "underline",
-    color: "white",
-  },
-  modalContinueButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
   underlineText: {
     textDecorationLine: "underline",
   },

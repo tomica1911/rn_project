@@ -68,7 +68,6 @@ export const Login = ({ navigation }: any): JSX.Element => {
                 clearErrors();
                 setAuthErrors(undefined);
               }}
-              stylesButton={styles.errorModalButton}
               title="Back to login screen"
             />
           </View>
@@ -99,7 +98,6 @@ export const Login = ({ navigation }: any): JSX.Element => {
             <CustomizableButton
               onPress={handleSubmit(onFormSubmit)}
               title="Login"
-              stylesButton={styles.formButton}
             />
           </>
         )}
@@ -109,29 +107,18 @@ export const Login = ({ navigation }: any): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  errorModalButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
   formContainer: {
     flex: 1,
+    paddingHorizontal: 20,
+    alignItems: "center",
     justifyContent: "center",
   },
   fieldLabel: {
     color: "#F7B42F",
-    textAlign: "center",
-  },
-  formButton: {
-    marginTop: 10,
-    height: 35,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F7B42F",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 20,
+    textAlign: "left",
   },
 });
+// backgroundColor: "#F7B42F",

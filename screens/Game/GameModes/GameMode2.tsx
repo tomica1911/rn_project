@@ -215,12 +215,10 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
                   onPress={() =>
                     navigation.navigate(SCREENS.PLAY, { subsequent: true })
                   }
-                  stylesButton={styles.modalBackButton}
                   title="Back to selection"
                 />
                 <CustomizableButton
                   onPress={() => startAgainWithCurrentSettings()}
-                  stylesButton={styles.modalTryAgainButton}
                   title="Try again"
                 />
               </View>
@@ -283,8 +281,6 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
                   setIsModalVisible(true);
                 }}
                 title="Help"
-                stylesText={styles.helpButton}
-                stylesButton={styles.helpButton}
               />
             </View>
             <Modal
@@ -295,7 +291,6 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
                     onPress={() =>
                       setIsModalVisible((prevValue: boolean) => !prevValue)
                     }
-                    stylesButton={styles.modalContinueButton}
                     title="Continue"
                   />
                 </View>
@@ -332,24 +327,6 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  modalBackButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
-  modalTryAgainButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
   characterBox: {
     width: 200,
     height: 200,
@@ -376,19 +353,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
   },
-  helpButton: {
-    color: "white",
-    textDecorationLine: "underline",
-  },
-  modalContinueButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  } as any,
   underlinedText: {
     textDecorationLine: "underline",
   },

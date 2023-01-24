@@ -6,15 +6,18 @@ import { STANDARDISED_STYLES } from "../../styles/styles";
 type ModalProps = {
   isVisible: boolean;
   children: React.ReactNode;
+  onRequestClose: () => void;
   [x: string]: any;
 };
 export const ModalConfiguration = ({
   isVisible = false,
+  onRequestClose,
   children,
   ...props
 }: ModalProps) => {
   return (
     <RNModal
+      onBackdropPress={onRequestClose}
       isVisible={isVisible}
       animationInTiming={400}
       animationOutTiming={400}

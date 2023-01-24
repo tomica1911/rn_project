@@ -73,6 +73,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
       ) : (
         <>
           <Modal
+            onRequestClose={() => setIsModalVisible(false)}
             isModalVisible={isModalVisible}
             footerComponent={
               <View>
@@ -147,6 +148,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
               borderWidth: 10,
               borderRadius: 25,
             }}
+            onRequestClose={() => setCharSelectionVisible(false)}
             headerTextStyles={{ color: COLOR_COMBINATION_1.ORANGE }}
             headerTitleStyles={{ backgroundColor: COLOR_COMBINATION_1.ORANGE }}
             isModalVisible={charSelectionVisible}
@@ -284,6 +286,9 @@ export const GameSelectionForm = ({ navigation }: any) => {
             {renderDurationPickerItems()}
           </Picker>
           <CustomizableButton
+            stylesButton={{
+              backgroundColor: COLOR_COMBINATION_1.BLUE,
+            }}
             onPress={() =>
               playButtonSoundOnExecution(() => {
                 if (formValues.selectedCharacters.length === 0) {

@@ -1,13 +1,9 @@
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
   Animated,
-  Button,
-  Pressable,
 } from "react-native";
-import { ButtonGroup } from "@rneui/themed";
 import { SCREENS, TipsOfTheDay } from "../../constants";
 import {
   BannerAd,
@@ -17,7 +13,6 @@ import {
 
 import React, { useMemo, FC, useEffect } from "react";
 import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
-import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { useAuth } from "../../contexts/authContext";
 import { useSafeArea } from "react-native-safe-area-context";
 import { playButtonSound } from "../../utils/soundUtils";
@@ -34,25 +29,25 @@ interface Props {
 export const MainMenu: FC<Props> = ({ navigation }: Props) => {
   const { currentUser } = useAuth();
   const getTipIndex = useMemo(
-      () => new Date().getDate() % TipsOfTheDay.length,
-      []
+    () => new Date().getDate() % TipsOfTheDay.length,
+    []
   );
   const [error, setError] = React.useState<string>("");
   const fadeAnim = new Animated.Value(0);
 
   const buttonTitles = Object.values(SCREENS).filter(
-      (screenName) =>
-          screenName !== SCREENS.MAIN &&
-          screenName !== SCREENS.GAME_MODE_ONE &&
-          screenName !== SCREENS.GAME_MODE_TWO
+    (screenName) =>
+      screenName !== SCREENS.MAIN &&
+      screenName !== SCREENS.GAME_MODE_ONE &&
+      screenName !== SCREENS.GAME_MODE_TWO
   );
 
   const buttons = currentUser
-      ? buttonTitles.filter(
-          (screenName) =>
-              screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
+    ? buttonTitles.filter(
+        (screenName) =>
+          screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
       )
-      : buttonTitles.filter((screenName) => screenName !== SCREENS.LOGOUT);
+    : buttonTitles.filter((screenName) => screenName !== SCREENS.LOGOUT);
 
   const insets = useSafeArea();
 
@@ -73,42 +68,36 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
     }).start();
   }, []);
 
+  // ToDo: make other modals closeable on press outside
   return (
-      <View style={styles.container}>
-        <Animated.View
-            style={[styles.quoteBox, { paddingTop: insets.top, opacity: fadeAnim }]}
-        >
-          <Text style={styles.quoteHeadline}>Quote of the day:</Text>
-          <Text style={styles.quoteText}>{TipsOfTheDay[getTipIndex]}</Text>
-        </Animated.View>
-        <Animated.View
-            style={[
-              { paddingBottom: insets.bottom, opacity: fadeAnim },
-              styles.buttonContainer,
-            ]}
-        >
+    <View style={styles.container}>
+      <Animated.View
+        style={[styles.quoteBox, { paddingTop: insets.top, opacity: fadeAnim }]}
+      >
+        <Text style={styles.quoteHeadline}>Quote of the day:</Text>
+        <Text style={styles.quoteText}>{TipsOfTheDay[getTipIndex]}</Text>
+      </Animated.View>
+      <Animated.View
+        style={[
+          { paddingBottom: insets.bottom, opacity: fadeAnim },
+          styles.buttonContainer,
+        ]}
+      >
           {buttons.map((buttonTitle, index) => (
-              <Pressable
-                  style={styles.pressable}
-                  key={buttonTitle}
-                  onPress={() => handleOnPress(buttonTitle)}
-              >
-                <Text style={styles.pressableText}>{buttonTitle}</Text>
-              </Pressable>
+            <CustomizableButton
+              stylesButton={
+                index === 0 ? styles.pressableProminent : styles.pressable
+              }
+              key={buttonTitle}
+              onPress={() => handleOnPress(buttonTitle)}
+              title={buttonTitle}
+            />
           ))}
-          {/*<ButtonGroup*/}
-          {/*  onPress={(buttonIndex: number) => handleOnPress(buttons[buttonIndex])}*/}
-          {/*  vertical*/}
-          {/*  textStyle={styles.buttonGroup}*/}
-          {/*  buttonStyle={Platform.OS === "ios" ? { height: 50 } : {}}*/}
-          {/*  containerStyle={STANDARDISED_STYLES.BUTTON}*/}
-          {/*  buttons={buttons}*/}
-          {/*/>*/}
-          <View style={{ position: "absolute", bottom: 0 }}>
-            <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
-          </View>
-        </Animated.View>
+      </Animated.View>
+      <View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>
+        <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
       </View>
+    </View>
   );
 };
 
@@ -151,24 +140,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   pressable: {
-    backgroundColor: COLOR_COMBINATION_1.ORANGE,
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: COLOR_COMBINATION_1.ORANGE,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
     width: "50%",
+    height: "10%",
+    padding: 0,
   },
-  pressableText: {
-    color: COLOR_COMBINATION_1.BLACK,
-    fontSize: 20,
-    textTransform: "uppercase",
-    fontWeight: "bold",
+  pressableProminent: {
+    width: "50%",
+    height: "10%",
+    padding: 0,
+    backgroundColor: COLOR_COMBINATION_1.BLUE,
   },
 });
 

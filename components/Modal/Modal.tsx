@@ -4,6 +4,7 @@ import React, { ReactNode } from "react";
 
 interface ModalProps {
   isModalVisible: boolean;
+  onRequestClose: () => void;
   headerTitle: string;
   headerTitleStyles?: TextStyle;
   headerText: string | JSX.Element;
@@ -16,6 +17,7 @@ interface ModalProps {
 export const Modal = ({
   isModalVisible,
   headerTitle,
+    onRequestClose,
   headerTitleStyles,
   headerText,
   footerComponent,
@@ -23,7 +25,7 @@ export const Modal = ({
   headerTextStyles,
 }: ModalProps) => {
   return (
-    <ModalConfiguration isVisible={isModalVisible}>
+    <ModalConfiguration onRequestClose={onRequestClose} isVisible={isModalVisible}>
       <ModalConfiguration.Container containerStyles={containerStyles}>
         <View>
           <ModalConfiguration.Header

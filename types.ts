@@ -32,6 +32,6 @@ export enum GameDurations {
 export interface GameSelectionState {
   characters: AvailableCharacters;
   duration: GameDurations;
-  selectedCharacters: CharacterObject[];
+  selectedCharacters: CharacterObject[] | null;
   selectedGameMode: SCREENS.GAME_MODE_ONE | SCREENS.GAME_MODE_TWO;
 }

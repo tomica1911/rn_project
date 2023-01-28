@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
-import {
-  AvailableCharacters,
-  CharacterObject,
-  characters,
-} from "../../../characters";
+import { AvailableCharacters, characters } from "../../../characters";
 import { FlatList, Text, View, Platform } from "react-native";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { CharacterTile } from "../../../components/CharacterTile/CharacterTile";
 import {
@@ -40,31 +37,36 @@ export const GameSelectionForm = ({ navigation }: any) => {
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [charSelectionVisible, setCharSelectionVisible] = useState(false);
-
+  const {
+    getItem: getCachedSelectedCharacters,
+    setItem: setCachedSelectedCharacters,
+  } = useAsyncStorage("@selectedCharacters");
   const availableCharacters = Object.values(AvailableCharacters);
   // ToDo: add appropriate value to any
   const handleChange = (key: keyof GameSelectionState, value: any) => {
     setFormValues({ ...formValues, [key]: value });
   };
 
-  // ToDo: see if this can be refactored
-  const renderDurationPickerItems = () => {
-    const menuInputItems = [];
+  const renderDurationPickerItems = () =>
+    Array.from({ length: 30 }, (_, i) => i + 2)
+      .filter((n) => n % 2 === 0)
+      .map((n) => <Picker.Item key={n} label={n.toString()} value={n} />);
 
-    for (let i = 0; i < 30; i++) {
-      if (i % 2 == 0) {
-        menuInputItems.push(
-          <Picker.Item
-            key={`key${i}`}
-            label={(i + 2).toString()}
-            value={i + 2}
-          />
-        );
-      }
-    }
+  useEffect(() => {
+    const readSelectedCharactersFromStorage = async () => {
+      const stringifiedCachedSelectedCharacters =
+        await getCachedSelectedCharacters();
+      const parsedCachedSelectedCharacters = JSON.parse(
+        stringifiedCachedSelectedCharacters ?? "[]"
+      );
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        selectedCharacters: parsedCachedSelectedCharacters,
+      }));
+    };
 
-    return menuInputItems.map((item) => item);
-  };
+    readSelectedCharactersFromStorage();
+  }, []);
 
   return (
     <AppLayout>
@@ -166,63 +168,71 @@ export const GameSelectionForm = ({ navigation }: any) => {
                   keyExtractor={(item, index) => item.letter + index}
                   numColumns={5}
                   data={
-                    characters.filter(
+                    characters.find(
                       (arrayItem) => arrayItem.setName === formValues.characters
-                    )[0].letters
+                    )?.letters
                   }
-                  renderItem={({ item }) => (
-                    <CharacterTile
-                      selected={formValues.selectedCharacters.includes(item)}
-                      character={item.letter}
-                      onPress={() =>
-                        playButtonSoundOnExecution(() => {
-                          if (formValues.selectedCharacters.includes(item)) {
-                            return setFormValues(
-                              (prevValues: GameSelectionState) => {
+                  renderItem={({ item }) => {
+                    const isSelected = formValues.selectedCharacters?.some(
+                      (char) => char.id === item.id
+                    );
+                    return (
+                      <CharacterTile
+                        selected={isSelected}
+                        character={item.letter}
+                        onPress={() =>
+                          playButtonSoundOnExecution(() => {
+                            if (isSelected) {
+                              setFormValues((prevValues) => {
                                 const withoutToBeRemoved =
-                                  prevValues.selectedCharacters.filter(
+                                  prevValues?.selectedCharacters?.filter(
                                     (charObj) => charObj.letter !== item.letter
                                   );
                                 return {
                                   ...prevValues,
-                                  selectedCharacters: [...withoutToBeRemoved],
-                                };
-                              }
-                            );
-                          }
-                          return setFormValues(
-                            (prevValues: GameSelectionState) => {
-                              const duplicate =
-                                prevValues.selectedCharacters.find(
-                                  (el: CharacterObject) =>
-                                    el.letter === item.letter
-                                );
-                              if (!duplicate) {
-                                return {
-                                  ...prevValues,
                                   selectedCharacters: [
-                                    ...prevValues.selectedCharacters,
-                                    item,
+                                    ...(withoutToBeRemoved ?? []),
                                   ],
                                 };
-                              }
-                              return {
-                                ...prevValues,
-                              };
+                              });
+                            } else {
+                              setFormValues((prevValues) => {
+                                if (
+                                  !prevValues.selectedCharacters?.find(
+                                    (char) => char.letter === item.letter
+                                  )
+                                ) {
+                                  return {
+                                    ...prevValues,
+                                    selectedCharacters: [
+                                      ...(prevValues.selectedCharacters ?? []),
+                                      item,
+                                    ],
+                                  };
+                                }
+                                return {
+                                  ...prevValues,
+                                };
+                              });
                             }
-                          );
-                        })
-                      }
-                    />
-                  )}
+                          })
+                        }
+                      />
+                    );
+                  }}
                   style={{ width: "100%" }}
                 />
                 <CustomizableButton
-                  onPress={() =>
+                  onPress={async () => {
+                    if (formValues.selectedCharacters) {
+                      await setCachedSelectedCharacters(
+                        JSON.stringify(formValues.selectedCharacters)
+                      );
+                    }
                     playButtonSoundOnExecution(() =>
                       setCharSelectionVisible(false)
-                    )
-                  }
+                    );
+                  }}
                   title="Choose"
                 />
               </View>
@@ -291,7 +301,10 @@ export const GameSelectionForm = ({ navigation }: any) => {
             }}
             onPress={() =>
               playButtonSoundOnExecution(() => {
-                if (formValues.selectedCharacters.length === 0) {
+                if (
+                  formValues.selectedCharacters &&
+                  formValues.selectedCharacters.length === 0
+                ) {
                   return setIsModalVisible(true);
                 }
                 navigation.navigate(formValues.selectedGameMode, {

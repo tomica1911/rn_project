@@ -94,9 +94,9 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
             />
           ))}
       </Animated.View>
-      <View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>
-        <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
-      </View>
+      {/*<View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>*/}
+      {/*  <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />*/}
+      {/*</View>*/}
     </View>
   );
 };

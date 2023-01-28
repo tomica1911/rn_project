@@ -4,7 +4,7 @@ import {Pressable, Text} from "react-native";
 export interface CharacterTileProps {
     character: string,
     onPress: () => void,
-    selected?: boolean
+    selected?: boolean | null,
 }
 
 export const CharacterTile = ({character, onPress, selected}: CharacterTileProps): JSX.Element => {

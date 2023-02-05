@@ -12,7 +12,7 @@ import {
 } from "react-native-google-mobile-ads";
 
 import React, { useMemo, FC, useEffect } from "react";
-import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
+import { COLOR_COMBINATION_1 } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import { useSafeArea } from "react-native-safe-area-context";
 import { playButtonSound } from "../../utils/soundUtils";
@@ -47,7 +47,7 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
         (screenName) =>
           screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
       )
-    : buttonTitles.filter((screenName) => screenName !== SCREENS.LOGOUT);
+    : buttonTitles.filter((screenName) => screenName !== SCREENS.LOGOUT && screenName);
 
   const insets = useSafeArea();
 

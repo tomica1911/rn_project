@@ -35,3 +35,13 @@ export interface GameSelectionState {
   selectedCharacters: CharacterObject[] | null;
   selectedGameMode: SCREENS.GAME_MODE_ONE | SCREENS.GAME_MODE_TWO;
 }
+
+
+export interface StatisticalData {
+  barChartData: number[];
+  pieChartStatusData: { name: string, color: string, count: number, legendFontColor: string, legendFontSize: number }[];
+  pointsWon: number;
+  averageGameDuration: string,
+  mostPlayedDuration: number,
+  individualPoints: number[];
+}

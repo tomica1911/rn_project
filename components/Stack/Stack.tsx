@@ -11,6 +11,7 @@ import { About } from "../../screens/About/About";
 import { Contact } from "../../screens/Contact/Contact";
 import { Login } from "../../screens/Login/Login";
 import { GameSelectionForm } from "../../screens/Game/GameSelectionForm/GameSelectionForm";
+import { Dashboard } from "../../screens/Dashboard/Dashboard";
 
 const AppStack = createStackNavigator();
 
@@ -40,6 +41,11 @@ export const Stack = (): JSX.Element => {
         />
         <AppStack.Screen
           options={styles}
+          name={SCREENS.DASHBOARD}
+          component={Dashboard}
+        />
+        <AppStack.Screen
+          options={styles}
           name={SCREENS.LOGIN}
           component={Login}
         />
@@ -64,14 +70,14 @@ export const Stack = (): JSX.Element => {
           component={GameMode2}
         />
         <AppStack.Screen
-            options={styles}
-            name={SCREENS.ABOUT}
-            component={About}
+          options={styles}
+          name={SCREENS.ABOUT}
+          component={About}
         />
         <AppStack.Screen
-            options={styles}
-            name={SCREENS.CONTACT}
-            component={Contact}
+          options={styles}
+          name={SCREENS.CONTACT}
+          component={Contact}
         />
       </AppStack.Navigator>
     </NavigationContainer>

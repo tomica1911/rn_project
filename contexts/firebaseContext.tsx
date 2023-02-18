@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useState } from "react";
 import {
-  getFirestore,
+  initializeFirestore,
   arrayUnion,
   getDoc,
   doc,
@@ -56,7 +56,9 @@ interface FirebaseContextValues {
 
 //ToDo: define correct types
 export function FirestoreProvider({ children }: FirestoreProviderProps) {
-  const firestoreDatabase = getFirestore(FirebaseApp);
+  const firestoreDatabase = initializeFirestore(FirebaseApp, {
+    experimentalForceLongPolling: true,
+  });
   const [userFirestoreData, setUserFirestoreData] = useState<
     UserFirestoreData | undefined
   >(undefined);
@@ -82,7 +84,7 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
     status,
     points,
     duration,
-  }: GameSettings & { userUid: string }): void => {
+  }: GameSettings & { userUid: string }) => {
     const data: { datePlayed: number; settings: GameSettings } = {
       datePlayed: Date.now(),
       settings: {
@@ -94,7 +96,9 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
       },
     };
 
-    updateDoc(doc(firestoreDatabase, "userData", userUid), {
+    const document = doc(firestoreDatabase, "userData", userUid);
+
+    updateDoc(document, {
       playedGames: arrayUnion(data),
     });
   };

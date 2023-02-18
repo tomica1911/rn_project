@@ -53,3 +53,8 @@ export const TipsOfTheDay = [
   "Stay focused.",
   "Tell me and I forget, teach me and I may remember, involve me and I learn.",
 ];
+
+export enum GOOGLE_ADMOB_APP_IDS {
+  ANDROID = "ca-app-pub-9254443985458204~7784866269",
+  IOS = "ca-app-pub-9254443985458204~2420310200",
+}

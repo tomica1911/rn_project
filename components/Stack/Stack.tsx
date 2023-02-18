@@ -12,6 +12,8 @@ import { Contact } from "../../screens/Contact/Contact";
 import { Login } from "../../screens/Login/Login";
 import { GameSelectionForm } from "../../screens/Game/GameSelectionForm/GameSelectionForm";
 import { Dashboard } from "../../screens/Dashboard/Dashboard";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 
 const AppStack = createStackNavigator();
 
@@ -19,6 +21,14 @@ export const Stack = (): JSX.Element => {
   const styles = {
     headerStyle: {
       backgroundColor: COLOR_COMBINATION_1.BLACK,
+      height: 50,
+    },
+    // This prevents jumping of the header text on initial load, do not remove
+    initialSafeAreaInsets: {
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
     headerTintColor: "#F7B42F",
     headerTitleStyle: {

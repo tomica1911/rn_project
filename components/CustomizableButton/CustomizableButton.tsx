@@ -5,6 +5,7 @@ import { COLOR_COMBINATION_1 } from "../../styles/styles";
 interface CustomizableButtonProps {
   onPress: () => void;
   title: string;
+  primary?: boolean;
   stylesButton?: Record<string, string | number>;
   stylesText?: Record<string, string | number>;
   disabled?: boolean;
@@ -13,6 +14,7 @@ interface CustomizableButtonProps {
 export const CustomizableButton = ({
   onPress,
   title,
+  primary = true,
   stylesButton,
   stylesText,
   disabled = false,
@@ -21,7 +23,14 @@ export const CustomizableButton = ({
     android_disableSound
     disabled={disabled}
     style={{
-      backgroundColor: COLOR_COMBINATION_1.ORANGE,
+      backgroundColor: primary ? COLOR_COMBINATION_1.ORANGE : "white",
+      ...(primary
+        ? {}
+        : {
+            borderStyle: "solid",
+            borderColor: COLOR_COMBINATION_1.ORANGE,
+            borderWidth: 5,
+          }),
       padding: 20,
       alignSelf: "center",
       marginVertical: 10,
@@ -41,10 +50,8 @@ export const CustomizableButton = ({
   >
     <Text
       style={{
-        color: COLOR_COMBINATION_1.BLACK,
+        color: "#0f1120",
         fontSize: 20,
-        textTransform: "uppercase",
-        fontWeight: "bold",
         ...stylesText,
       }}
     >

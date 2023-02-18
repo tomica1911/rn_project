@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 
 interface ModalProps {
   isModalVisible: boolean;
-  onRequestClose: () => void;
+  onRequestClose?: () => void;
   headerTitle: string;
   headerTitleStyles?: TextStyle;
   headerText: string | JSX.Element;

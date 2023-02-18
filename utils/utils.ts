@@ -1,5 +1,7 @@
 import AdMob, { InterstitialAd } from "@admob-plus/react-native";
 import { TestIds } from "react-native-google-mobile-ads";
+import { Platform } from "react-native";
+import { GOOGLE_ADMOB_APP_IDS } from "../constants";
 
 export const getRandomNumberInRange: (min: number, max: number) => number = (
   min: number,
@@ -14,9 +16,12 @@ export const getPoints = (
 
 export async function showInterstitalAd() {
   await AdMob.start();
-
   const interstitial = new InterstitialAd({
-    adUnitId: TestIds.INTERSTITIAL,
+    adUnitId: __DEV__
+      ? TestIds.INTERSTITIAL
+      : Platform.OS === "android"
+      ? GOOGLE_ADMOB_APP_IDS.ANDROID
+      : GOOGLE_ADMOB_APP_IDS.IOS,
   });
   await interstitial.load();
   await interstitial.show();

@@ -6,7 +6,7 @@ import { STANDARDISED_STYLES } from "../../styles/styles";
 type ModalProps = {
   isVisible: boolean;
   children: React.ReactNode;
-  onRequestClose: () => void;
+  onRequestClose?: () => void;
   [x: string]: any;
 };
 export const ModalConfiguration = ({

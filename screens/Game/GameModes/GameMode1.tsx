@@ -7,7 +7,7 @@ import { shuffle } from "lodash";
 import {
   getPoints,
   getRandomNumberInRange,
-  // showInterstitalAd,
+  showInterstitalAd,
 } from "../../../utils/utils";
 // @ts-ignore
 import { ProgressPie } from "react-native-progress/Pie";
@@ -43,7 +43,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     const randomNumberInRange = getRandomNumberInRange(0, 100);
 
     if (gameCompleted && randomNumberInRange <= 20) {
-      // showInterstitalAd();
+      showInterstitalAd();
     }
   }, [gameCompleted]);
 

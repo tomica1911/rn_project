@@ -1,6 +1,6 @@
 export enum GameModes {
-  ONE = "1",
-  TWO = "2",
+  ONE = "Game Mode 1",
+  TWO = "Game Mode 2",
 }
 
 export enum Status {

@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Animated,
-} from "react-native";
+import { StyleSheet, Text, View, Animated } from "react-native";
 import { SCREENS, TipsOfTheDay } from "../../constants";
 import {
   BannerAd,
@@ -14,7 +9,7 @@ import {
 import React, { useMemo, FC, useEffect } from "react";
 import { COLOR_COMBINATION_1 } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
-import { useSafeArea } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { playButtonSound } from "../../utils/soundUtils";
 import { CustomizableButton } from "../../components/CustomizableButton/CustomizableButton";
 
@@ -47,9 +42,9 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
         (screenName) =>
           screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
       )
-    : buttonTitles.filter((screenName) => screenName !== SCREENS.LOGOUT && screenName);
-
-  const insets = useSafeArea();
+    : buttonTitles.filter(
+        (screenName) => screenName !== SCREENS.LOGOUT && screenName && screenName !== SCREENS.DASHBOARD
+      );
 
   const handleOnPress = async (screenName: string) => {
     try {
@@ -70,34 +65,27 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
 
   // ToDo: make other modals closeable on press outside
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[styles.quoteBox, { paddingTop: insets.top, opacity: fadeAnim }]}
-      >
+    <SafeAreaView style={styles.container}>
+      <Animated.View style={[styles.quoteBox, { opacity: fadeAnim }]}>
         <Text style={styles.quoteHeadline}>Quote of the day:</Text>
         <Text style={styles.quoteText}>{TipsOfTheDay[getTipIndex]}</Text>
       </Animated.View>
-      <Animated.View
-        style={[
-          { paddingBottom: insets.bottom, opacity: fadeAnim },
-          styles.buttonContainer,
-        ]}
-      >
-          {buttons.map((buttonTitle, index) => (
-            <CustomizableButton
-              stylesButton={
-                index === 0 ? styles.pressableProminent : styles.pressable
-              }
-              key={buttonTitle}
-              onPress={() => handleOnPress(buttonTitle)}
-              title={buttonTitle}
-            />
-          ))}
+      <Animated.View style={[{ opacity: fadeAnim }, styles.buttonContainer]}>
+        {buttons.map((buttonTitle, index) => (
+          <CustomizableButton
+            stylesButton={
+              index === 0 ? styles.pressableProminent : styles.pressable
+            }
+            key={buttonTitle}
+            onPress={() => handleOnPress(buttonTitle)}
+            title={buttonTitle}
+          />
+        ))}
       </Animated.View>
-      {/*<View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>*/}
-      {/*  <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />*/}
-      {/*</View>*/}
-    </View>
+      <View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>
+        <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
+      </View>
+    </SafeAreaView>
   );
 };
 

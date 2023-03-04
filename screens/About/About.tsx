@@ -9,7 +9,7 @@ export const About = ({ navigation }: any): JSX.Element => {
         paddingLeft: 50,
         paddingRight: 50,
         alignItems: "center",
-        backgroundColor: COLOR_COMBINATION_1.BLACK,
+        backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
       }}
     >
       <View style={{ marginTop: 10 }}>

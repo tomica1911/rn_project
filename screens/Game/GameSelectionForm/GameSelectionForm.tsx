@@ -15,24 +15,16 @@ import { shuffle } from "lodash";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { GameSelectionState } from "../../../types";
 import { playButtonSoundOnExecution } from "../../../utils/soundUtils";
-
-interface GameSelectionFormProps {
-  //ToDo: check if all values from GameSelectionState are needed here and rename it to GameSelectionStateProps
-  formValues: GameSelectionState & {
-    setStartGame: (arg: boolean) => void;
-    //ToDo: define proper type for any
-    setFormValues: (arg: any) => void;
-  };
-}
+import Checkbox from "expo-checkbox";
 
 //ToDo: add return type to the component (GameSelectionFormProps)
 export const GameSelectionForm = ({ navigation }: any) => {
-  //ToDo: make commented lines of code work
   const [formValues, setFormValues] = useState<GameSelectionState>({
-    characters: AvailableCharacters.HIRAGANA,
+    characterSet: AvailableCharacters.HIRAGANA,
     duration: GameDurations.D2,
     selectedCharacters: [],
     selectedGameMode: SCREENS.GAME_MODE_ONE,
+    mixCharacters: false,
   });
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -40,12 +32,10 @@ export const GameSelectionForm = ({ navigation }: any) => {
   const {
     getItem: getCachedSelectedCharacters,
     setItem: setCachedSelectedCharacters,
-  } = useAsyncStorage("@selectedCharacters");
+  } = useAsyncStorage("@selectedCharactersFormValue");
+  const { getItem: getRestCachedFormValues, setItem: setRestCachedFormValues } =
+    useAsyncStorage("@restFormValues");
   const availableCharacters = Object.values(AvailableCharacters);
-  // ToDo: add appropriate value to any
-  const handleChange = (key: keyof GameSelectionState, value: any) => {
-    setFormValues({ ...formValues, [key]: value });
-  };
 
   const renderDurationPickerItems = () =>
     Array.from({ length: 30 }, (_, i) => i + 2)
@@ -54,18 +44,30 @@ export const GameSelectionForm = ({ navigation }: any) => {
 
   useEffect(() => {
     const readSelectedCharactersFromStorage = async () => {
-      const stringifiedCachedSelectedCharacters =
+      const stringifiedSelectedCharactersFormValues =
         await getCachedSelectedCharacters();
-      const parsedCachedSelectedCharacters = JSON.parse(
-        stringifiedCachedSelectedCharacters ?? "[]"
+      const parsedCachedFormValues = JSON.parse(
+        stringifiedSelectedCharactersFormValues ?? "[]"
       );
       setFormValues((prevValues) => ({
         ...prevValues,
-        selectedCharacters: parsedCachedSelectedCharacters,
+        selectedCharacters: parsedCachedFormValues,
+      }));
+    };
+
+    const readRestFormValuesFromStorage = async () => {
+      const stringifiedRestFormValues = await getRestCachedFormValues();
+      const parsedCachedRestFormValues = JSON.parse(
+        stringifiedRestFormValues ?? "[]"
+      );
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        ...parsedCachedRestFormValues,
       }));
     };
 
     readSelectedCharactersFromStorage();
+    readRestFormValuesFromStorage();
   }, []);
 
   return (
@@ -107,20 +109,51 @@ export const GameSelectionForm = ({ navigation }: any) => {
           </Text>
           <Picker
             itemStyle={{ marginTop: -70 }}
-            selectedValue={formValues.characters}
+            selectedValue={formValues.characterSet}
             style={
               Platform.OS === "ios"
                 ? { width: 200, height: 70, backgroundColor: "white" }
                 : { width: 200, backgroundColor: "white" }
             }
-            onValueChange={(itemValue: string) =>
-              handleChange("characters", itemValue)
-            }
+            onValueChange={(characterSet: AvailableCharacters) => {
+              setFormValues({
+                ...formValues,
+                characterSet,
+              });
+              const { selectedCharacters, ...rest } = formValues;
+              setRestCachedFormValues(
+                  JSON.stringify({ ...rest, characterSet })
+              );
+            }}
           >
             {availableCharacters.map((key) => (
               <Picker.Item key={key} label={key} value={key} />
             ))}
           </Picker>
+          <Text
+            style={{
+              marginTop: 10,
+              marginBottom: 10,
+              color: COLOR_COMBINATION_1.ORANGE,
+              textAlign: "center",
+            }}
+          >
+            Mix different character sets
+          </Text>
+          <Checkbox
+            value={formValues.mixCharacters}
+            onValueChange={(nextCheckboxValue: boolean) => {
+              setFormValues({
+                ...formValues,
+                mixCharacters: nextCheckboxValue,
+              });
+              const { characterSet, ...rest } = formValues;
+              setRestCachedFormValues(
+                JSON.stringify({ ...rest, mixCharacters: nextCheckboxValue })
+              );
+            }}
+            color={COLOR_COMBINATION_1.ORANGE}
+          />
           <Text
             style={{
               marginTop: 10,
@@ -144,7 +177,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
           />
           <Modal
             containerStyles={{
-              backgroundColor: COLOR_COMBINATION_1.BLACK,
+              backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
               borderColor: COLOR_COMBINATION_1.ORANGE,
               borderStyle: "solid",
               borderWidth: 10,
@@ -169,7 +202,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
                   numColumns={5}
                   data={
                     characters.find(
-                      (arrayItem) => arrayItem.setName === formValues.characters
+                      (arrayItem) => arrayItem.setName === formValues.characterSet
                     )?.letters
                   }
                   renderItem={({ item }) => {
@@ -206,7 +239,10 @@ export const GameSelectionForm = ({ navigation }: any) => {
                                     ...prevValues,
                                     selectedCharacters: [
                                       ...(prevValues.selectedCharacters ?? []),
-                                      item,
+                                      {
+                                        ...item,
+                                        characterSet: formValues.characterSet,
+                                      },
                                     ],
                                   };
                                 }
@@ -257,17 +293,24 @@ export const GameSelectionForm = ({ navigation }: any) => {
                 ? { width: 200, height: 70, backgroundColor: "white" }
                 : { width: 200, backgroundColor: "white" }
             }
-            onValueChange={(gameMode) =>
-              handleChange("selectedGameMode", gameMode)
-            }
+            onValueChange={async (gameMode) => {
+              setFormValues({
+                ...formValues,
+                selectedGameMode: gameMode,
+              });
+              const { characterSet, ...rest } = formValues;
+              setRestCachedFormValues(
+                JSON.stringify({ ...rest, selectedGameMode: gameMode })
+              );
+            }}
           >
             <Picker.Item
-              key="key1"
+              key="Game Mode 1"
               label="Game Mode 1"
               value={SCREENS.GAME_MODE_ONE}
             />
             <Picker.Item
-              key="key2"
+              key="Game Mode 2"
               label="Game Mode 2"
               value={SCREENS.GAME_MODE_TWO}
             />
@@ -289,28 +332,36 @@ export const GameSelectionForm = ({ navigation }: any) => {
                 ? { width: 200, height: 70, backgroundColor: "white" }
                 : { width: 200, backgroundColor: "white" }
             }
-            onValueChange={(duration: GameDurations) =>
-              handleChange("duration", duration)
-            }
+            onValueChange={async (duration: GameDurations) => {
+              setFormValues({
+                ...formValues,
+                duration
+              });
+              const { characterSet, ...rest } = formValues;
+              setRestCachedFormValues(
+                  JSON.stringify({ ...rest, duration })
+              );
+            }}
           >
             {renderDurationPickerItems()}
           </Picker>
           <CustomizableButton
-            stylesButton={{
-              backgroundColor: COLOR_COMBINATION_1.BLUE,
-            }}
+            stylesButton={STANDARDISED_STYLES.BUTTON}
             onPress={() =>
               playButtonSoundOnExecution(() => {
-                if (
-                  formValues.selectedCharacters &&
-                  formValues.selectedCharacters.length === 0
-                ) {
+                const charactersToBeUsed = formValues.mixCharacters
+                  ? formValues.selectedCharacters
+                  : formValues.selectedCharacters?.filter(
+                      ({ characterSet }) =>
+                        characterSet === formValues.characterSet
+                    );
+                if (charactersToBeUsed && charactersToBeUsed.length === 0) {
                   return setIsModalVisible(true);
                 }
                 navigation.navigate(formValues.selectedGameMode, {
                   formValues: {
                     ...formValues,
-                    selectedCharacters: shuffle(formValues.selectedCharacters),
+                    selectedCharacters: shuffle(charactersToBeUsed),
                   },
                 });
               })

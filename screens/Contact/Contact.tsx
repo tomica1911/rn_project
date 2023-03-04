@@ -89,6 +89,7 @@ export const Contact = ({ navigation }: any): JSX.Element => {
             />
             <Text style={styles.fieldLabel}>Message</Text>
             <InputField
+              additionalInputContainerStyles={{ height: 200 }}
               additionalInputFieldStyles={{
                 textAlignVertical: "top",
                 textAlign: "left",

@@ -94,7 +94,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
       ? shuffle(formValues.selectedCharacters)
       : formValues.selectedCharacters;
     const lettersArray = charDB.filter(
-      (arrayItem) => arrayItem.setName === formValues.characters
+      (arrayItem) => arrayItem.setName === formValues.characterSet
     )[0].letters;
     let randomCharIndex = getRandomNumberInRange(0, lettersArray.length - 1);
     let randomEquivalentIndex = getRandomNumberInRange(

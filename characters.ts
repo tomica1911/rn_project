@@ -1,7 +1,19 @@
+import { SCREENS } from "./constants";
+import { GameDurations } from "./types";
+
 export interface CharacterObject {
   id: number;
   letter: string;
   equivalents: string[];
+  characterSet?: AvailableCharacters;
+}
+
+export interface GameSelectionState {
+  characters: AvailableCharacters;
+  duration: GameDurations;
+  selectedCharacters: CharacterObject[] | null;
+  selectedGameMode: SCREENS.GAME_MODE_ONE | SCREENS.GAME_MODE_TWO;
+  mixCharacters: boolean;
 }
 
 export enum AvailableCharacters {

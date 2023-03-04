@@ -20,7 +20,7 @@ const AppStack = createStackNavigator();
 export const Stack = (): JSX.Element => {
   const styles = {
     headerStyle: {
-      backgroundColor: COLOR_COMBINATION_1.BLACK,
+      backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
       height: 50,
     },
     // This prevents jumping of the header text on initial load, do not remove

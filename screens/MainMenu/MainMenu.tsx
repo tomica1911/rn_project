@@ -12,6 +12,7 @@ import { useAuth } from "../../contexts/authContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { playButtonSound } from "../../utils/soundUtils";
 import { CustomizableButton } from "../../components/CustomizableButton/CustomizableButton";
+import { AppLayout } from "../../components/AppLayout/AppLayout";
 
 type Navigation = {
   navigate: (routeName: string) => void;
@@ -43,7 +44,10 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
           screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
       )
     : buttonTitles.filter(
-        (screenName) => screenName !== SCREENS.LOGOUT && screenName && screenName !== SCREENS.DASHBOARD
+        (screenName) =>
+          screenName !== SCREENS.LOGOUT &&
+          screenName &&
+          screenName !== SCREENS.DASHBOARD
       );
 
   const handleOnPress = async (screenName: string) => {
@@ -65,35 +69,35 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
 
   // ToDo: make other modals closeable on press outside
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.quoteBox, { opacity: fadeAnim }]}>
-        <Text style={styles.quoteHeadline}>Quote of the day:</Text>
-        <Text style={styles.quoteText}>{TipsOfTheDay[getTipIndex]}</Text>
-      </Animated.View>
-      <Animated.View style={[{ opacity: fadeAnim }, styles.buttonContainer]}>
-        {buttons.map((buttonTitle, index) => (
-          <CustomizableButton
-            stylesButton={
-              index === 0 ? styles.pressableProminent : styles.pressable
-            }
-            key={buttonTitle}
-            onPress={() => handleOnPress(buttonTitle)}
-            title={buttonTitle}
-          />
-        ))}
-      </Animated.View>
-      <View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>
-        <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
-      </View>
-    </SafeAreaView>
+    <AppLayout>
+      <SafeAreaView style={styles.container}>
+        <Animated.View style={[styles.quoteBox, { opacity: fadeAnim }]}>
+          <Text style={styles.quoteHeadline}>Quote of the day:</Text>
+          <Text style={styles.quoteText}>{TipsOfTheDay[getTipIndex]}</Text>
+        </Animated.View>
+        <Animated.View style={[{ opacity: fadeAnim }, styles.buttonContainer]}>
+          {buttons.map((buttonTitle, index) => (
+            <CustomizableButton
+              stylesButton={
+                index === 0 ? styles.pressableProminent : styles.pressable
+              }
+              key={buttonTitle}
+              onPress={() => handleOnPress(buttonTitle)}
+              title={buttonTitle}
+            />
+          ))}
+        </Animated.View>
+        <View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>
+          <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
+        </View>
+      </SafeAreaView>
+    </AppLayout>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    backgroundColor: "#0f1120",
   },
   buttonContainer: {
     alignItems: "center",
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   quoteText: {
-    color: COLOR_COMBINATION_1.BLACK,
+    color: COLOR_COMBINATION_1.DARK_BLUE,
     fontSize: 16,
     textAlign: "center",
   },
@@ -136,7 +140,7 @@ const styles = StyleSheet.create({
     width: "50%",
     height: "10%",
     padding: 0,
-    backgroundColor: COLOR_COMBINATION_1.BLUE,
+    backgroundColor: COLOR_COMBINATION_1.ORANGE,
   },
 });
 

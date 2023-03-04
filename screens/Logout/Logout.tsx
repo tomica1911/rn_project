@@ -18,6 +18,7 @@ export const Logout = ({ navigation }: any): JSX.Element => {
             footerComponent={
               <View>
                 <CustomizableButton
+                    stylesText={styles.modalButtonText}
                     onPress={() => navigation.navigate(SCREENS.MAIN)}
                     stylesButton={styles.modalButton}
                     title="Back to main menu"
@@ -52,14 +53,12 @@ export const Logout = ({ navigation }: any): JSX.Element => {
 
 const styles = StyleSheet.create({
   modalButton: {
-    marginTop: 10,
-    height: 50,
     ...STANDARDISED_STYLES.CENTER_CONTENT,
     ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
   } as any,
+  modalButtonText: {
+    textAlign: "center"
+  },
   logoutContainer: {
     flex: 1,
     justifyContent: "center",
@@ -69,24 +68,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   primaryButton: {
-    marginTop: 10,
-    height: 50,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
     ...STANDARDISED_STYLES.BUTTON,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
+    height: 90,
   } as any,
   secondaryButton: {
-    marginTop: 10,
-    height: 50,
-    borderColor: COLOR_COMBINATION_1.ORANGE,
-    backgroundColor: COLOR_COMBINATION_1.BLACK,
+    ...STANDARDISED_STYLES.BUTTON,
+    height: 90,
     borderWidth: 2,
-    ...STANDARDISED_STYLES.CENTER_CONTENT,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
+    borderColor: COLOR_COMBINATION_1.ORANGE,
+    backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
   } as any,
   secondaryButtonText: {
     color: COLOR_COMBINATION_1.ORANGE,

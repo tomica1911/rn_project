@@ -32,7 +32,7 @@ async function checkConsent() {
 export default function App() {
   const [hasConsent, setHasConsent] = useState<boolean | undefined>(false);
   const [fontsLoaded] = useFonts({
-    luckiestGuy: require("./assets/fonts/LuckiestGuy.ttf"),
+    karmillaBold: require("./assets/fonts/karmillaBold.ttf"),
   });
   AdsConsent.reset();
 

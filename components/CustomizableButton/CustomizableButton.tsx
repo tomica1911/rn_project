@@ -50,7 +50,7 @@ export const CustomizableButton = ({
   >
     <Text
       style={{
-        color: "#0f1120",
+        color: COLOR_COMBINATION_1.DARK_BLUE,
         fontSize: 20,
         ...stylesText,
       }}

@@ -17,6 +17,7 @@ interface PasswordFieldProps {
   maxLength?: number;
   // ToDo: find more appropriate type
   additionalInputFieldStyles?: Record<any, any>;
+  additionalInputContainerStyles?: Record<any, any>;
 }
 
 //ToDo: refactor component
@@ -27,6 +28,7 @@ export const InputField = ({
   control,
   multiline = false,
   additionalInputFieldStyles,
+  additionalInputContainerStyles,
   numberOfLines = 1,
   maxLength = 100,
 }: PasswordFieldProps) => {
@@ -44,7 +46,7 @@ export const InputField = ({
     marginLeft: showHidePasswordAbility ? 20 : 0,
   };
   return (
-    <View style={styles.inputContainer}>
+    <View style={{ ...styles.inputContainer, ...additionalInputContainerStyles }}>
       <TextInput
         style={
           !additionalInputFieldStyles

@@ -1,7 +1,7 @@
 export enum COLOR_COMBINATION_1 {
   ORANGE = "#F7B42F",
-  BLACK = "#0f1120",
   BLUE = "#8AC9E9",
+  DARK_BLUE = "#0f1120",
 }
 
 export const STANDARDISED_STYLES = {

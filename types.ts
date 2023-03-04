@@ -30,18 +30,24 @@ export enum GameDurations {
 }
 
 export interface GameSelectionState {
-  characters: AvailableCharacters;
+  characterSet: AvailableCharacters;
   duration: GameDurations;
   selectedCharacters: CharacterObject[] | null;
   selectedGameMode: SCREENS.GAME_MODE_ONE | SCREENS.GAME_MODE_TWO;
+  mixCharacters: boolean;
 }
-
 
 export interface StatisticalData {
   barChartData: number[];
-  pieChartStatusData: { name: string, color: string, count: number, legendFontColor: string, legendFontSize: number }[];
+  pieChartStatusData: {
+    name: string;
+    color: string;
+    count: number;
+    legendFontColor: string;
+    legendFontSize: number;
+  }[];
   pointsWon: number;
-  averageGameDuration: string,
-  mostPlayedDuration: number,
+  averageGameDuration: string;
+  mostPlayedDuration: number;
   individualPoints: number[];
 }

@@ -121,4 +121,3 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 });
-// backgroundColor: "#F7B42F",

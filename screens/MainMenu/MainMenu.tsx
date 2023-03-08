@@ -8,7 +8,7 @@ import {
 } from "react-native-google-mobile-ads";
 
 import React, { FC, useEffect, useMemo } from "react";
-import { COLOR_COMBINATION_1 } from "../../styles/styles";
+import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { playButtonSound } from "../../utils/soundUtils";
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   pressable: {
-    width: 200,
+    ...STANDARDISED_STYLES.BUTTON,
     height: "10%",
     padding: 0,
   },

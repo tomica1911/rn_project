@@ -4,7 +4,7 @@ import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../components/PasswordField/InputField";
 import { CustomizableButton } from "../../components/CustomizableButton/CustomizableButton";
-import { FieldError, FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Modal } from "../../components/Modal/Modal";
@@ -20,7 +20,7 @@ const yupSchema = yup.object().shape({
   message: yup
     .string()
     .required("Please write a message")
-    .min(10, "Please enter a valid message with over 10 characters")
+    .min(10, "Please enter a valid message with over 10 characters"),
 });
 // ToDo: add login with google, facebook and phone number
 export const Contact = ({ navigation }: any): JSX.Element => {
@@ -49,10 +49,8 @@ export const Contact = ({ navigation }: any): JSX.Element => {
     login(data.email, data.password);
   };
 
-  const allErrors: FieldError | Pick<FieldError, "message"> = merge(
-    errors,
-    authErrors
-  );
+  const allErrors: typeof errors | { [errorKey: string]: { message: string } } =
+    merge(errors, authErrors);
   const formHasErrors = Object.keys(allErrors).length > 0;
   // ToDo: hide email field if logged in
   return (

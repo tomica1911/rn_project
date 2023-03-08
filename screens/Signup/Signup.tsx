@@ -4,11 +4,10 @@ import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../components/PasswordField/InputField";
 import { CustomizableButton } from "../../components/CustomizableButton/CustomizableButton";
-import { FieldValues, useForm, FieldError } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Modal } from "../../components/Modal/Modal";
-import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import merge from "lodash/merge";
 import { SCREENS } from "../../constants";
@@ -71,10 +70,8 @@ export const Signup = ({ navigation }: any): JSX.Element => {
   //   }, 30000);
   // }
 
-  const allErrors: FieldError | Pick<FieldError, "message"> = merge(
-    errors,
-    authErrors
-  );
+  const allErrors: typeof errors | { [errorKey: string]: { message: string } } =
+    merge(errors, authErrors);
   const formHasErrors = Object.keys(allErrors).length > 0;
 
   return (
@@ -93,7 +90,6 @@ export const Signup = ({ navigation }: any): JSX.Element => {
           </View>
         }
         headerTitle="You're just one step away"
-        // @ts-ignore
         headerText={Object.values(allErrors)[0]?.message}
       />
       {currentUser && (

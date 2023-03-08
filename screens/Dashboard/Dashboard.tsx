@@ -32,8 +32,7 @@ const statisticalDataFetcher = async (url: string) => {
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     console.error(error);
     return error;
@@ -65,7 +64,7 @@ const barAndLineChartDimensions = {
   height: Dimensions.get("window").height / 1.5,
 };
 
-export const Dashboard = ({ navigation }: any): JSX.Element => {
+export const Dashboard = (): JSX.Element => {
   const [isCacheRead, setIsCacheRead] = useState<boolean>(false);
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const { currentUser } = useAuth();
@@ -219,14 +218,10 @@ export const Dashboard = ({ navigation }: any): JSX.Element => {
                   paddingLeft={"15"}
                   center={[80, 0]}
                 />
-                <Text style={{ alignSelf: "center", color: "#F7B42F" }}>
-                  Legend
-                </Text>
+                <Text style={styles.legendText}>Legend</Text>
                 <View style={styles.pieChartPickerContainer}>
                   <Picker
-                    itemStyle={{
-                      marginTop: -70,
-                    }}
+                    itemStyle={styles.pickerItem}
                     selectedValue={Object.values(Status)[0]}
                     style={
                       Platform.OS === "ios"
@@ -364,4 +359,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     textAlign: "center",
   },
+  pickerItem: {
+    marginTop: -70,
+  },
+  legendText: { alignSelf: "center", color: "#F7B42F" },
 });

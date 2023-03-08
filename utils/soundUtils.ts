@@ -7,7 +7,7 @@ let sound: Audio.Sound | undefined;
 export async function playButtonSound() {
   try {
     const { sound: newSound } = await Audio.Sound.createAsync(
-      require("../assets/sounds/buttonSound.mp3")
+      require("../assets/sounds/buttonSound.wav")
     );
     sound = newSound;
     await sound.playAsync();
@@ -26,10 +26,10 @@ export async function playCharacterSound(
     sound = newSound;
     await sound.playAsync();
     sound.setOnPlaybackStatusUpdate((status: any) => {
-      if(status.didJustFinish && !status.isLooping){
+      if (status.didJustFinish && !status.isLooping) {
         cleanupSound();
       }
-    })
+    });
   } catch (error) {
     console.log(`Failed to load sound: ${error}`);
   }

@@ -12,8 +12,6 @@ import { Contact } from "../../screens/Contact/Contact";
 import { Login } from "../../screens/Login/Login";
 import { GameSelectionForm } from "../../screens/Game/GameSelectionForm/GameSelectionForm";
 import { Dashboard } from "../../screens/Dashboard/Dashboard";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View } from "react-native";
 
 const AppStack = createStackNavigator();
 

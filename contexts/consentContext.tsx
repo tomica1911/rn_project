@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AdsConsentStatus } from "react-native-google-mobile-ads";
 
 interface ConsentContextProps {
@@ -10,7 +10,6 @@ interface ConsentProviderProps {
   adsConsentStatusInfo: AdsConsentStatus | null;
 }
 
-// ToDo: setup enviroment variables for this to work with production
 const ConsentContext = React.createContext<ConsentContextProps>({
   adsConsentStatus: null,
 });
@@ -25,6 +24,10 @@ export function ConsentProvider({
 }: ConsentProviderProps) {
   const [adsConsentStatus, setAdsConsentStatus] =
     useState<AdsConsentStatus | null>(adsConsentStatusInfo);
+
+  useEffect(() => {
+    setAdsConsentStatus(adsConsentStatusInfo);
+  }, [adsConsentStatusInfo]);
 
   const values = {
     adsConsentStatus,

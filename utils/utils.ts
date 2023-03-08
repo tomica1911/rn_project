@@ -4,10 +4,6 @@ import {
   AdsConsentStatus,
   AdEventType,
 } from "react-native-google-mobile-ads";
-import { Platform } from "react-native";
-import { GOOGLE_ADMOB_APP_IDS } from "../constants";
-import { useConsentInfo } from "../contexts/consentContext";
-import React, { useEffect } from "react";
 
 export const getRandomNumberInRange: (min: number, max: number) => number = (
   min: number,
@@ -36,3 +32,5 @@ export const showInterstitialAd = (
 
   interstitial.load();
 };
+
+export type ValuesType<T> = T[keyof T];

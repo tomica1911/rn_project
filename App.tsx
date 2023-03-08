@@ -3,8 +3,6 @@ import { Stack } from "./components/Stack/Stack";
 import "./firebaseConfig";
 import { AuthProvider } from "./contexts/authContext";
 import { FirestoreProvider } from "./contexts/firebaseContext";
-import { useFonts } from "expo-font";
-import { setCustomText } from "react-native-global-props";
 import mobileAds, {
   MaxAdContentRating,
   AdsConsent,
@@ -13,15 +11,9 @@ import mobileAds, {
 import { useEffect, useState } from "react";
 import { ConsentProvider } from "./contexts/consentContext";
 
-//ToDo: remove unused npm packages from project
 export default function App() {
   const [adsConsentStatus, setAdsConsentStatus] =
     useState<AdsConsentStatus | null>(null);
-  const [fontsLoaded] = useFonts({
-    karmillaBold: require("./assets/fonts/karmillaBold.ttf"),
-  });
-  AdsConsent.reset();
-
   useEffect(() => {
     async function checkConsent() {
       const consentInfo = await AdsConsent.requestInfoUpdate();
@@ -58,10 +50,6 @@ export default function App() {
     .then((adapterStatuses: any) => {
       console.log("adMob Initialization complete!");
     });
-
-  if (fontsLoaded) {
-    setCustomText({ style: { fontFamily: "luckiestGuy", fontSize: 15 } });
-  }
 
   return (
     <ConsentProvider adsConsentStatusInfo={adsConsentStatus}>

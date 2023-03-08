@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { AvailableCharacters, characters } from "../../../characters";
-import { FlatList, Text, View, Platform } from "react-native";
+import { FlatList, Text, View, Platform, StyleSheet } from "react-native";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { CharacterTile } from "../../../components/CharacterTile/CharacterTile";
@@ -89,10 +89,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
                       setIsModalVisible((prevValue: boolean) => !prevValue)
                     )
                   }
-                  stylesButton={{
-                    marginTop: 10,
-                    width: "100%",
-                  }}
+                  stylesButton={styles.modalButton}
                   title="Back to selection"
                 />
               </View>
@@ -100,22 +97,14 @@ export const GameSelectionForm = ({ navigation }: any) => {
             headerTitle="You're just one step away"
             headerText="Please select a few characters"
           />
-          <Text
-            style={{
-              marginTop: 10,
-              marginBottom: 10,
-              color: COLOR_COMBINATION_1.ORANGE,
-            }}
-          >
-            Characters
-          </Text>
+          <Text style={styles.pickerText}>Characters</Text>
           <Picker
-            itemStyle={{ marginTop: -70 }}
+            itemStyle={styles.pickerItem}
             selectedValue={formValues.characterSet}
             style={
               Platform.OS === "ios"
-                ? { width: 200, height: 70, backgroundColor: "white" }
-                : { width: 200, backgroundColor: "white" }
+                ? styles.pickerStyleIos
+                : styles.pickerStyleAndroid
             }
             onValueChange={(characterSet: AvailableCharacters) => {
               setFormValues({
@@ -124,7 +113,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
               });
               const { selectedCharacters, ...rest } = formValues;
               setRestCachedFormValues(
-                  JSON.stringify({ ...rest, characterSet })
+                JSON.stringify({ ...rest, characterSet })
               );
             }}
           >
@@ -132,16 +121,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
               <Picker.Item key={key} label={key} value={key} />
             ))}
           </Picker>
-          <Text
-            style={{
-              marginTop: 10,
-              marginBottom: 10,
-              color: COLOR_COMBINATION_1.ORANGE,
-              textAlign: "center",
-            }}
-          >
-            Mix different character sets
-          </Text>
+          <Text style={styles.checkboxText}>Mix different character sets</Text>
           <Checkbox
             value={formValues.mixCharacters}
             onValueChange={(nextCheckboxValue: boolean) => {
@@ -156,59 +136,57 @@ export const GameSelectionForm = ({ navigation }: any) => {
             }}
             color={COLOR_COMBINATION_1.ORANGE}
           />
-          <Text
-              style={{
-                marginTop: 10,
-                marginBottom: 10,
-                color: COLOR_COMBINATION_1.ORANGE,
-                textAlign: "center",
-              }}
-          >
-            Play character sounds
-          </Text>
+          <Text style={styles.checkboxText}>Play character sounds</Text>
           <Checkbox
-              value={formValues.playCharacterSounds}
-              onValueChange={(nextCheckboxValue: boolean) => {
-                setFormValues({
-                  ...formValues,
+            value={formValues.playCharacterSounds}
+            onValueChange={(nextCheckboxValue: boolean) => {
+              setFormValues({
+                ...formValues,
+                playCharacterSounds: nextCheckboxValue,
+              });
+              const { characterSet, ...rest } = formValues;
+              setRestCachedFormValues(
+                JSON.stringify({
+                  ...rest,
                   playCharacterSounds: nextCheckboxValue,
-                });
-                const { characterSet, ...rest } = formValues;
-                setRestCachedFormValues(
-                    JSON.stringify({ ...rest, playCharacterSounds: nextCheckboxValue })
-                );
-              }}
-              color={COLOR_COMBINATION_1.ORANGE}
+                })
+              );
+            }}
+            color={COLOR_COMBINATION_1.ORANGE}
           />
-          <Text
-              style={{
-                marginTop: 10,
-                marginBottom: 10,
-                color: COLOR_COMBINATION_1.ORANGE,
-                textAlign: "center",
-              }}
-          >
-            Track game (Premium only)
-          </Text>
+          <Text style={styles.checkboxText}>Training mode (No points)</Text>
           <Checkbox
-              disabled={true}
-              value={formValues.trackGame}
-              onValueChange={(nextCheckboxValue: boolean) => {
-                setFormValues({
-                  ...formValues,
-                  trackGame: nextCheckboxValue,
-                });
-                const { characterSet, ...rest } = formValues;
-                setRestCachedFormValues(
-                    JSON.stringify({ ...rest, trackGame: nextCheckboxValue })
-                );
-              }}
-              color={COLOR_COMBINATION_1.ORANGE}
+            value={formValues.trackGame}
+            onValueChange={(nextCheckboxValue: boolean) => {
+              setFormValues({
+                ...formValues,
+                trackGame: nextCheckboxValue,
+              });
+              const { characterSet, ...rest } = formValues;
+              setRestCachedFormValues(
+                JSON.stringify({ ...rest, trackGame: nextCheckboxValue })
+              );
+            }}
+            color={COLOR_COMBINATION_1.ORANGE}
+          />
+          <Text style={styles.checkboxText}>Track game (Premium only)</Text>
+          <Checkbox
+            disabled={true}
+            value={formValues.trackGame}
+            onValueChange={(nextCheckboxValue: boolean) => {
+              setFormValues({
+                ...formValues,
+                trackGame: nextCheckboxValue,
+              });
+              const { characterSet, ...rest } = formValues;
+              setRestCachedFormValues(
+                JSON.stringify({ ...rest, trackGame: nextCheckboxValue })
+              );
+            }}
+            color={COLOR_COMBINATION_1.ORANGE}
           />
           <Text
             style={{
-              marginTop: 10,
-              marginBottom: 10,
               color: COLOR_COMBINATION_1.ORANGE,
             }}
           >
@@ -218,42 +196,25 @@ export const GameSelectionForm = ({ navigation }: any) => {
             onPress={() =>
               playButtonSoundOnExecution(() => setCharSelectionVisible(true))
             }
-            stylesButton={{
-              marginTop: 10,
-              ...STANDARDISED_STYLES.CENTER_CONTENT,
-              ...STANDARDISED_STYLES.BUTTON,
-              fontSize: 50,
-            }}
+            stylesButton={styles.characterSelectionButton}
             title="Selection"
           />
           <Modal
-            containerStyles={{
-              backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
-              borderColor: COLOR_COMBINATION_1.ORANGE,
-              borderStyle: "solid",
-              borderWidth: 10,
-              borderRadius: 25,
-            }}
+            containerStyles={styles.modalContainer}
             onRequestClose={() => setCharSelectionVisible(false)}
-            headerTextStyles={{ color: COLOR_COMBINATION_1.ORANGE }}
-            headerTitleStyles={{ backgroundColor: COLOR_COMBINATION_1.ORANGE }}
+            headerTextStyles={styles.modalText}
+            headerTitleStyles={styles.modalText}
             isModalVisible={charSelectionVisible}
             footerComponent={
-              <View
-                style={{
-                  height: 210,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-              >
+              <View style={styles.modalFooterContainer}>
                 <FlatList
                   persistentScrollbar
                   keyExtractor={(item, index) => item.letter + index}
                   numColumns={5}
                   data={
                     characters.find(
-                      (arrayItem) => arrayItem.setName === formValues.characterSet
+                      (arrayItem) =>
+                        arrayItem.setName === formValues.characterSet
                     )?.letters
                   }
                   renderItem={({ item }) => {
@@ -307,7 +268,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
                       />
                     );
                   }}
-                  style={{ width: "100%" }}
+                  style={styles.flatList}
                 />
                 <CustomizableButton
                   onPress={async () => {
@@ -327,22 +288,14 @@ export const GameSelectionForm = ({ navigation }: any) => {
             headerTitle="You're just one step away"
             headerText={`Character selection \n\n Scroll down for more`}
           />
-          <Text
-            style={{
-              marginTop: 10,
-              marginBottom: 10,
-              color: COLOR_COMBINATION_1.ORANGE,
-            }}
-          >
-            Select mode
-          </Text>
+          <Text style={styles.gameModeText}>Select mode</Text>
           <Picker
-            itemStyle={{ marginTop: -70 }}
+            itemStyle={styles.pickerItem}
             selectedValue={formValues.selectedGameMode}
             style={
               Platform.OS === "ios"
-                ? { width: 200, height: 70, backgroundColor: "white" }
-                : { width: 200, backgroundColor: "white" }
+                ? styles.pickerStyleIos
+                : styles.pickerStyleAndroid
             }
             onValueChange={async (gameMode) => {
               setFormValues({
@@ -368,30 +321,26 @@ export const GameSelectionForm = ({ navigation }: any) => {
           </Picker>
           <Text
             style={{
-              marginTop: 10,
-              marginBottom: 10,
               color: COLOR_COMBINATION_1.ORANGE,
             }}
           >
             Select duration
           </Text>
           <Picker
-            itemStyle={{ marginTop: -70 }}
+            itemStyle={styles.pickerItem}
             selectedValue={formValues.duration}
             style={
               Platform.OS === "ios"
-                ? { width: 200, height: 70, backgroundColor: "white" }
-                : { width: 200, backgroundColor: "white" }
+                ? styles.pickerStyleIos
+                : styles.pickerStyleAndroid
             }
             onValueChange={async (duration: GameDurations) => {
               setFormValues({
                 ...formValues,
-                duration
+                duration,
               });
               const { characterSet, ...rest } = formValues;
-              setRestCachedFormValues(
-                  JSON.stringify({ ...rest, duration })
-              );
+              setRestCachedFormValues(JSON.stringify({ ...rest, duration }));
             }}
           >
             {renderDurationPickerItems()}
@@ -424,3 +373,47 @@ export const GameSelectionForm = ({ navigation }: any) => {
     </AppLayout>
   );
 };
+
+const styles = StyleSheet.create({
+  modalButton: {
+    marginTop: 10,
+    width: "100%",
+  },
+  pickerText: {
+    marginTop: 10,
+    color: COLOR_COMBINATION_1.ORANGE,
+  },
+  pickerItem: { marginTop: -70 },
+  pickerStyleIos: { width: 200, height: 70, backgroundColor: "white" },
+  pickerStyleAndroid: { width: 200, backgroundColor: "white" },
+  checkboxText: {
+    color: COLOR_COMBINATION_1.ORANGE,
+    textAlign: "center",
+  },
+  characterSelectionButton: {
+    marginTop: 0,
+    ...STANDARDISED_STYLES.CENTER_CONTENT,
+    ...STANDARDISED_STYLES.BUTTON,
+    fontSize: 50,
+  } as any,
+  modalContainer: {
+    backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
+    borderColor: COLOR_COMBINATION_1.ORANGE,
+    borderStyle: "solid",
+    borderWidth: 10,
+    borderRadius: 25,
+  },
+  modalText: { color: COLOR_COMBINATION_1.ORANGE },
+  modalFooterContainer: {
+    height: 210,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  flatList: {
+    width: "100%",
+  },
+  gameModeText: {
+    color: COLOR_COMBINATION_1.ORANGE,
+  },
+});

@@ -147,7 +147,6 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     }
   };
 
-  // @ts-ignore
   return (
     <AppLayout>
       <View>
@@ -206,7 +205,6 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
                       : 100,
                 }}
               >
-                {/*{formValues.selectedCharacters[currentCharIndex].equivalents[0]}*/}
                 {formValues.selectedCharacters[currentCharIndex].letter}
               </Text>
             </View>

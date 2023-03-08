@@ -8,14 +8,7 @@ const appVersion = packageJson.version;
 
 export const About = (): JSX.Element => (
   <AppLayout>
-    <ScrollView
-      contentContainerStyle={{
-        paddingLeft: 50,
-        paddingRight: 50,
-        alignItems: "center",
-        backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
-      }}
-    >
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.section}>
         <Text style={styles.sectionHeadlineText}>1.1. General Info</Text>
         <Text style={styles.sectionText}>
@@ -63,8 +56,14 @@ export const About = (): JSX.Element => (
 );
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    paddingLeft: 50,
+    paddingRight: 50,
+    alignItems: "center",
+    backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
+  },
   section: {
-    marginTop: 10
+    marginTop: 10,
   },
   sectionText: {
     color: COLOR_COMBINATION_1.ORANGE,

@@ -1,4 +1,5 @@
 import { AvailableCharacters } from "../../../characters";
+import { ValuesType } from "../../../utils/utils";
 
 export default {
   Hiragana: {
@@ -312,4 +313,8 @@ export default {
     [`${AvailableCharacters.KATAKANA}_45`]: require("./Katakana/ヲ.mp3"),
     [`${AvailableCharacters.KATAKANA}_46`]: require("./Katakana/ン.mp3"),
   },
+} as {
+  [key in ValuesType<typeof AvailableCharacters>]: {
+    [y: string]: NodeRequire;
+  };
 };

@@ -186,9 +186,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
             color={COLOR_COMBINATION_1.ORANGE}
           />
           <Text
-            style={{
-              color: COLOR_COMBINATION_1.ORANGE,
-            }}
+            style={styles.characterSelectionText}
           >
             Select characters
           </Text>
@@ -389,6 +387,7 @@ const styles = StyleSheet.create({
   checkboxText: {
     color: COLOR_COMBINATION_1.ORANGE,
     textAlign: "center",
+    marginBottom: 5
   },
   characterSelectionButton: {
     marginTop: 0,
@@ -402,6 +401,10 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 10,
     borderRadius: 25,
+  },
+  characterSelectionText: {
+    color: COLOR_COMBINATION_1.ORANGE,
+    marginTop: 10,
   },
   modalText: { color: COLOR_COMBINATION_1.ORANGE },
   modalFooterContainer: {

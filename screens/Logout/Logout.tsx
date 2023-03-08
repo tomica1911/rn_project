@@ -14,6 +14,7 @@ export const Logout = ({ navigation }: any): JSX.Element => {
   return (
       <AppLayout>
         <Modal
+            onRequestClose={() => navigation.navigate(SCREENS.MAIN)}
             isModalVisible={isModalVisible}
             footerComponent={
               <View>

@@ -77,6 +77,7 @@ export const Signup = ({ navigation }: any): JSX.Element => {
   return (
     <AppLayout>
       <Modal
+        onRequestClose={() => clearErrors()}
         isModalVisible={formHasErrors}
         footerComponent={
           <View>

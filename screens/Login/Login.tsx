@@ -35,9 +35,7 @@ export const Login = ({ navigation }: any): JSX.Element => {
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
-
   const { currentUser, authErrors, setAuthErrors, login } = useAuth();
-
   // ToDo complete the loading functionality
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -57,6 +55,7 @@ export const Login = ({ navigation }: any): JSX.Element => {
   return (
     <AppLayout>
       <Modal
+        onRequestClose={() => clearErrors()}
         isModalVisible={formHasErrors}
         footerComponent={
           <View>

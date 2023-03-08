@@ -108,6 +108,7 @@ export const Dashboard = (): JSX.Element => {
         ) : (
           <>
             <Modal
+              onRequestClose={() => setModalVisible(false)}
               isModalVisible={isModalVisible}
               footerComponent={
                 <View>
@@ -116,7 +117,6 @@ export const Dashboard = (): JSX.Element => {
                     title="Got it!"
                   />
                   <CustomizableButton
-                    primary={false}
                     onPress={async () => {
                       await setCachedModalSettings(
                         JSON.stringify({

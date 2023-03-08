@@ -19,6 +19,7 @@ import { useFirestore } from "../../../contexts/firebaseContext";
 import { useAuth } from "../../../contexts/authContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
+import { playCharacterSound } from "../../../utils/soundUtils";
 
 export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   const [formValues, setFormValues] = useState(route.params.formValues);
@@ -48,6 +49,12 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   }, [gameCompleted]);
 
   useEffect(() => {
+    if(formValues.playCharacterSounds){
+      playCharacterSound(
+          formValues.selectedCharacters[currentCharIndex].characterSet,
+          formValues.selectedCharacters[currentCharIndex].id
+      );
+    }
     startCountdown();
   }, []);
 
@@ -68,16 +75,36 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
           );
           resetCountdown();
           startCountdown();
+          console.log(formValues.selectedCharacters);
+          console.log(
+            formValues.selectedCharacters[currentCharIndex + 1].letter
+          );
+          console.log(
+            formValues.selectedCharacters[currentCharIndex + 1].equivalents
+          );
+          if(formValues.playCharacterSounds){
+            playCharacterSound(
+                formValues.selectedCharacters[currentCharIndex + 1].characterSet,
+                formValues.selectedCharacters[currentCharIndex + 1].id
+            );
+          }
         }
       }
     }
   }
 
   const startAgainWithCurrentSettings = () => {
+    const shuffledCharacters = shuffle(formValues.selectedCharacters);
     setFormValues({
       ...formValues,
-      selectedCharacters: shuffle(formValues.selectedCharacters),
+      selectedCharacters: shuffledCharacters,
     });
+    if(formValues.playCharacterSounds){
+      playCharacterSound(
+          shuffledCharacters[0].characterSet,
+          shuffledCharacters[0].id
+      );
+    }
     setGameCompleted(false);
     resetCountdown();
     startCountdown();

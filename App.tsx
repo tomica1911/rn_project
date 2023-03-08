@@ -11,35 +11,30 @@ import mobileAds, {
   AdsConsentStatus,
 } from "react-native-google-mobile-ads";
 import { useEffect, useState } from "react";
-
-async function checkConsent() {
-  const consentInfo = await AdsConsent.requestInfoUpdate();
-
-  if (consentInfo.isConsentFormAvailable) {
-    if (consentInfo.status === AdsConsentStatus.REQUIRED) {
-      const { status } = await AdsConsent.showForm();
-      if (status === AdsConsentStatus.OBTAINED) {
-        return true;
-      }
-    } else {
-      return true;
-    }
-  }
-  return false;
-}
+import { ConsentProvider } from "./contexts/consentContext";
 
 //ToDo: remove unused npm packages from project
 export default function App() {
-  const [hasConsent, setHasConsent] = useState<boolean | undefined>(false);
+  const [adsConsentStatus, setAdsConsentStatus] =
+    useState<AdsConsentStatus | null>(null);
   const [fontsLoaded] = useFonts({
     karmillaBold: require("./assets/fonts/karmillaBold.ttf"),
   });
   AdsConsent.reset();
 
   useEffect(() => {
-    checkConsent().then((consent) => {
-      setHasConsent(consent);
-    });
+    async function checkConsent() {
+      const consentInfo = await AdsConsent.requestInfoUpdate();
+      setAdsConsentStatus(consentInfo.status);
+      if (consentInfo.isConsentFormAvailable) {
+        if (consentInfo.status === AdsConsentStatus.REQUIRED) {
+          const { status } = await AdsConsent.showForm();
+          setAdsConsentStatus(status);
+        }
+      }
+    }
+
+    checkConsent();
   }, []);
 
   mobileAds()
@@ -69,10 +64,12 @@ export default function App() {
   }
 
   return (
-    <FirestoreProvider>
-      <AuthProvider>
-        <Stack />
-      </AuthProvider>
-    </FirestoreProvider>
+    <ConsentProvider adsConsentStatusInfo={adsConsentStatus}>
+      <FirestoreProvider>
+        <AuthProvider>
+          <Stack />
+        </AuthProvider>
+      </FirestoreProvider>
+    </ConsentProvider>
   );
 }

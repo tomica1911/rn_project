@@ -35,6 +35,8 @@ export interface GameSelectionState {
   selectedCharacters: CharacterObject[] | null;
   selectedGameMode: SCREENS.GAME_MODE_ONE | SCREENS.GAME_MODE_TWO;
   mixCharacters: boolean;
+  playCharacterSounds: boolean;
+  trackGame: boolean;
 }
 
 export interface StatisticalData {

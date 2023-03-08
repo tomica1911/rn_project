@@ -1,18 +1,20 @@
-import { StyleSheet, Text, View, Animated } from "react-native";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import { SCREENS, TipsOfTheDay } from "../../constants";
 import {
+  AdsConsentStatus,
   BannerAd,
   BannerAdSize,
   TestIds,
 } from "react-native-google-mobile-ads";
 
-import React, { useMemo, FC, useEffect } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 import { COLOR_COMBINATION_1 } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { playButtonSound } from "../../utils/soundUtils";
 import { CustomizableButton } from "../../components/CustomizableButton/CustomizableButton";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
+import { useConsentInfo } from "../../contexts/consentContext";
 
 type Navigation = {
   navigate: (routeName: string) => void;
@@ -24,11 +26,11 @@ interface Props {
 
 export const MainMenu: FC<Props> = ({ navigation }: Props) => {
   const { currentUser } = useAuth();
+  let { adsConsentStatus } = useConsentInfo();
   const getTipIndex = useMemo(
     () => new Date().getDate() % TipsOfTheDay.length,
     []
   );
-  const [error, setError] = React.useState<string>("");
   const fadeAnim = new Animated.Value(0);
 
   const buttonTitles = Object.values(SCREENS).filter(
@@ -88,7 +90,16 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
           ))}
         </Animated.View>
         <View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>
-          <BannerAd size={BannerAdSize.LARGE_BANNER} unitId={TestIds.BANNER} />
+          <BannerAd
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: !(
+                adsConsentStatus === AdsConsentStatus.OBTAINED ||
+                adsConsentStatus === AdsConsentStatus.NOT_REQUIRED
+              ),
+            }}
+            size={BannerAdSize.LARGE_BANNER}
+            unitId={TestIds.BANNER}
+          />
         </View>
       </SafeAreaView>
     </AppLayout>

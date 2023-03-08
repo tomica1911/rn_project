@@ -1,16 +1,21 @@
 import {
   AdEventType,
+  AdsConsentStatus,
   InterstitialAd,
   TestIds,
 } from "react-native-google-mobile-ads";
 import React, { useEffect, useState } from "react";
-
-const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
-  requestNonPersonalizedAdsOnly: true,
-  keywords: ["fashion", "clothing"],
-});
+import { useConsentInfo } from "../../contexts/consentContext";
 
 export const InterstitialAdComponent = (): JSX.Element => {
+  const { adsConsentStatus } = useConsentInfo();
+  const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
+    requestNonPersonalizedAdsOnly: !(
+      adsConsentStatus === AdsConsentStatus.OBTAINED ||
+      adsConsentStatus === AdsConsentStatus.NOT_REQUIRED
+    ),
+  });
+
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -21,9 +26,7 @@ export const InterstitialAdComponent = (): JSX.Element => {
       }
     );
 
-    // Start loading the interstitial straight away
     interstitial.load();
-    // Unsubscribe from events on unmount
     return unsubscribe;
   }, []);
 

@@ -17,11 +17,10 @@ const yupSchema = yup.object().shape({
     .string()
     .email("Please enter a valid email address")
     .required("Please enter a valid email address"),
-  password: yup
+  message: yup
     .string()
-    .required("Please enter a password")
-    .min(8, "Please enter a valid password")
-    .matches(/^([0-9a-zA-Z]{1,16}){8,}$/, "Please enter a valid password"),
+    .required("Please write a message")
+    .min(10, "Please enter a valid message with over 10 characters")
 });
 // ToDo: add login with google, facebook and phone number
 export const Contact = ({ navigation }: any): JSX.Element => {

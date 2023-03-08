@@ -25,6 +25,8 @@ export const GameSelectionForm = ({ navigation }: any) => {
     selectedCharacters: [],
     selectedGameMode: SCREENS.GAME_MODE_ONE,
     mixCharacters: false,
+    playCharacterSounds: true,
+    trackGame: false,
   });
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -153,6 +155,55 @@ export const GameSelectionForm = ({ navigation }: any) => {
               );
             }}
             color={COLOR_COMBINATION_1.ORANGE}
+          />
+          <Text
+              style={{
+                marginTop: 10,
+                marginBottom: 10,
+                color: COLOR_COMBINATION_1.ORANGE,
+                textAlign: "center",
+              }}
+          >
+            Play character sounds
+          </Text>
+          <Checkbox
+              value={formValues.playCharacterSounds}
+              onValueChange={(nextCheckboxValue: boolean) => {
+                setFormValues({
+                  ...formValues,
+                  playCharacterSounds: nextCheckboxValue,
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(
+                    JSON.stringify({ ...rest, playCharacterSounds: nextCheckboxValue })
+                );
+              }}
+              color={COLOR_COMBINATION_1.ORANGE}
+          />
+          <Text
+              style={{
+                marginTop: 10,
+                marginBottom: 10,
+                color: COLOR_COMBINATION_1.ORANGE,
+                textAlign: "center",
+              }}
+          >
+            Track game(Premium only)
+          </Text>
+          <Checkbox
+              disabled={true}
+              value={formValues.trackGame}
+              onValueChange={(nextCheckboxValue: boolean) => {
+                setFormValues({
+                  ...formValues,
+                  trackGame: nextCheckboxValue,
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(
+                    JSON.stringify({ ...rest, trackGame: nextCheckboxValue })
+                );
+              }}
+              color={COLOR_COMBINATION_1.ORANGE}
           />
           <Text
             style={{

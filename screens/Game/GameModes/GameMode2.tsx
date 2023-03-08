@@ -21,6 +21,7 @@ import { useFirestore } from "../../../contexts/firebaseContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { shuffle } from "lodash";
+import { playCharacterSound } from "../../../utils/soundUtils";
 
 export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
   const [formValues, setFormValues] = useState(route.params.formValues);
@@ -42,6 +43,12 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
   const { updateUserData } = useFirestore();
 
   useEffect(() => {
+    if (formValues.playCharacterSounds) {
+      playCharacterSound(
+        formValues.selectedCharacters[currentCharIndex].characterSet,
+        formValues.selectedCharacters[currentCharIndex].id
+      );
+    }
     startCountdown();
   }, []);
 
@@ -58,11 +65,21 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
           setGameCompleted(true);
           stopCountdown();
         } else {
-          setCurrentCharIndex((prevCurrentIndex) => prevCurrentIndex + 1);
+          let nextIndex = 0;
+          setCurrentCharIndex((prevCurrentIndex) => {
+            nextIndex = prevCurrentIndex + 1;
+            return nextIndex;
+          });
           setProgress(
             ((currentCharIndex + 1) / formValues.selectedCharacters.length) *
               100
           );
+          if (formValues.playCharacterSounds) {
+            playCharacterSound(
+              formValues.selectedCharacters[nextIndex].characterSet,
+              formValues.selectedCharacters[nextIndex].id
+            );
+          }
           resetCountdown();
           startCountdown();
         }
@@ -80,7 +97,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     const randomNumberInRange = getRandomNumberInRange(0, 100);
 
     if (gameCompleted && randomNumberInRange <= 20) {
-      // showInterstitalAd();
+      showInterstitalAd();
     }
   }, [gameCompleted]);
 
@@ -132,8 +149,6 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
         0,
         chars[currentCharIndex].equivalents.length - 1
       );
-      console.log(chars[currentCharIndex]);
-      console.log(chars[currentCharIndex].equivalents[randomEquivalentIndex]);
       values[getRandomNumberInRange(0, values.length - 1)] =
         chars[currentCharIndex].equivalents[randomEquivalentIndex];
     }
@@ -143,6 +158,9 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
         ...formValues,
         selectedCharacters: chars,
       });
+      if(formValues.playCharacterSounds){
+        playCharacterSound(chars[0].characterSet, chars[0].id);
+      }
     }
     setButtonGroupValues(values);
   };

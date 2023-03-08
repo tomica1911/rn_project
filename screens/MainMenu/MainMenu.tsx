@@ -26,7 +26,7 @@ interface Props {
 
 export const MainMenu: FC<Props> = ({ navigation }: Props) => {
   const { currentUser } = useAuth();
-  let { adsConsentStatus } = useConsentInfo();
+  const { adsConsentStatus } = useConsentInfo();
   const getTipIndex = useMemo(
     () => new Date().getDate() % TipsOfTheDay.length,
     []
@@ -78,11 +78,9 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
           <Text style={styles.quoteText}>{TipsOfTheDay[getTipIndex]}</Text>
         </Animated.View>
         <Animated.View style={[{ opacity: fadeAnim }, styles.buttonContainer]}>
-          {buttons.map((buttonTitle, index) => (
+          {buttons.map((buttonTitle) => (
             <CustomizableButton
-              stylesButton={
-                index === 0 ? styles.pressableProminent : styles.pressable
-              }
+              stylesButton={styles.pressable}
               key={buttonTitle}
               onPress={() => handleOnPress(buttonTitle)}
               title={buttonTitle}
@@ -115,6 +113,8 @@ const styles = StyleSheet.create({
   },
   quoteBox: {
     backgroundColor: COLOR_COMBINATION_1.ORANGE,
+    borderWidth: 1,
+    borderColor: "white",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
@@ -143,15 +143,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   pressable: {
-    width: "50%",
+    width: 200,
     height: "10%",
     padding: 0,
-  },
-  pressableProminent: {
-    width: "50%",
-    height: "10%",
-    padding: 0,
-    backgroundColor: COLOR_COMBINATION_1.ORANGE,
   },
 });
 

@@ -188,7 +188,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
                 textAlign: "center",
               }}
           >
-            Track game(Premium only)
+            Track game (Premium only)
           </Text>
           <Checkbox
               disabled={true}

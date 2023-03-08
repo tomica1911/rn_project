@@ -1,9 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { COLOR_COMBINATION_1 } from "../../styles/styles";
+import packageJson from "../../package.json";
+import { AppLayout } from "../../components/AppLayout/AppLayout";
 
-export const About = ({ navigation }: any): JSX.Element => {
-  return (
+const appVersion = packageJson.version;
+
+export const About = (): JSX.Element => (
+  <AppLayout>
     <ScrollView
       contentContainerStyle={{
         paddingLeft: 50,
@@ -12,14 +16,14 @@ export const About = ({ navigation }: any): JSX.Element => {
         backgroundColor: COLOR_COMBINATION_1.DARK_BLUE,
       }}
     >
-      <View style={{ marginTop: 10 }}>
-        <Text style={styles.headlineText}>1.1. General Info</Text>
-        <Text style={styles.text}>
-          This application was created mainly for personal use.{"\n"}{" "}
-          However, because I thought it may also benefit broader range of people
-          I came to decision to make it available for everyone using Android or
-          iOS devices.{"\n"} The application was designed under UI/UX usability
-          guidelines to make the usage as simple and fun as possible.{"\n"}
+      <View style={styles.section}>
+        <Text style={styles.sectionHeadlineText}>1.1. General Info</Text>
+        <Text style={styles.sectionText}>
+          This application was created mainly for personal use.{"\n"} However,
+          because I thought it may also benefit broader range of people I came
+          to decision to make it available for everyone using Android devices.
+          {"\n"} The application was designed under UI/UX usability guidelines
+          to make the usage as simple and fun as possible.{"\n"}
           Through various game modes, it is supposed to make learning of foreign
           characters like Hiragana interactive and fun.{"\n"}
           Because of its fun-like nature and ease of use, its intended to be
@@ -27,53 +31,46 @@ export const About = ({ navigation }: any): JSX.Element => {
           {"\n"}
         </Text>
       </View>
-      <View style={{ marginTop: 10 }}>
-        <Text style={styles.headlineText}>1.2. Feedback & Contact</Text>
-        <Text style={styles.text}>
+      <View style={styles.section}>
+        <Text style={styles.sectionHeadlineText}>1.2. Feedback & Contact</Text>
+        <Text style={styles.sectionText}>
           I strongly encourage everyone to send any available feedback or
           similar through the contact form built in the application. This may
           include, proposals for improvement, questions about development or
-          questions about application functionalities.
+          similar.
         </Text>
       </View>
-      <View style={{ marginTop: 10 }}>
-        <Text style={styles.headlineText}>
-          1.3. Funding
-        </Text>
-        <Text style={styles.text}>
-          The application is being funded solely by Google Ads. The funds are
-          mainly used to keep the application running.{"\n"}
-          Expenses include mainly development costs like basic Firebase
-          subscription plans, additional writing and reading from databases and
-          everything else that is in some way connected to the application.
+      <View style={styles.section}>
+        <Text style={styles.sectionHeadlineText}>1.3. Funding</Text>
+        <Text style={styles.sectionText}>
+          The application is being funded by Google Ads and in-app purchases.
+          The funds are mainly used to keep the application running.{"\n"}
+          Expenses include development costs like Firebase subscription plans,
+          additional writing and reading accesses, serverless functions and
+          similar.
         </Text>
       </View>
-      <View style={{ marginTop: 10 }}>
-        <Text style={styles.headlineText}>1.4. Donations</Text>
-        <Text style={styles.text}>
-          Currently there is no ability to make donations, however, this should
-          change over time.
-        </Text>
-      </View>
-      <View style={{ marginTop: 10 }}>
-        <Text style={styles.headlineText}>1.5. Subscription</Text>
-        <Text style={styles.text}>
-          As of current time (30.10.2022) there are not any plans to add
-          subscription to the application. However, while its currently not
-          supported, it does´nt mean that it won´t be added. In case where
-          subscription will be added, it will be strongly advocated for the main
-          functionalities to stay the same with a few other additional benefits.
+      <View style={styles.section}>
+        <Text style={styles.sectionHeadlineText}>1.4. Application Version</Text>
+        <Text style={styles.sectionText}>
+          To update your app to the latest version, simply navigate to the
+          Google Play Store and select "Update" for the app.{"\n"}
+          Current installed application version is {appVersion}.
         </Text>
       </View>
     </ScrollView>
-  );
-};
+  </AppLayout>
+);
 
 const styles = StyleSheet.create({
-  text: {
-    color: COLOR_COMBINATION_1.ORANGE,
+  section: {
+    marginTop: 10
   },
-  headlineText: {
+  sectionText: {
+    color: COLOR_COMBINATION_1.ORANGE,
+    padding: 10,
+  },
+  sectionHeadlineText: {
     color: "white",
   },
 });

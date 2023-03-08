@@ -7,24 +7,23 @@ import { shuffle } from "lodash";
 import {
   getPoints,
   getRandomNumberInRange,
-  showInterstitalAd,
+  showInterstitialAd,
 } from "../../../utils/utils";
 // @ts-ignore
 import { ProgressPie } from "react-native-progress/Pie";
-import {
-  COLOR_COMBINATION_1,
-  STANDARDISED_STYLES,
-} from "../../../styles/styles";
+import { COLOR_COMBINATION_1 } from "../../../styles/styles";
 import { useFirestore } from "../../../contexts/firebaseContext";
 import { useAuth } from "../../../contexts/authContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { playCharacterSound } from "../../../utils/soundUtils";
+import { useConsentInfo } from "../../../contexts/consentContext";
 
 export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   const [formValues, setFormValues] = useState(route.params.formValues);
   const { updateUserData } = useFirestore();
   const { currentUser } = useAuth();
+  const { adsConsentStatus } = useConsentInfo();
   const [reqSent, setReqSent] = useState<boolean>(false);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
@@ -44,15 +43,15 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
     const randomNumberInRange = getRandomNumberInRange(0, 100);
 
     if (gameCompleted && randomNumberInRange <= 20) {
-      showInterstitalAd();
+      showInterstitialAd(adsConsentStatus);
     }
   }, [gameCompleted]);
 
   useEffect(() => {
-    if(formValues.playCharacterSounds){
+    if (formValues.playCharacterSounds) {
       playCharacterSound(
-          formValues.selectedCharacters[currentCharIndex].characterSet,
-          formValues.selectedCharacters[currentCharIndex].id
+        formValues.selectedCharacters[currentCharIndex].characterSet,
+        formValues.selectedCharacters[currentCharIndex].id
       );
     }
     startCountdown();
@@ -75,17 +74,10 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
           );
           resetCountdown();
           startCountdown();
-          console.log(formValues.selectedCharacters);
-          console.log(
-            formValues.selectedCharacters[currentCharIndex + 1].letter
-          );
-          console.log(
-            formValues.selectedCharacters[currentCharIndex + 1].equivalents
-          );
-          if(formValues.playCharacterSounds){
+          if (formValues.playCharacterSounds) {
             playCharacterSound(
-                formValues.selectedCharacters[currentCharIndex + 1].characterSet,
-                formValues.selectedCharacters[currentCharIndex + 1].id
+              formValues.selectedCharacters[currentCharIndex + 1].characterSet,
+              formValues.selectedCharacters[currentCharIndex + 1].id
             );
           }
         }
@@ -99,10 +91,10 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
       ...formValues,
       selectedCharacters: shuffledCharacters,
     });
-    if(formValues.playCharacterSounds){
+    if (formValues.playCharacterSounds) {
       playCharacterSound(
-          shuffledCharacters[0].characterSet,
-          shuffledCharacters[0].id
+        shuffledCharacters[0].characterSet,
+        shuffledCharacters[0].id
       );
     }
     setGameCompleted(false);

@@ -16,23 +16,17 @@ export const InterstitialAdComponent = (): JSX.Element => {
     ),
   });
 
-  const [loaded, setLoaded] = useState(false);
-
   useEffect(() => {
     const unsubscribe = interstitial.addAdEventListener(
       AdEventType.LOADED,
       () => {
-        setLoaded(true);
+        interstitial.show();
       }
     );
 
     interstitial.load();
     return unsubscribe;
   }, []);
-
-  if (loaded) {
-    interstitial.show();
-  }
 
   return <></>;
 };

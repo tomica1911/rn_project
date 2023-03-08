@@ -54,7 +54,7 @@ export const Contact = ({ navigation }: any): JSX.Element => {
     authErrors
   );
   const formHasErrors = Object.keys(allErrors).length > 0;
-
+  // ToDo: hide email field if logged in
   return (
     <AppLayout>
       <Modal

@@ -1,7 +1,13 @@
-import AdMob, { InterstitialAd } from "@admob-plus/react-native";
-import { TestIds } from "react-native-google-mobile-ads";
+import {
+  TestIds,
+  InterstitialAd,
+  AdsConsentStatus,
+  AdEventType,
+} from "react-native-google-mobile-ads";
 import { Platform } from "react-native";
 import { GOOGLE_ADMOB_APP_IDS } from "../constants";
+import { useConsentInfo } from "../contexts/consentContext";
+import React, { useEffect } from "react";
 
 export const getRandomNumberInRange: (min: number, max: number) => number = (
   min: number,
@@ -14,15 +20,19 @@ export const getPoints = (
   multiplyFactor: number
 ): number => (1 / duration) * 100 * numberOfSelectedCharacters * multiplyFactor;
 
-export async function showInterstitalAd() {
-  await AdMob.start();
-  const interstitial = new InterstitialAd({
-    adUnitId: __DEV__
-      ? TestIds.INTERSTITIAL
-      : Platform.OS === "android"
-      ? GOOGLE_ADMOB_APP_IDS.ANDROID
-      : GOOGLE_ADMOB_APP_IDS.IOS,
+export const showInterstitialAd = (
+  adsConsentStatus: AdsConsentStatus | null
+): void => {
+  const interstitial = InterstitialAd.createForAdRequest(TestIds.INTERSTITIAL, {
+    requestNonPersonalizedAdsOnly: !(
+      adsConsentStatus === AdsConsentStatus.OBTAINED ||
+      adsConsentStatus === AdsConsentStatus.NOT_REQUIRED
+    ),
   });
-  await interstitial.load();
-  await interstitial.show();
-}
+
+  interstitial.addAdEventListener(AdEventType.LOADED, () => {
+    interstitial.show();
+  });
+
+  interstitial.load();
+};

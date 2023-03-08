@@ -4,7 +4,7 @@ import { characters as charDB } from "../../../characters";
 import {
   getPoints,
   getRandomNumberInRange,
-  showInterstitalAd,
+  showInterstitialAd,
 } from "../../../utils/utils";
 import { ButtonGroup } from "@rneui/themed";
 import { useCountdown } from "usehooks-ts";
@@ -22,10 +22,12 @@ import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { shuffle } from "lodash";
 import { playCharacterSound } from "../../../utils/soundUtils";
+import { useConsentInfo } from "../../../contexts/consentContext";
 
 export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
   const [formValues, setFormValues] = useState(route.params.formValues);
   const [reqSent, setReqSent] = useState<boolean>(false);
+  const { adsConsentStatus } = useConsentInfo();
   const [buttonGroupValues, setButtonGroupValues] = useState<string[]>([]);
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
@@ -97,7 +99,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     const randomNumberInRange = getRandomNumberInRange(0, 100);
 
     if (gameCompleted && randomNumberInRange <= 20) {
-      showInterstitalAd();
+      showInterstitialAd(adsConsentStatus);
     }
   }, [gameCompleted]);
 
@@ -158,7 +160,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
         ...formValues,
         selectedCharacters: chars,
       });
-      if(formValues.playCharacterSounds){
+      if (formValues.playCharacterSounds) {
         playCharacterSound(chars[0].characterSet, chars[0].id);
       }
     }

@@ -34,11 +34,12 @@ interface FirestoreProviderProps {
 }
 
 export interface GameSettings {
-  characters: AvailableCharacters;
+  characterSet: AvailableCharacters;
   gameMode: GameModes;
   status: Status;
   points: number;
   duration: number;
+  trainingMode: boolean;
 }
 
 interface FirebaseContextValues {
@@ -46,7 +47,8 @@ interface FirebaseContextValues {
   getUserData: (userId: string) => void;
   updateUserData: ({
     userUid,
-    characters,
+    characterSet,
+    trainingMode,
     gameMode,
     status,
     points,
@@ -79,19 +81,21 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
 
   const updateUserData = ({
     userUid,
-    characters,
+    characterSet,
     gameMode,
     status,
+    trainingMode,
     points,
     duration,
   }: GameSettings & { userUid: string }) => {
     const data: { datePlayed: number; settings: GameSettings } = {
       datePlayed: Date.now(),
       settings: {
-        characters,
+        characterSet,
         gameMode,
         status,
         points,
+        trainingMode,
         duration,
       },
     };

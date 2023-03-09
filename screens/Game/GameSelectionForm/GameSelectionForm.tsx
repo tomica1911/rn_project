@@ -27,6 +27,7 @@ export const GameSelectionForm = ({ navigation }: any) => {
     mixCharacters: false,
     playCharacterSounds: true,
     trackGame: false,
+    trainingMode: true,
   });
   const userData = {};
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -156,15 +157,15 @@ export const GameSelectionForm = ({ navigation }: any) => {
           />
           <Text style={styles.checkboxText}>Training mode (No points)</Text>
           <Checkbox
-            value={formValues.trackGame}
+            value={formValues.trainingMode}
             onValueChange={(nextCheckboxValue: boolean) => {
               setFormValues({
                 ...formValues,
-                trackGame: nextCheckboxValue,
+                trainingMode: nextCheckboxValue,
               });
               const { characterSet, ...rest } = formValues;
               setRestCachedFormValues(
-                JSON.stringify({ ...rest, trackGame: nextCheckboxValue })
+                JSON.stringify({ ...rest, trainingMode: nextCheckboxValue })
               );
             }}
             color={COLOR_COMBINATION_1.ORANGE}

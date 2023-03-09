@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CustomizableButton } from "../../../components/CustomizableButton/CustomizableButton";
 import { useCountdown } from "usehooks-ts";
 import { Modal } from "../../../components/Modal/Modal";
@@ -28,10 +28,11 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isHelperCalled, setIsHelperCalled] = useState(false);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const [textInputValue, setTextInputValue] = useState<string>("");
+  const textInputRef = useRef<TextInput | null>(null);
+  const [isFirstGame, setIsFirstGame] = useState(true);
   const [counter, { startCountdown, resetCountdown, stopCountdown }] =
     useCountdown({
       countStart: formValues.duration,
@@ -46,6 +47,8 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
       showInterstitialAd(adsConsentStatus);
     }
   }, [gameCompleted]);
+  // This line has to be here because of how react native works
+  textInputRef.current?.focus();
 
   useEffect(() => {
     if (formValues.playCharacterSounds) {
@@ -54,6 +57,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
         formValues.selectedCharacters[currentCharIndex].id
       );
     }
+
     startCountdown();
   }, []);
 
@@ -86,6 +90,9 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
   }
 
   const startAgainWithCurrentSettings = () => {
+    if (isFirstGame) {
+      setIsFirstGame(false);
+    }
     const shuffledCharacters = shuffle(formValues.selectedCharacters);
     setFormValues({
       ...formValues,
@@ -97,11 +104,11 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
         shuffledCharacters[0].id
       );
     }
+    setTextInputValue("");
     setGameCompleted(false);
     resetCountdown();
     startCountdown();
     setCurrentCharIndex(0);
-    setIsHelperCalled(false);
     setIsModalVisible(false);
     setProgress(0);
     setReqSent(false);
@@ -113,7 +120,8 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
       setReqSent((prevValue: boolean) => !prevValue);
       return updateUserData({
         userUid: currentUser.uid,
-        characters: formValues.characters,
+        characterSet: formValues.characterSet,
+        trainingMode: formValues.trainingMode,
         gameMode: SCREENS.GAME_MODE_ONE,
         status,
         points,
@@ -131,11 +139,13 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
           1
         )
       );
-      if (isHelperCalled) {
+      if (formValues.trainingMode) {
         points = 0;
       }
       updateUserStats(Status.WIN, points);
-      return `You've won ${points} points`;
+      return `You've won ${points} points ${
+        formValues.trainingMode ? "(training mode)" : ""
+      }`;
     }
     if (counter === 0) {
       updateUserStats(Status.TIMEOUT);
@@ -187,6 +197,8 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
               <View>
                 <Text style={styles.inputFieldText}>Answer</Text>
                 <TextInput
+                  autoFocus={isFirstGame}
+                  ref={textInputRef}
                   value={textInputValue}
                   style={styles.inputField}
                   onChangeText={(answer: string) =>
@@ -211,15 +223,10 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
             <View style={styles.counterContainer}>
               <Text style={styles.counterNumber}>{counter}</Text>
             </View>
-            <View style={styles.helpContainer}>
-              <CustomizableButton
-                onPress={() => {
-                  setIsHelperCalled(true);
-                  setIsModalVisible(true);
-                }}
-                title="Help"
-              />
-            </View>
+            <Text style={styles.suggestedSolutionText}>
+              Suggested solution:{" "}
+              {formValues.selectedCharacters[currentCharIndex].equivalents}
+            </Text>
             {/* Extract this component somewhere else and use it in the other game mode*/}
             <Modal
               isModalVisible={isModalVisible}
@@ -270,6 +277,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 5,
     justifyContent: "space-between",
+    marginTop: "30%",
   },
   progress: {
     alignSelf: "flex-end",
@@ -283,6 +291,9 @@ const styles = StyleSheet.create({
   inputField: {
     backgroundColor: "white",
     width: 100,
+  },
+  suggestedSolutionText: {
+    color: COLOR_COMBINATION_1.ORANGE,
   },
   characterContainer: {
     width: 150,
@@ -301,13 +312,6 @@ const styles = StyleSheet.create({
   counterNumber: {
     alignSelf: "center",
     color: "#F7B42F",
-  },
-  helpContainer: {
-    marginTop: 5,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignSelf: "center",
   },
   underlineText: {
     textDecorationLine: "underline",

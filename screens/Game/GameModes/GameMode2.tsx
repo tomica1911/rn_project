@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { characters as charDB } from "../../../characters";
 import {
   getPoints,
@@ -32,7 +32,6 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
   const [currentCharIndex, setCurrentCharIndex] = useState<number>(0);
   const [progress, setProgress] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isHelperCalled, setIsHelperCalled] = useState(false);
   const [throwOutIncorrect, setThrowOutIncorrect] = useState<boolean>(false);
   const [gameCompleted, setGameCompleted] = useState<boolean>(false);
   const [counter, { startCountdown, resetCountdown, stopCountdown }] =
@@ -173,7 +172,6 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
     startCountdown();
     setIsModalVisible(false);
     setCurrentCharIndex(0);
-    setIsHelperCalled(false);
     setProgress(0);
     setThrowOutIncorrect(false);
     setGameCompleted(false);
@@ -185,10 +183,11 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
       setReqSent((prevValue: boolean) => !prevValue);
       return updateUserData({
         userUid: currentUser.uid,
-        characters: formValues.characters,
+        characterSet: formValues.characterSet,
         gameMode: SCREENS.GAME_MODE_TWO,
+        trainingMode: formValues.trainingMode,
         status,
-        points: points,
+        points,
         duration: formValues.duration,
       });
     }
@@ -204,12 +203,14 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
         )
       );
 
-      if (isHelperCalled) {
+      if (formValues.trainingMode) {
         points = 0;
       }
 
       updateUserStats(Status.WIN, points);
-      return `You've won ${points} points.`;
+      return `You've won ${points} points ${
+        formValues.trainingMode ? "(training mode)" : ""
+      }`;
     }
     if (counter === 0) {
       updateUserStats(Status.TIMEOUT);
@@ -246,17 +247,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
             headerTitle={
               throwOutIncorrect || counter === 0 ? "Oh no!" : "Congratulations!"
             }
-            headerText={
-              (
-                <>
-                  <Text>{getModalHeaderTextAndUpdateUser()}</Text>
-                  {"\n"}
-                  {isHelperCalled && !(counter === 0) && (
-                    <Text>Points resetted to 0 because of using help.</Text>
-                  )}
-                </>
-              ) ?? ""
-            }
+            headerText={<Text>{getModalHeaderTextAndUpdateUser()}</Text>}
           />
         )}
         {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (
@@ -287,20 +278,30 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
             </View>
             <View>
               <Text style={styles.chooseAnswerText}>
-                Choose a correct answer
+                Choose a correct answer{"\n"}
               </Text>
+              {formValues.trainingMode && (
+                <Text style={styles.trainingModeSolutionsText}>
+                  {formValues.selectedCharacters[currentCharIndex].equivalents
+                    .length > 0
+                    ? "Suggested solutions: "
+                    : "Suggested solution: "}
+                  {"\n"}
+                  {formValues.selectedCharacters[
+                    currentCharIndex
+                  ].equivalents.map((char: string, index: number) =>
+                    index ===
+                    formValues.selectedCharacters[currentCharIndex].equivalents
+                      .length -
+                      1
+                      ? char
+                      : `${char}, `
+                  )}
+                </Text>
+              )}
               <ButtonGroup
                 buttons={buttonGroupValues}
                 onPress={(buttonIndex: number) => updateButtons(buttonIndex)}
-              />
-            </View>
-            <View style={styles.helperContainer}>
-              <CustomizableButton
-                onPress={() => {
-                  setIsHelperCalled(true);
-                  setIsModalVisible(true);
-                }}
-                title="Help"
               />
             </View>
             <Modal
@@ -348,6 +349,7 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
 
 const styles = StyleSheet.create({
   characterBox: {
+    marginTop: "50%",
     width: 200,
     height: 200,
     backgroundColor: "#DFDFD9",
@@ -358,20 +360,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  trainingModeSolutionsText: {
+    color: COLOR_COMBINATION_1.ORANGE,
+    textAlign: "center",
+  },
   counterNumber: {
     alignSelf: "center",
     color: "#F7B42F",
   },
   chooseAnswerText: {
+    marginTop: 20,
     color: COLOR_COMBINATION_1.ORANGE,
     textAlign: "center",
-  },
-  helperContainer: {
-    marginTop: 20,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignSelf: "center",
   },
   underlinedText: {
     textDecorationLine: "underline",

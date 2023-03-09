@@ -37,6 +37,7 @@ export interface GameSelectionState {
   mixCharacters: boolean;
   playCharacterSounds: boolean;
   trackGame: boolean;
+  trainingMode: boolean;
 }
 
 export interface StatisticalData {

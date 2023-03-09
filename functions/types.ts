@@ -8,7 +8,7 @@ export interface CharacterObject {
 }
 
 export interface GameSettings {
-  characters: AvailableCharacters;
+  characterSet: AvailableCharacters;
   gameMode: GameModes;
   status: Status;
   points: number;

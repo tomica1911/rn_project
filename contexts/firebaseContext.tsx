@@ -2,11 +2,13 @@ import React, { useContext, useMemo, useState } from "react";
 import {
   initializeFirestore,
   arrayUnion,
+  setDoc,
   getDoc,
   doc,
   updateDoc,
   DocumentSnapshot,
   DocumentData,
+  Timestamp,
 } from "firebase/firestore";
 import { FirebaseApp } from "../firebaseConfig";
 import { AvailableCharacters } from "../characters";
@@ -15,14 +17,24 @@ import { UserFirestoreData } from "../types";
 
 interface FirestoreContextProps {
   userFirestoreData: DocumentData | undefined;
+  sendContactMessageSubmissionError: null | BackendError;
+  setSendContactMessageSubmissionError: Function;
   getUserData: Function;
   updateUserData: Function;
+  sendContactMessage: Function;
+  contactFormSubmissionCompleted: boolean;
+  setContactFormSubmissionCompleted: Function;
 }
 
 const FirestoreContext = React.createContext<FirestoreContextProps>({
   userFirestoreData: undefined,
   getUserData: () => {},
   updateUserData: () => {},
+  sendContactMessage: () => {},
+  setSendContactMessageSubmissionError: () => {},
+  sendContactMessageSubmissionError: null,
+  contactFormSubmissionCompleted: false,
+  setContactFormSubmissionCompleted: () => {},
 });
 
 export function useFirestore() {
@@ -42,9 +54,25 @@ export interface GameSettings {
   trainingMode: boolean;
 }
 
+interface BackendError {
+  [x: string]: { message: string };
+}
+
+interface SendContactMessageProps {
+  message: string;
+  email: string;
+}
+
 interface FirebaseContextValues {
   userFirestoreData: DocumentData | undefined;
   getUserData: (userId: string) => void;
+  sendContactMessage: ({
+    message,
+    email,
+  }: {
+    message: string;
+    email: string;
+  }) => void;
   updateUserData: ({
     userUid,
     characterSet,
@@ -54,6 +82,10 @@ interface FirebaseContextValues {
     points,
     duration,
   }: GameSettings & { userUid: string }) => void;
+  sendContactMessageSubmissionError: null | BackendError;
+  setSendContactMessageSubmissionError: Function;
+  contactFormSubmissionCompleted: boolean;
+  setContactFormSubmissionCompleted: Function;
 }
 
 //ToDo: define correct types
@@ -64,7 +96,14 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
   const [userFirestoreData, setUserFirestoreData] = useState<
     UserFirestoreData | undefined
   >(undefined);
-  // const [characters, setCharacters] = useState(false);
+  const [
+    sendContactMessageSubmissionError,
+    setSendContactMessageSubmissionError,
+  ] = useState<null | BackendError>(
+    null
+  );
+  const [contactFormSubmissionCompleted, setContactFormSubmissionCompleted] =
+    useState<boolean>(false);
 
   const getUserData = (userUid: string): void => {
     getDoc(doc(firestoreDatabase, "userData", userUid))
@@ -107,14 +146,38 @@ export function FirestoreProvider({ children }: FirestoreProviderProps) {
     });
   };
 
+  const sendContactMessage = async (data: SendContactMessageProps) => {
+    const dateSent = Timestamp.now().toDate().toISOString();
+    const document = doc(firestoreDatabase, "contactMessages", dateSent);
+
+    try {
+      await setDoc(document, data);
+      setContactFormSubmissionCompleted(true);
+    } catch (error: any) {
+      setSendContactMessageSubmissionError({
+        contactFormSubmissionError: {
+          message: error.message,
+        },
+      });
+    }
+  };
+
   const firebaseContextValues = useMemo(
     (): FirebaseContextValues => ({
-      // characters,
+      contactFormSubmissionCompleted,
+      setContactFormSubmissionCompleted,
       userFirestoreData,
       getUserData,
       updateUserData,
+      sendContactMessage,
+      sendContactMessageSubmissionError,
+      setSendContactMessageSubmissionError,
     }),
-    [userFirestoreData]
+    [
+      userFirestoreData,
+      sendContactMessageSubmissionError,
+      contactFormSubmissionCompleted,
+    ]
   );
 
   return (

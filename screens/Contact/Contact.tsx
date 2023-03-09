@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { ActivityIndicator } from "react-native";
 import { InputField } from "../../components/PasswordField/InputField";
@@ -10,88 +10,117 @@ import * as yup from "yup";
 import { Modal } from "../../components/Modal/Modal";
 import { useAuth } from "../../contexts/authContext";
 import merge from "lodash/merge";
-import { SCREENS } from "../../constants";
+import { useFirestore } from "../../contexts/firebaseContext";
 
-const yupSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Please enter a valid email address")
-    .required("Please enter a valid email address"),
-  message: yup
-    .string()
-    .required("Please write a message")
-    .min(10, "Please enter a valid message with over 10 characters"),
-});
-// ToDo: add login with google, facebook and phone number
-export const Contact = ({ navigation }: any): JSX.Element => {
+//ToDo: users should be able to send contact messages every 30 minutes
+export const Contact = (): JSX.Element => {
+  const { currentUser, authErrors, setAuthErrors } = useAuth();
+  const {
+    sendContactMessage,
+    sendContactMessageSubmissionError,
+    setSendContactMessageSubmissionError,
+    contactFormSubmissionCompleted,
+    setContactFormSubmissionCompleted,
+  } = useFirestore();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const yupSchema = yup.object().shape({
+    email: !currentUser
+      ? yup
+          .string()
+          .email("Please enter a valid email address")
+          .required("Please enter a valid email address")
+      : yup.string().optional(),
+    message: yup
+      .string()
+      .required("Please write a message")
+      .min(10, "Please enter a valid message with over 10 characters"),
+  });
+
   const {
     control,
     handleSubmit,
     formState: { errors },
-    clearErrors,
+    clearErrors: clearFormErrors,
   } = useForm({
     resolver: yupResolver(yupSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
 
-  const { currentUser, authErrors, setAuthErrors, login } = useAuth();
+  const clearAllErrors = () => {
+    clearFormErrors();
+    setAuthErrors(undefined);
+    setSendContactMessageSubmissionError(null);
+  };
 
-  // ToDo complete the loading functionality
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(
-    () => currentUser && navigation.navigate(SCREENS.MAIN),
-    [currentUser]
-  );
-
-  const onFormSubmit = (data: FieldValues) => {
-    login(data.email, data.password);
+  const onFormSubmit = async (data: FieldValues) => {
+    setLoading(true);
+    const email = currentUser?.email ?? data["email"];
+    const message = data["message"];
+    await sendContactMessage({
+      email,
+      message,
+    });
+    setLoading(false);
   };
 
   const allErrors: typeof errors | { [errorKey: string]: { message: string } } =
-    merge(errors, authErrors);
+    merge(errors, authErrors, sendContactMessageSubmissionError);
   const formHasErrors = Object.keys(allErrors).length > 0;
-  // ToDo: hide email field if logged in
+
   return (
     <AppLayout>
       <Modal
-        onRequestClose={() => clearErrors()}
-        isModalVisible={formHasErrors}
+        onRequestClose={() => clearAllErrors()}
+        isModalVisible={formHasErrors || contactFormSubmissionCompleted}
         footerComponent={
-          <View>
-            <CustomizableButton
-              onPress={() => {
-                clearErrors();
-                setAuthErrors(undefined);
-              }}
-              title="Back to login screen"
-            />
-          </View>
+          <>
+            {contactFormSubmissionCompleted ? (
+              <CustomizableButton
+                onPress={() => setContactFormSubmissionCompleted(false)}
+                title="Back"
+              />
+            ) : (
+              <CustomizableButton
+                onPress={() => clearAllErrors()}
+                title="Back to login screen"
+              />
+            )}
+          </>
         }
-        headerTitle="You're just one step away"
-        // @ts-ignore
-        headerText={Object.values(allErrors)[0]?.message}
+        headerTitle={
+          contactFormSubmissionCompleted
+            ? "Message successfully sent!"
+            : "You're just one step away"
+        }
+        headerText={
+          formHasErrors
+            ? Object.values(allErrors)[0]?.message
+            : "You'll be contacted as soon as possible, thank you for the message!"
+        }
       />
       <View style={styles.formContainer}>
         {loading ? (
-          //ToDo: move the loading icon to a seperate component
           <ActivityIndicator size="large" color="#F7B42F" />
         ) : (
           <>
-            <Text style={styles.fieldLabel}>Email Address</Text>
-            <InputField
-              control={control}
-              name="email"
-              placeholder="Enter email"
-            />
+            {!currentUser && (
+              <>
+                <Text style={styles.fieldLabel}>Email Address</Text>
+                <InputField
+                  control={control}
+                  name="email"
+                  placeholder="Enter email"
+                />
+              </>
+            )}
             <Text style={styles.fieldLabel}>Message</Text>
             <InputField
-              additionalInputContainerStyles={{ height: 200 }}
-              additionalInputFieldStyles={{
-                textAlignVertical: "top",
-                textAlign: "left",
-              }}
+              additionalInputContainerStyles={
+                styles.additionalInputContainerStyles
+              }
+              additionalInputFieldStyles={styles.additionalInputFieldStyles}
               maxLength={600}
               multiline={true}
               numberOfLines={10}
@@ -114,6 +143,11 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     justifyContent: "center",
+  },
+  additionalInputContainerStyles: { height: 200 },
+  additionalInputFieldStyles: {
+    textAlignVertical: "top",
+    textAlign: "left",
   },
   fieldLabel: {
     color: "#F7B42F",

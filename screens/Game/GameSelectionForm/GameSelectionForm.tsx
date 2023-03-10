@@ -356,25 +356,23 @@ export const GameSelectionForm = ({ navigation }: any) => {
           </Picker>
           <CustomizableButton
             stylesButton={STANDARDISED_STYLES.BUTTON}
-            onPress={() =>
-              playButtonSoundOnExecution(() => {
-                const charactersToBeUsed = formValues.mixCharacters
-                  ? formValues.selectedCharacters
-                  : formValues.selectedCharacters?.filter(
-                      ({ characterSet }) =>
-                        characterSet === formValues.characterSet
-                    );
-                if (charactersToBeUsed && charactersToBeUsed.length === 0) {
-                  return setIsModalVisible(true);
-                }
-                navigation.navigate(formValues.selectedGameMode, {
-                  formValues: {
-                    ...formValues,
-                    selectedCharacters: shuffle(charactersToBeUsed),
-                  },
-                });
-              })
-            }
+            onPress={() => {
+              const charactersToBeUsed = formValues.mixCharacters
+                ? formValues.selectedCharacters
+                : formValues.selectedCharacters?.filter(
+                    ({ characterSet }) =>
+                      characterSet === formValues.characterSet
+                  );
+              if (charactersToBeUsed && charactersToBeUsed.length === 0) {
+                return setIsModalVisible(true);
+              }
+              navigation.navigate(formValues.selectedGameMode, {
+                formValues: {
+                  ...formValues,
+                  selectedCharacters: shuffle(charactersToBeUsed),
+                },
+              });
+            }}
             title="Play"
           />
         </>

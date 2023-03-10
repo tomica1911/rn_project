@@ -178,11 +178,7 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
                   title="Back to selection"
                 />
                 <CustomizableButton
-                  onPress={() =>
-                    playButtonSoundOnExecution(() =>
-                      startAgainWithCurrentSettings()
-                    )
-                  }
+                  onPress={() => startAgainWithCurrentSettings()}
                   title="Try again"
                 />
               </View>

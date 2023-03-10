@@ -1,5 +1,5 @@
 import { AvailableCharacters } from "../../../characters";
-import { ValuesType } from "../../../utils/utils";
+import { ValuesType } from "../../../utils/typeUtils";
 
 export default {
   Hiragana: {

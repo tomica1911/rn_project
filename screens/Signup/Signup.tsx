@@ -11,6 +11,7 @@ import { Modal } from "../../components/Modal/Modal";
 import { useAuth } from "../../contexts/authContext";
 import merge from "lodash/merge";
 import { SCREENS } from "../../constants";
+import { playButtonSoundOnExecution } from "../../utils/soundUtils";
 
 const yupSchema = yup.object().shape({
   displayName: yup
@@ -100,11 +101,19 @@ export const Signup = ({ navigation }: any): JSX.Element => {
             <View>
               <CustomizableButton
                 disabled={!clickable}
-                onPress={() => sendVerificationEmail(currentUser)}
+                onPress={() =>
+                  playButtonSoundOnExecution(() =>
+                    sendVerificationEmail(currentUser)
+                  )
+                }
                 title="Resend email"
               />
               <CustomizableButton
-                onPress={() => navigation.navigate(SCREENS.MAIN)}
+                onPress={() =>
+                  playButtonSoundOnExecution(() =>
+                    navigation.navigate(SCREENS.MAIN)
+                  )
+                }
                 title="Back to main menu"
               />
             </View>
@@ -148,7 +157,11 @@ export const Signup = ({ navigation }: any): JSX.Element => {
               control={control}
             />
             <CustomizableButton
-              onPress={handleSubmit(onSignupFormSubmit)}
+              onPress={() =>
+                playButtonSoundOnExecution(() =>
+                  handleSubmit(onSignupFormSubmit)
+                )
+              }
               title="Signup"
             />
           </>

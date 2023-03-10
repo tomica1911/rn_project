@@ -16,7 +16,10 @@ import { useFirestore } from "../../../contexts/firebaseContext";
 import { useAuth } from "../../../contexts/authContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
-import { playCharacterSound } from "../../../utils/soundUtils";
+import {
+  playButtonSoundOnExecution,
+  playCharacterSound,
+} from "../../../utils/soundUtils";
 import { useConsentInfo } from "../../../contexts/consentContext";
 
 export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
@@ -168,12 +171,18 @@ export const GameMode1 = ({ navigation, route }: any): JSX.Element => {
               <View>
                 <CustomizableButton
                   onPress={() =>
-                    navigation.navigate(SCREENS.PLAY, { subsequent: true })
+                    playButtonSoundOnExecution(() =>
+                      navigation.navigate(SCREENS.PLAY, { subsequent: true })
+                    )
                   }
                   title="Back to selection"
                 />
                 <CustomizableButton
-                  onPress={() => startAgainWithCurrentSettings()}
+                  onPress={() =>
+                    playButtonSoundOnExecution(() =>
+                      startAgainWithCurrentSettings()
+                    )
+                  }
                   title="Try again"
                 />
               </View>

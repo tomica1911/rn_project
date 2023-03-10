@@ -7,11 +7,11 @@ import {
   TestIds,
 } from "react-native-google-mobile-ads";
 
-import React, { FC, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { COLOR_COMBINATION_1, STANDARDISED_STYLES } from "../../styles/styles";
 import { useAuth } from "../../contexts/authContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { playButtonSound } from "../../utils/soundUtils";
+import { playButtonSoundOnExecution } from "../../utils/soundUtils";
 import { CustomizableButton } from "../../components/CustomizableButton/CustomizableButton";
 import { AppLayout } from "../../components/AppLayout/AppLayout";
 import { useConsentInfo } from "../../contexts/consentContext";
@@ -20,11 +20,11 @@ type Navigation = {
   navigate: (routeName: string) => void;
 };
 
-interface Props {
+interface MainMenuProps {
   navigation: Navigation;
 }
 
-export const MainMenu: FC<Props> = ({ navigation }: Props) => {
+export const MainMenu = ({ navigation }: MainMenuProps): JSX.Element => {
   const { currentUser } = useAuth();
   const { adsConsentStatus } = useConsentInfo();
   const getTipIndex = useMemo(
@@ -33,33 +33,32 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
   );
   const fadeAnim = new Animated.Value(0);
 
-  const buttonTitles = Object.values(SCREENS).filter(
-    (screenName) =>
-      screenName !== SCREENS.MAIN &&
-      screenName !== SCREENS.GAME_MODE_ONE &&
-      screenName !== SCREENS.GAME_MODE_TWO
+  const buttonTitles = useMemo(
+    () =>
+      Object.values(SCREENS).filter(
+        (screenName) =>
+          screenName !== SCREENS.MAIN &&
+          screenName !== SCREENS.GAME_MODE_ONE &&
+          screenName !== SCREENS.GAME_MODE_TWO
+      ),
+    []
   );
 
-  const buttons = currentUser
-    ? buttonTitles.filter(
-        (screenName) =>
-          screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
-      )
-    : buttonTitles.filter(
-        (screenName) =>
-          screenName !== SCREENS.LOGOUT &&
-          screenName &&
-          screenName !== SCREENS.DASHBOARD
-      );
-
-  const handleOnPress = async (screenName: string) => {
-    try {
-      await playButtonSound();
-      navigation.navigate(screenName);
-    } catch (error) {
-      console.log(`Failed to load sound: ${error}`);
-    }
-  };
+  const buttons = useMemo(
+    () =>
+      currentUser
+        ? buttonTitles.filter(
+            (screenName) =>
+              screenName !== SCREENS.SIGNUP && screenName !== SCREENS.LOGIN
+          )
+        : buttonTitles.filter(
+            (screenName) =>
+              screenName !== SCREENS.LOGOUT &&
+              screenName &&
+              screenName !== SCREENS.DASHBOARD
+          ),
+    [currentUser]
+  );
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -69,7 +68,6 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
     }).start();
   }, []);
 
-  // ToDo: make other modals closeable on press outside
   return (
     <AppLayout>
       <SafeAreaView style={styles.container}>
@@ -82,12 +80,16 @@ export const MainMenu: FC<Props> = ({ navigation }: Props) => {
             <CustomizableButton
               stylesButton={styles.pressable}
               key={buttonTitle}
-              onPress={() => handleOnPress(buttonTitle)}
+              onPress={() =>
+                playButtonSoundOnExecution(() =>
+                  navigation.navigate(buttonTitle)
+                )
+              }
               title={buttonTitle}
             />
           ))}
         </Animated.View>
-        <View style={{ position: "absolute", bottom: 0, alignSelf: "center" }}>
+        <View style={styles.bannerContainer}>
           <BannerAd
             requestOptions={{
               requestNonPersonalizedAdsOnly: !(
@@ -131,6 +133,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  bannerContainer: { position: "absolute", bottom: 0, alignSelf: "center" },
   quoteHeadline: {
     fontWeight: "bold",
     fontSize: 20,
@@ -150,8 +153,6 @@ const styles = StyleSheet.create({
 });
 
 //ToDos
-//______________________________________________________________________________________________________________________
-// ToDo: warn user about exiting the app with pressing back button
 // ToDo: Add snapshot & unit tests
 // ToDo: Do all the ToDos
 // ToDo: Make sure the app is compatible for iphone users

@@ -1,8 +1,8 @@
 import {
-  TestIds,
-  InterstitialAd,
-  AdsConsentStatus,
   AdEventType,
+  AdsConsentStatus,
+  InterstitialAd,
+  TestIds,
 } from "react-native-google-mobile-ads";
 
 export const getRandomNumberInRange: (min: number, max: number) => number = (
@@ -32,5 +32,3 @@ export const showInterstitialAd = (
 
   interstitial.load();
 };
-
-export type ValuesType<T> = T[keyof T];

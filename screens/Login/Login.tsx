@@ -11,6 +11,7 @@ import { Modal } from "../../components/Modal/Modal";
 import { useAuth } from "../../contexts/authContext";
 import merge from "lodash/merge";
 import { SCREENS } from "../../constants";
+import { playButtonSoundOnExecution } from "../../utils/soundUtils";
 
 const yupSchema = yup.object().shape({
   email: yup
@@ -60,10 +61,12 @@ export const Login = ({ navigation }: any): JSX.Element => {
         footerComponent={
           <View>
             <CustomizableButton
-              onPress={() => {
-                clearErrors();
-                setAuthErrors(undefined);
-              }}
+              onPress={() =>
+                playButtonSoundOnExecution(() => {
+                  clearErrors();
+                  setAuthErrors(undefined);
+                })
+              }
               title="Back to login screen"
             />
           </View>
@@ -91,7 +94,9 @@ export const Login = ({ navigation }: any): JSX.Element => {
               placeholder="Enter password"
             />
             <CustomizableButton
-              onPress={handleSubmit(onFormSubmit)}
+              onPress={() =>
+                playButtonSoundOnExecution(() => handleSubmit(onFormSubmit))
+              }
               title="Login"
             />
           </>

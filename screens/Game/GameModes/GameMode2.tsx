@@ -21,7 +21,10 @@ import { useFirestore } from "../../../contexts/firebaseContext";
 import { SCREENS, Status } from "../../../constants";
 import { AppLayout } from "../../../components/AppLayout/AppLayout";
 import { shuffle } from "lodash";
-import { playCharacterSound } from "../../../utils/soundUtils";
+import {
+  playButtonSoundOnExecution,
+  playCharacterSound,
+} from "../../../utils/soundUtils";
 import { useConsentInfo } from "../../../contexts/consentContext";
 
 export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
@@ -234,12 +237,18 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
               <View>
                 <CustomizableButton
                   onPress={() =>
-                    navigation.navigate(SCREENS.PLAY, { subsequent: true })
+                    playButtonSoundOnExecution(() =>
+                      navigation.navigate(SCREENS.PLAY, { subsequent: true })
+                    )
                   }
                   title="Back to selection"
                 />
                 <CustomizableButton
-                  onPress={() => startAgainWithCurrentSettings()}
+                  onPress={() =>
+                    playButtonSoundOnExecution(() =>
+                      startAgainWithCurrentSettings()
+                    )
+                  }
                   title="Try again"
                 />
               </View>
@@ -301,7 +310,9 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
               )}
               <ButtonGroup
                 buttons={buttonGroupValues}
-                onPress={(buttonIndex: number) => updateButtons(buttonIndex)}
+                onPress={(buttonIndex: number) =>
+                  playButtonSoundOnExecution(() => updateButtons(buttonIndex))
+                }
               />
             </View>
             <Modal

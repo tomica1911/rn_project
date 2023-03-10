@@ -13,10 +13,10 @@ import {
 } from "firebase/auth";
 
 interface AuthContextProps {
-  currentUser: User | undefined;
+  currentUser: User | null;
   login: Function;
   logout: Function;
-  authErrors: Error | undefined;
+  authErrors: Error | null;
   setAuthErrors: Function;
   signup: Function;
   resetUserPassword: Function;
@@ -29,9 +29,9 @@ interface AuthContextProps {
 
 // ToDo: setup enviroment variables for this to work with production
 const AuthContext = React.createContext<AuthContextProps>({
-  currentUser: undefined,
+  currentUser: null,
   login: () => {},
-  authErrors: undefined,
+  authErrors: null,
   setAuthErrors: () => {},
   signup: () => {},
   logout: () => {},
@@ -60,8 +60,8 @@ type Error = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [currentUser, setCurrentUser] = useState<User>();
-  const [authErrors, setAuthErrors] = useState<Error | undefined>(undefined);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [authErrors, setAuthErrors] = useState<Error | null>(null);
   const [authLoading, setAuthLoading] = useState(false);
   const [verificationEmailResent, setVerificationEmailResent] =
     useState<boolean>(false);
@@ -142,7 +142,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   function logout() {
     setAuthLoading(true);
     signOut(auth);
-    setCurrentUser(undefined);
+    setCurrentUser(null);
     setAuthLoading(false);
   }
 

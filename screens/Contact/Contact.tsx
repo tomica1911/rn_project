@@ -11,6 +11,7 @@ import { Modal } from "../../components/Modal/Modal";
 import { useAuth } from "../../contexts/authContext";
 import merge from "lodash/merge";
 import { useFirestore } from "../../contexts/firebaseContext";
+import { playButtonSoundOnExecution } from "../../utils/soundUtils";
 
 //ToDo: users should be able to send contact messages every 30 minutes
 export const Contact = (): JSX.Element => {
@@ -78,12 +79,18 @@ export const Contact = (): JSX.Element => {
           <>
             {contactFormSubmissionCompleted ? (
               <CustomizableButton
-                onPress={() => setContactFormSubmissionCompleted(false)}
+                onPress={() =>
+                  playButtonSoundOnExecution(() =>
+                    setContactFormSubmissionCompleted(false)
+                  )
+                }
                 title="Back"
               />
             ) : (
               <CustomizableButton
-                onPress={() => clearAllErrors()}
+                onPress={() =>
+                  playButtonSoundOnExecution(() => clearAllErrors())
+                }
                 title="Back to login screen"
               />
             )}
@@ -129,7 +136,9 @@ export const Contact = (): JSX.Element => {
               placeholder=""
             />
             <CustomizableButton
-              onPress={handleSubmit(onFormSubmit)}
+              onPress={() =>
+                playButtonSoundOnExecution(() => handleSubmit(onFormSubmit))
+              }
               title="Send"
             />
           </>

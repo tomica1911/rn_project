@@ -107,16 +107,18 @@ export const GameSelectionForm = ({ navigation }: any) => {
                 ? styles.pickerStyleIos
                 : styles.pickerStyleAndroid
             }
-            onValueChange={(characterSet: AvailableCharacters) => {
-              setFormValues({
-                ...formValues,
-                characterSet,
-              });
-              const { selectedCharacters, ...rest } = formValues;
-              setRestCachedFormValues(
-                JSON.stringify({ ...rest, characterSet })
-              );
-            }}
+            onValueChange={(characterSet: AvailableCharacters) =>
+              playButtonSoundOnExecution(() => {
+                setFormValues({
+                  ...formValues,
+                  characterSet,
+                });
+                const { selectedCharacters, ...rest } = formValues;
+                setRestCachedFormValues(
+                  JSON.stringify({ ...rest, characterSet })
+                );
+              })
+            }
           >
             {availableCharacters.map((key) => (
               <Picker.Item key={key} label={key} value={key} />
@@ -125,72 +127,76 @@ export const GameSelectionForm = ({ navigation }: any) => {
           <Text style={styles.checkboxText}>Mix different character sets</Text>
           <Checkbox
             value={formValues.mixCharacters}
-            onValueChange={(nextCheckboxValue: boolean) => {
-              setFormValues({
-                ...formValues,
-                mixCharacters: nextCheckboxValue,
-              });
-              const { characterSet, ...rest } = formValues;
-              setRestCachedFormValues(
-                JSON.stringify({ ...rest, mixCharacters: nextCheckboxValue })
-              );
-            }}
+            onValueChange={(nextCheckboxValue: boolean) =>
+              playButtonSoundOnExecution(() => {
+                setFormValues({
+                  ...formValues,
+                  mixCharacters: nextCheckboxValue,
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(
+                  JSON.stringify({ ...rest, mixCharacters: nextCheckboxValue })
+                );
+              })
+            }
             color={COLOR_COMBINATION_1.ORANGE}
           />
           <Text style={styles.checkboxText}>Play character sounds</Text>
           <Checkbox
             value={formValues.playCharacterSounds}
-            onValueChange={(nextCheckboxValue: boolean) => {
-              setFormValues({
-                ...formValues,
-                playCharacterSounds: nextCheckboxValue,
-              });
-              const { characterSet, ...rest } = formValues;
-              setRestCachedFormValues(
-                JSON.stringify({
-                  ...rest,
+            onValueChange={(nextCheckboxValue: boolean) =>
+              playButtonSoundOnExecution(() => {
+                setFormValues({
+                  ...formValues,
                   playCharacterSounds: nextCheckboxValue,
-                })
-              );
-            }}
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(
+                  JSON.stringify({
+                    ...rest,
+                    playCharacterSounds: nextCheckboxValue,
+                  })
+                );
+              })
+            }
             color={COLOR_COMBINATION_1.ORANGE}
           />
           <Text style={styles.checkboxText}>Training mode (No points)</Text>
           <Checkbox
             value={formValues.trainingMode}
-            onValueChange={(nextCheckboxValue: boolean) => {
-              setFormValues({
-                ...formValues,
-                trainingMode: nextCheckboxValue,
-              });
-              const { characterSet, ...rest } = formValues;
-              setRestCachedFormValues(
-                JSON.stringify({ ...rest, trainingMode: nextCheckboxValue })
-              );
-            }}
+            onValueChange={(nextCheckboxValue: boolean) =>
+              playButtonSoundOnExecution(() => {
+                setFormValues({
+                  ...formValues,
+                  trainingMode: nextCheckboxValue,
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(
+                  JSON.stringify({ ...rest, trainingMode: nextCheckboxValue })
+                );
+              })
+            }
             color={COLOR_COMBINATION_1.ORANGE}
           />
           <Text style={styles.checkboxText}>Track game (Premium only)</Text>
           <Checkbox
             disabled={true}
             value={formValues.trackGame}
-            onValueChange={(nextCheckboxValue: boolean) => {
-              setFormValues({
-                ...formValues,
-                trackGame: nextCheckboxValue,
-              });
-              const { characterSet, ...rest } = formValues;
-              setRestCachedFormValues(
-                JSON.stringify({ ...rest, trackGame: nextCheckboxValue })
-              );
-            }}
+            onValueChange={(nextCheckboxValue: boolean) =>
+              playButtonSoundOnExecution(() => {
+                setFormValues({
+                  ...formValues,
+                  trackGame: nextCheckboxValue,
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(
+                  JSON.stringify({ ...rest, trackGame: nextCheckboxValue })
+                );
+              })
+            }
             color={COLOR_COMBINATION_1.ORANGE}
           />
-          <Text
-            style={styles.characterSelectionText}
-          >
-            Select characters
-          </Text>
+          <Text style={styles.characterSelectionText}>Select characters</Text>
           <CustomizableButton
             onPress={() =>
               playButtonSoundOnExecution(() => setCharSelectionVisible(true))
@@ -296,16 +302,18 @@ export const GameSelectionForm = ({ navigation }: any) => {
                 ? styles.pickerStyleIos
                 : styles.pickerStyleAndroid
             }
-            onValueChange={async (gameMode) => {
-              setFormValues({
-                ...formValues,
-                selectedGameMode: gameMode,
-              });
-              const { characterSet, ...rest } = formValues;
-              setRestCachedFormValues(
-                JSON.stringify({ ...rest, selectedGameMode: gameMode })
-              );
-            }}
+            onValueChange={async (gameMode) =>
+              playButtonSoundOnExecution(() => {
+                setFormValues({
+                  ...formValues,
+                  selectedGameMode: gameMode,
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(
+                  JSON.stringify({ ...rest, selectedGameMode: gameMode })
+                );
+              })
+            }
           >
             <Picker.Item
               key="Game Mode 1"
@@ -333,14 +341,16 @@ export const GameSelectionForm = ({ navigation }: any) => {
                 ? styles.pickerStyleIos
                 : styles.pickerStyleAndroid
             }
-            onValueChange={async (duration: GameDurations) => {
-              setFormValues({
-                ...formValues,
-                duration,
-              });
-              const { characterSet, ...rest } = formValues;
-              setRestCachedFormValues(JSON.stringify({ ...rest, duration }));
-            }}
+            onValueChange={async (duration: GameDurations) =>
+              playButtonSoundOnExecution(() => {
+                setFormValues({
+                  ...formValues,
+                  duration,
+                });
+                const { characterSet, ...rest } = formValues;
+                setRestCachedFormValues(JSON.stringify({ ...rest, duration }));
+              })
+            }
           >
             {renderDurationPickerItems()}
           </Picker>
@@ -388,7 +398,7 @@ const styles = StyleSheet.create({
   checkboxText: {
     color: COLOR_COMBINATION_1.ORANGE,
     textAlign: "center",
-    marginBottom: 5
+    marginBottom: 5,
   },
   characterSelectionButton: {
     marginTop: 0,

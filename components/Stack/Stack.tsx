@@ -12,6 +12,7 @@ import { Contact } from "../../screens/Contact/Contact";
 import { Login } from "../../screens/Login/Login";
 import { GameSelectionForm } from "../../screens/Game/GameSelectionForm/GameSelectionForm";
 import { Dashboard } from "../../screens/Dashboard/Dashboard";
+import { Premium } from "../../screens/Premium/Premium";
 
 const AppStack = createStackNavigator();
 
@@ -86,6 +87,11 @@ export const Stack = (): JSX.Element => {
           options={styles}
           name={SCREENS.CONTACT}
           component={Contact}
+        />
+        <AppStack.Screen
+          options={styles}
+          name={SCREENS.PREMIUM}
+          component={Premium}
         />
       </AppStack.Navigator>
     </NavigationContainer>

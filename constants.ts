@@ -7,6 +7,7 @@ export enum SCREENS {
   LOGIN = "Login",
   LOGOUT = "Logout",
   SIGNUP = "Sign Up",
+  PREMIUM = "Premium",
   ABOUT = "About",
   CONTACT = "Contact",
 }

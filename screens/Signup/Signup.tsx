@@ -158,9 +158,7 @@ export const Signup = ({ navigation }: any): JSX.Element => {
             />
             <CustomizableButton
               onPress={() =>
-                playButtonSoundOnExecution(() =>
-                  handleSubmit(onSignupFormSubmit)
-                )
+                playButtonSoundOnExecution(handleSubmit(onSignupFormSubmit))
               }
               title="Signup"
             />

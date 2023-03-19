@@ -40,10 +40,11 @@ export const Login = ({ navigation }: any): JSX.Element => {
   // ToDo complete the loading functionality
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(
-    () => currentUser && navigation.navigate(SCREENS.MAIN),
-    [currentUser]
-  );
+  useEffect(() => {
+    if (currentUser) {
+      navigation.navigate(SCREENS.MAIN);
+    }
+  }, [currentUser]);
 
   const onFormSubmit = (data: FieldValues) => {
     login(data.email, data.password);
@@ -95,7 +96,7 @@ export const Login = ({ navigation }: any): JSX.Element => {
             />
             <CustomizableButton
               onPress={() =>
-                playButtonSoundOnExecution(() => handleSubmit(onFormSubmit))
+                playButtonSoundOnExecution(handleSubmit(onFormSubmit))
               }
               title="Login"
             />

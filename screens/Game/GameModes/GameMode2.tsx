@@ -252,7 +252,31 @@ export const GameMode2 = ({ navigation, route }: any): JSX.Element => {
             headerTitle={
               throwOutIncorrect || counter === 0 ? "Oh no!" : "Congratulations!"
             }
-            headerText={<Text>{getModalHeaderTextAndUpdateUser()}</Text>}
+            headerText={
+              <View>
+                <Text>{getModalHeaderTextAndUpdateUser()}</Text>
+                <View style={{ marginTop: 10 }}>
+                  <Text>
+                    Daily Goal Status: <Text style={{ fontWeight: "bold" }}>15/150</Text>
+                  </Text>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                  <Text>
+                    Current Goal Streak: <Text style={{ fontWeight: "bold" }}>5 Days</Text>
+                  </Text>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                  <Text>
+                    Bonus points: <Text style={{ fontWeight: "bold" }}>133</Text>
+                  </Text>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                  <Text>
+                    Total points: <Text style={{ fontWeight: "bold" }}>148</Text>
+                  </Text>
+                </View>
+              </View>
+            }
           />
         )}
         {!(counter === 0) && !gameCompleted && !throwOutIncorrect && (

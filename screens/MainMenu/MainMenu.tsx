@@ -54,12 +54,11 @@ export const MainMenu = ({ navigation }: MainMenuProps): JSX.Element => {
         : buttonTitles.filter(
             (screenName) =>
               screenName !== SCREENS.LOGOUT &&
-              screenName &&
-              screenName !== SCREENS.DASHBOARD
+              screenName !== SCREENS.DASHBOARD &&
+              screenName !== SCREENS.PREMIUM
           ),
     [currentUser]
   );
-
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 15,
@@ -122,7 +121,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 20,
-    marginTop: 50,
     marginBottom: 25,
     shadowColor: "#000",
     shadowOffset: {

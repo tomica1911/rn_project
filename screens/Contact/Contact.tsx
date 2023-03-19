@@ -137,7 +137,7 @@ export const Contact = (): JSX.Element => {
             />
             <CustomizableButton
               onPress={() =>
-                playButtonSoundOnExecution(() => handleSubmit(onFormSubmit))
+                playButtonSoundOnExecution(handleSubmit(onFormSubmit))
               }
               title="Send"
             />
